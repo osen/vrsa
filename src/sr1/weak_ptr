@@ -1,0 +1,144 @@
+#ifndef STD_SR1_WEAKPTR
+#define STD_SR1_WEAKPTR
+
+#include "shared_ptr"
+
+namespace std
+{
+
+namespace sr1
+{
+
+#ifdef STD_SR1_DEBUG
+
+template <typename T>
+class weak_ptr
+{
+public:
+  weak_ptr() : ref(NULL) { }
+
+  weak_ptr& operator=(const weak_ptr& other)
+  {
+    aquire(other.ref);
+
+    return *this;
+  }
+
+  weak_ptr(const weak_ptr& copy) : ref(NULL)
+  {
+    operator=(copy);
+  }
+
+  template <typename U>
+  weak_ptr& operator=(const weak_ptr<U>& other)
+  {
+    T *t = static_cast<U *>(NULL);
+    aquire(other.ref);
+
+    return *this;
+  }
+
+  template <typename U>
+  weak_ptr(const weak_ptr<U>& copy) : ref(NULL)
+  {
+    operator=(copy);
+  }
+
+  template <typename U>
+  weak_ptr& operator=(const shared_ptr<U>& other)
+  {
+    T *t = static_cast<U *>(NULL);
+    aquire(other.ref);
+
+    return *this;
+  }
+
+  template <typename U>
+  weak_ptr(const shared_ptr<U>& copy) : ref(NULL)
+  {
+    *this = copy;
+  }
+
+  ~weak_ptr()
+  {
+    reset();
+  }
+
+  long use_count()
+  {
+    if(!ref) return 0;
+
+    return ref->shared;
+  }
+
+  shared_ptr<T> lock() const
+  {
+    shared_ptr<T> rtn;
+
+    if(ref)
+    {
+      if(ref->shared)
+      {
+        rtn.aquire(ref);
+      }
+    }
+
+    return rtn;
+  }
+
+  void reset()
+  {
+    if(!ref)
+    {
+      return;
+    }
+
+    ref->weak--;
+
+    if(ref->weak < 1)
+    {
+      if(ref->shared < 1)
+      {
+        delete ref;
+      }
+    }
+
+    ref = NULL;
+  }
+
+private:
+  template <typename R>
+  friend class shared_ptr;
+
+  template <typename R>
+  friend class weak_ptr;
+
+  template <typename U>
+  friend struct observer_ptr;
+
+  shared_ptr_refcount *ref;
+
+  void aquire(shared_ptr_refcount *ref)
+  {
+    if(ref)
+    {
+      ref->weak++;
+    }
+
+    reset();
+    this->ref = ref;
+  }
+};
+
+#else
+
+using std::weak_ptr;
+using std::make_shared;
+
+#endif
+
+}
+
+}
+
+#endif
