@@ -7,19 +7,37 @@ void Key::onInitialize()
   ModelCollider* mc = getEntity()->addComponent<ModelCollider>();
 }
 
+void Key::setSelected(int selected)
+{
+  this->selected = selected;
+  refresh();
+}
+
 void Key::setType(int type)
 {
   this->type = type;
+  refresh();
+}
 
+void Key::refresh()
+{
   Model* model = NULL;
 
-  if(type == 0)
+  if(type == 0 && selected == 0)
   {
     model = Model::load("models/WhiteKey/WhiteKey");
   }
-  else
+  else if(type == 0 && selected == 1)
+  {
+    model = Model::load("models/WhiteKey/selected/WhiteKey");
+  }
+  else if(type == 1 && selected == 0)
   {
     model = Model::load("models/BlackKey/BlackKey");
+  }
+  else if(type == 1 && selected == 1)
+  {
+    model = Model::load("models/BlackKey/selected/BlackKey");
   }
 
   getEntity()->getComponent<ModelRenderer>()->setModel(model);

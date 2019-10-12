@@ -15,6 +15,23 @@ int Mouse::y;
 std::array<bool, 10> Mouse::buttons;
 std::array<bool, 10> Mouse::buttonsDown;
 
+void Mouse::clearButtons()
+{
+/*
+  for(std::array<bool, 10>::iterator it = buttons.begin();
+    it != buttons.end(); it++)
+  {
+    (*it) = false;
+  }
+*/
+
+  for(std::array<bool, 10>::iterator it = buttonsDown.begin();
+    it != buttonsDown.end(); it++)
+  {
+    (*it) = false;
+  }
+}
+
 void Mouse::motion(int x, int y)
 {
   Mouse::x = x;
@@ -45,7 +62,7 @@ bool Mouse::getButtonDown(int button)
 {
   if(buttonsDown.at(button))
   {
-    buttonsDown.at(button) = false;
+    //buttonsDown.at(button) = false;
 
     return true;
   }

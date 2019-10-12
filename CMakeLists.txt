@@ -39,5 +39,6 @@ add_executable(vrsa
   src/vrsa/Piano.cpp
   src/vrsa/Key.cpp
   src/vrsa/VrManager.cpp
+  src/vrsa/ButtonBar.cpp
 )
 target_link_libraries(vrsa hydra)

@@ -54,8 +54,22 @@ void Piano::onTick()
 
     std::sr1::observer_ptr<Key> k = getKey(r);
 
-    std::cout << k.get() << " " << k << std::endl;
+    if(k)
+    {
+      selectKey(k);
+    }
   }
+}
+
+void Piano::selectKey(std::sr1::observer_ptr<Key> key)
+{
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    keys.begin(); it != keys.end(); it++)
+  {
+    (*it)->setSelected(0);
+  }
+
+  key->setSelected(1);
 }
 
 std::sr1::observer_ptr<Key> Piano::getKey(Ray ray)

@@ -358,6 +358,7 @@ void Environment::idle()
   }
 
   instance->downKeys.clear();
+  Mouse::clearButtons();
 
   glutPostRedisplay();
 }

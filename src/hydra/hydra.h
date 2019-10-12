@@ -557,6 +557,8 @@ public:
   static bool getButton(int button = 0);
   static bool getButtonDown(int button = 0);
 
+  static void clearButtons();
+
   static int x;
   static int y;
 

@@ -7,8 +7,12 @@ struct Key : public Component
   void onInitialize();
 
   void setType(int type);
+  void setSelected(int selected);
 
 private:
   std::sr1::zero_initialized<int> type;
+  std::sr1::zero_initialized<int> selected;
+
+  void refresh();
 
 };
