@@ -4,7 +4,7 @@ void Key::onInitialize()
 {
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   setType(0);
-
+  ModelCollider* mc = getEntity()->addComponent<ModelCollider>();
 }
 
 void Key::setType(int type)

@@ -20,6 +20,7 @@
 #include <string>
 #include <memory>
 #include <ctime>
+#include <array>
 
 namespace hydra
 {
@@ -558,8 +559,9 @@ public:
 
   static int x;
   static int y;
-  static bool button0;
-  static bool button0Down;
+
+  static std::array<bool, 10> buttons;
+  static std::array<bool, 10> buttonsDown;
 };
 
 class Keyboard

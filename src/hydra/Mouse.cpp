@@ -11,8 +11,9 @@ namespace hydra
 
 int Mouse::x;
 int Mouse::y;
-bool Mouse::button0;
-bool Mouse::button0Down;
+
+std::array<bool, 10> Mouse::buttons;
+std::array<bool, 10> Mouse::buttonsDown;
 
 void Mouse::motion(int x, int y)
 {
@@ -32,10 +33,8 @@ int Mouse::getY()
 
 bool Mouse::getButton(int button)
 {
-  if(button0)
+  if(buttons.at(button))
   {
-    button0 = false;
-
     return true;
   }
 
@@ -44,8 +43,10 @@ bool Mouse::getButton(int button)
 
 bool Mouse::getButtonDown(int button)
 {
-  if(button0Down)
+  if(buttonsDown.at(button))
   {
+    buttonsDown.at(button) = false;
+
     return true;
   }
 
@@ -56,13 +57,13 @@ void Mouse::mouse(int button, int state, int x, int y)
 {
   if(state == GLUT_DOWN)
   {
-    button0 = true;
-    button0Down = true;
+    buttons.at(button) = true;
+    buttonsDown.at(button) = true;
   }
   else
   {
-    button0 = false;
-    button0Down = false;
+    buttons.at(button) = false;
+    buttonsDown.at(button) = false;
   }
 
   Mouse::x = x;
