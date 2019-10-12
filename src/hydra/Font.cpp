@@ -25,7 +25,8 @@ void Font::generateGlyphs()
     {
       if(x >= texture->getWidth())
       {
-        throw std::exception();
+        //std::cout << "Glyph: " << g.c << std::endl;
+        throw Exception("Glyph not found in image");
       }
 
       if(dirtyColumn(x) == true)
@@ -41,7 +42,7 @@ void Font::generateGlyphs()
     {
       if(x >= texture->getWidth())
       {
-        throw std::exception();
+        throw Exception("Glyph exceeded size of image");
       }
 
       if(dirtyColumn(x) == 0)

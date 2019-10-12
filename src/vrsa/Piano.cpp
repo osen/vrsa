@@ -58,6 +58,18 @@ void Piano::onTick()
     {
       selectKey(k);
     }
+
+    if(octaveButton)
+    {
+      Vector3 hitLocal;
+      Vector3 hitWorld;
+
+      if(octaveButton->getComponent<ModelCollider>()->
+        colliding(r, hitLocal, hitWorld) == true)
+      {
+        Environment::clear();
+      }
+    }
   }
 }
 
@@ -172,5 +184,6 @@ void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
   t->setPosition(pos);
   t->lookAt(Vector3(0, 0, 0));
   t->rotate(Vector3(0, 180, 0));
+  t->setScale(Vector3(2, 2, 2));
 }
 
