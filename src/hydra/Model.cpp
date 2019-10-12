@@ -21,12 +21,14 @@ void Model::processUsemtlLine(std::vector<std::string>& splitLine,
     }
   }
 
+/*
   if(texPath.length() < 1)
   {
     //std::cout << "Material specified does not exist" << std::endl;
     //throw std::exception();
     texPath = "internal/textures/null";
   }
+*/
 
   //std::cout << "Using: " << texPath << std::endl;
   store.currentMg.reset();
@@ -44,7 +46,17 @@ void Model::processUsemtlLine(std::vector<std::string>& splitLine,
   {
     //std::cout << "Adding new material group" << std::endl;
     std::shared_ptr<MaterialGroup> mg = std::make_shared<MaterialGroup>();
-    mg->texture = Texture::load(texPath);
+
+    if(texPath == "")
+    {
+      // TODO: Leak
+      mg->texture = new Texture(Vector4(1, 0, 0, 1));
+    }
+    else
+    {
+      mg->texture = Texture::load(texPath);
+    }
+
     store.currentMg = mg;
     store.currentPart->materialGroups.push_back(mg);
   }

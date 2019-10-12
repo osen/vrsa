@@ -33,5 +33,10 @@ target_link_libraries(hydra GLEW GL openal glut GLU ogg vorbis vorbisfile)
 
 add_executable(vrsa
   src/vrsa/main.cpp
+  src/vrsa/IntroScreen.cpp
+  src/vrsa/MainScreen.cpp
+  src/vrsa/Player.cpp
+  src/vrsa/Piano.cpp
+  src/vrsa/Key.cpp
 )
 target_link_libraries(vrsa hydra)
