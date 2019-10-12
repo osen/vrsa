@@ -5,6 +5,7 @@ void ButtonBar::onInitialize()
   Entity* e = Entity::create();
   ModelRenderer* mr = e->addComponent<ModelRenderer>();
   mr->setModel(Model::load("models/ExitButton/ExitButton"));
+  //mr->setModel(Model::load("models/OctaveButton/OctaveButton"));
   octaveCollider = e->addComponent<ModelCollider>();
   e->getComponent<Transform>()->setPosition(Vector3(-2.5, -2.5, -5));
   e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));

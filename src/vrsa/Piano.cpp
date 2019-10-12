@@ -69,7 +69,51 @@ void Piano::selectKey(std::sr1::observer_ptr<Key> key)
     (*it)->setSelected(0);
   }
 
+  int keyIdx = 0;
+
+  std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator kit = keys.begin();
+  for(; kit != keys.end(); kit++)
+  {
+    if(*kit == key)
+    {
+      break;
+    }
+
+    keyIdx++;
+  }
+
+  //int oct = 7;
+
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    kit + 1; it != keys.end(); it++)
+  {
+    if(it == kit + 13)
+    {
+      break;
+    }
+
+    (*it)->setSelected(2);
+    //if((*it)->getType() == 0)
+    //{
+    //  oct--;
+    //}
+
+    //if(oct <= 0)
+    //{
+    //  break;
+    //}
+  }
+
   key->setSelected(1);
+
+  if(keyIdx + 13 <= keys.size())
+  {
+    updateOctaveButton(key);
+  }
+  else
+  {
+    updateOctaveButton(std::sr1::observer_ptr<Key>());
+  }
 }
 
 std::sr1::observer_ptr<Key> Piano::getKey(Ray ray)
@@ -99,3 +143,34 @@ std::sr1::observer_ptr<Key> Piano::getKey(Ray ray)
 
   return rtn;
 }
+
+void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
+{
+  if(!key)
+  {
+    if(octaveButton)
+    {
+      octaveButton->kill();
+    }
+
+    return;
+  }
+
+  if(!octaveButton)
+  {
+    octaveButton = Entity::create();
+    octaveButton->addComponent<ModelCollider>();
+
+    octaveButton->addComponent<ModelRenderer>()->setModel(
+      Model::load("models/OctaveButton/OctaveButton"));
+  }
+
+  Transform* t = octaveButton->getComponent<Transform>();
+  Transform* keyT = key->getEntity()->getComponent<Transform>();
+  Vector3 pos = keyT->getPosition();
+  pos.y = 3;
+  t->setPosition(pos);
+  t->lookAt(Vector3(0, 0, 0));
+  t->rotate(Vector3(0, 180, 0));
+}
+

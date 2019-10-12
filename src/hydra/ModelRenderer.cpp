@@ -185,7 +185,11 @@ void ModelRenderer::onRender()
 
     for(size_t mgi = 0; mgi < model->parts.at(pi)->materialGroups.size(); mgi++)
     {
-      Mesh* mesh = model->parts.at(pi)->materialGroups.at(mgi)->mesh.get();
+      std::shared_ptr<MaterialGroup> mg = model->parts.at(pi)->materialGroups.at(mgi);
+
+      if(!mg->texture) continue;
+
+      Mesh* mesh = mg->mesh.get();
 
 /*
       glBindBuffer(GL_ARRAY_BUFFER, mesh->positionBuffer);

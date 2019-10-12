@@ -19,6 +19,11 @@ void Key::setType(int type)
   refresh();
 }
 
+int Key::getType()
+{
+  return type;
+}
+
 void Key::refresh()
 {
   Model* model = NULL;
@@ -31,6 +36,10 @@ void Key::refresh()
   {
     model = Model::load("models/WhiteKey/selected/WhiteKey");
   }
+  else if(type == 0 && selected == 2)
+  {
+    model = Model::load("models/WhiteKey/highlight/WhiteKey");
+  }
   else if(type == 1 && selected == 0)
   {
     model = Model::load("models/BlackKey/BlackKey");
@@ -38,6 +47,10 @@ void Key::refresh()
   else if(type == 1 && selected == 1)
   {
     model = Model::load("models/BlackKey/selected/BlackKey");
+  }
+  else if(type == 1 && selected == 2)
+  {
+    model = Model::load("models/BlackKey/highlight/BlackKey");
   }
 
   getEntity()->getComponent<ModelRenderer>()->setModel(model);

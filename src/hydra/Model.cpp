@@ -50,15 +50,15 @@ void Model::processUsemtlLine(std::vector<std::string>& splitLine,
     if(texPath == "")
     {
       // TODO: Leak
-      mg->texture = new Texture(Vector4(1, 0, 0, 1));
+      //mg->texture = new Texture(Vector4(1, 0, 0, 1));
     }
     else
     {
       mg->texture = Texture::load(texPath);
+      store.currentPart->materialGroups.push_back(mg);
     }
 
     store.currentMg = mg;
-    store.currentPart->materialGroups.push_back(mg);
   }
 }
 

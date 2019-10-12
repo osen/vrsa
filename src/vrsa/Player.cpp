@@ -1,6 +1,4 @@
 #include "Player.h"
-#include "Piano.h"
-#include "Key.h"
 
 #include <iostream>
 

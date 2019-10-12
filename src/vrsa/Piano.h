@@ -16,5 +16,8 @@ struct Piano : public Component
 
 private:
   std::sr1::vector<std::sr1::observer_ptr<Key> > keys;
+  std::sr1::observer_ptr<Entity> octaveButton;
+
+  void updateOctaveButton(std::sr1::observer_ptr<Key> key);
 
 };
