@@ -6,7 +6,7 @@
 void MainScreen::onInitialize()
 {
   Environment::addEntity<Player>();
-  Environment::addEntity<ButtonBar>();
+  Environment::addEntity<ButtonBar>(0);
 
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   world = Model::load("models/MusicRoom/MusicRoom");

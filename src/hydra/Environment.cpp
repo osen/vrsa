@@ -259,7 +259,7 @@ std::string Environment::getAssetsDirectory()
 
 Camera* Environment::getCamera()
 {
-  return instance->camera;
+  return instance->camera.get();
 }
 
 void Environment::repaint()

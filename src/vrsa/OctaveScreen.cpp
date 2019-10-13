@@ -5,7 +5,7 @@
 void OctaveScreen::onInitialize()
 {
   Environment::addEntity<Player>();
-  Environment::addEntity<ButtonBar>();
+  Environment::addEntity<ButtonBar>(1);
 
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   Model* world = Model::load("models/MusicRoom/MusicRoom");

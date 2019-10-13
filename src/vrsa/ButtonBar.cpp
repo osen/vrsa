@@ -1,15 +1,28 @@
 #include "ButtonBar.h"
+#include "MainScreen.h"
 
-void ButtonBar::onInitialize()
+void ButtonBar::onInitialize(int mode)
 {
+  this->mode = mode;
+
   Entity* e = Entity::create();
   ModelRenderer* mr = e->addComponent<ModelRenderer>();
   mr->setModel(Model::load("models/ExitButton/ExitButton"));
-  //mr->setModel(Model::load("models/OctaveButton/OctaveButton"));
-  octaveCollider = e->addComponent<ModelCollider>();
+  exitCollider = e->addComponent<ModelCollider>();
   e->getComponent<Transform>()->setPosition(Vector3(-2.5, -2.5, -5));
   e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   e->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+
+  if(mode == 1)
+  {
+    e = Entity::create();
+    mr = e->addComponent<ModelRenderer>();
+    mr->setModel(Model::load("models/PianoButton/PianoButton"));
+    pianoCollider = e->addComponent<ModelCollider>();
+    e->getComponent<Transform>()->setPosition(Vector3(0, -2.5, -5));
+    e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+    e->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  }
 }
 
 void ButtonBar::onTick()
@@ -22,9 +35,15 @@ void ButtonBar::onTick()
     Vector3 hitLocal;
     Vector3 hitWorld;
 
-    if(octaveCollider->colliding(r, hitLocal, hitWorld) == true)
+    if(exitCollider->colliding(r, hitLocal, hitWorld) == true)
     {
       Environment::exit();
+    }
+
+    if(pianoCollider && pianoCollider->colliding(r, hitLocal, hitWorld) == true)
+    {
+      Environment::clear();
+      Environment::addEntity<MainScreen>();
     }
   }
 }

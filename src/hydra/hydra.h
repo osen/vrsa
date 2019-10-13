@@ -611,7 +611,7 @@ class Environment
   std::sr1::zero_initialized<time_t> startTime;
   std::sr1::zero_initialized<int> screenWidth;
   std::sr1::zero_initialized<int> screenHeight;
-  std::sr1::zero_initialized<Camera*> camera;
+  std::sr1::observer_ptr<Camera> camera;
   std::string prefix;
   std::string assetsDirectory;
 

@@ -80,7 +80,8 @@ void Piano::onTick()
 
     if(k)
     {
-      selectKey(k);
+      //selectKey(k);
+      selectKeyOctave(k);
     }
 
     if(octaveButton)
@@ -96,6 +97,40 @@ void Piano::onTick()
       }
     }
   }
+}
+
+void Piano::selectKeyOctave(std::sr1::observer_ptr<Key> key)
+{
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    keys.begin(); it != keys.end(); it++)
+  {
+    (*it)->setSelected(0);
+  }
+
+  int keyIdx = 0;
+
+  std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator kit = keys.begin();
+  for(; kit != keys.end(); kit++)
+  {
+    if(*kit == key)
+    {
+      break;
+    }
+
+    keyIdx++;
+  }
+
+  size_t octaveIdx = (keyIdx / 12) * 12;
+
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    keys.begin() + octaveIdx; it != keys.end() && it != keys.begin() + octaveIdx + 12; it++)
+  {
+    (*it)->setSelected(2);
+  }
+
+  key->setSelected(1);
+  key->play();
+  updateOctaveButton(*(keys.begin() + octaveIdx + 5));
 }
 
 void Piano::selectKey(std::sr1::observer_ptr<Key> key)
