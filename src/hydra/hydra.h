@@ -98,7 +98,7 @@ public:
   int getHeight();
 };
 
-class Sound
+class Sound : public std::sr1::enable_observer
 {
   friend class hydra::Environment;
 

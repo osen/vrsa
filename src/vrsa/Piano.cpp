@@ -4,11 +4,14 @@
 #include <glm/ext.hpp>
 
 #include <iostream>
+#include <sstream>
 
 void Piano::onInitialize()
 {
   getEntity()->addTag("piano");
+  loadSounds();
   int type = 0;
+  size_t soundIdx = 0;
 
   for(int i = -90; i <= 90; i += 2)
   {
@@ -32,6 +35,8 @@ void Piano::onInitialize()
     {
       Key* key = Environment::addEntity<Key>();
       key->setType(keyType);
+      key->setSound(sounds.at(soundIdx));
+      soundIdx++;
       Transform* t = key->getEntity()->getTransform();
       pos.z *= -1;
       t->setPosition(pos);
@@ -117,6 +122,7 @@ void Piano::selectKey(std::sr1::observer_ptr<Key> key)
   }
 
   key->setSelected(1);
+  key->play();
 
   if(keyIdx + 13 <= keys.size())
   {
@@ -185,5 +191,36 @@ void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
   t->lookAt(Vector3(0, 0, 0));
   t->rotate(Vector3(0, 180, 0));
   t->setScale(Vector3(2, 2, 2));
+}
+
+void Piano::loadSounds()
+{
+  for(size_t i = 0; i < 9; i++)
+  {
+    std::stringstream trunk;
+    trunk << "audio/octave";
+    trunk << i;
+    trunk << "/";
+
+    std::stringstream base;
+    base << i;
+
+    sounds.push_back(Sound::load(trunk.str() + "C" + base.str()));
+    sounds.push_back(Sound::load(trunk.str() + "CS" + base.str()));
+    sounds.push_back(Sound::load(trunk.str() + "D" + base.str()));
+    sounds.push_back(Sound::load(trunk.str() + "DS" + base.str()));
+    sounds.push_back(Sound::load(trunk.str() + "E" + base.str()));
+    sounds.push_back(Sound::load(trunk.str() + "F" + base.str()));
+    sounds.push_back(Sound::load(trunk.str() + "FS" + base.str()));
+    sounds.push_back(Sound::load(trunk.str() + "G" + base.str()));
+
+    if(i < 8)
+    {
+      sounds.push_back(Sound::load(trunk.str() + "GS" + base.str()));
+      sounds.push_back(Sound::load(trunk.str() + "A" + base.str()));
+      sounds.push_back(Sound::load(trunk.str() + "AS" + base.str()));
+      sounds.push_back(Sound::load(trunk.str() + "B" + base.str()));
+    }
+  }
 }
 

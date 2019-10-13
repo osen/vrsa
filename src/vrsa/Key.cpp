@@ -7,6 +7,16 @@ void Key::onInitialize()
   ModelCollider* mc = getEntity()->addComponent<ModelCollider>();
 }
 
+void Key::setSound(std::sr1::observer_ptr<Sound> sound)
+{
+  this->sound = sound;
+}
+
+void Key::play()
+{
+  sound->play();
+}
+
 void Key::setSelected(int selected)
 {
   this->selected = selected;
