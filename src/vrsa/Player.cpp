@@ -21,5 +21,10 @@ void Player::onTick()
     getEntity()->getComponent<Transform>()->setRotation(rot);
   }
 
+  if(Mouse::getButton(1) == true)
+  {
+    getEntity()->getComponent<Transform>()->move(Vector3(0, 0, 1), 1);
+  }
+
   lastMouse = mpos;
 }

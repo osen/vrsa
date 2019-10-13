@@ -13,11 +13,22 @@ void Piano::onInitialize()
   int type = 0;
   size_t soundIdx = 0;
 
-  for(int i = -90; i <= 90; i += 2)
+  float ang = 180.0f / (float)(sounds.size() + 17);
+  float f = -90;
+
+  //std::cout << ang << std::endl;
+
+  //for(float f = -90; f <= 90; f += ang)
+  //while(true)
+
+  int posIdx = 0;
+
+  for(int i = 0; i < sounds.size(); i++)
   {
+    float f = -90.0f + (ang * (float)posIdx);
     glm::mat4 m(1.0f);
-    m = glm::rotate(m, glm::radians((float)i), glm::vec3(0, 1, 0));
-    m = glm::translate(m, glm::vec3(0, 0, 16));
+    m = glm::rotate(m, glm::radians(f), glm::vec3(0, 1, 0));
+    m = glm::translate(m, glm::vec3(0, 0, 21));
     glm::vec3 pos(m * glm::vec4(0, 0, 0, 1));
     int keyType = 0;
 
@@ -40,13 +51,19 @@ void Piano::onInitialize()
       Transform* t = key->getEntity()->getTransform();
       pos.z *= -1;
       t->setPosition(pos);
-      t->setRotation(Vector3(0, -i, 0));
+      t->setRotation(Vector3(0, -f, 0));
       keys.push_back(key);
+    }
+    else
+    {
+      // Not actually a key so do not consume a sound here.
+      // Position idx maintained separately.
+      i--;
     }
 
     type++;
-
     if(type > 13) type = 0;
+    posIdx ++;
   }
 }
 

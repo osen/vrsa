@@ -111,6 +111,7 @@ public:
 
   void play();
   void play(float vol, float varMin, float varMax);
+  std::string getPath();
 
 };
 

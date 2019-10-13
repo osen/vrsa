@@ -55,6 +55,7 @@ Sound::~Sound()
 
 void Sound::play()
 {
+  //std::cout << "Play: " << path << std::endl;
 #ifndef EMSCRIPTEN
   ALuint sid = 0;
   alGenSources(1, &sid);
@@ -65,6 +66,11 @@ void Sound::play()
 
   hydra::Environment::instance->audioSources.push_back(sid);
 #endif
+}
+
+std::string Sound::getPath()
+{
+  return path;
 }
 
 void Sound::play(float vol, float varMin, float varMax)

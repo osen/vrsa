@@ -27,6 +27,9 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
 
   model = glm::translate(model, mr->getOffset());
 
+  bool hit = false;
+  float bestHitDist = std::numeric_limits<float>::max();
+
   for(size_t pi = 0; pi < m->parts.size(); pi++)
   {
     Part* p = m->parts.at(pi).get();
@@ -49,13 +52,24 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
           //Converting barycentric to cartesian to get hit point
           //Weird but see https://github.com/g-truc/glm/issues/6
           float hitDist = bary.z;
-          
-          hitWorld = ray.origin + ray.direction*hitDist;
-          hitLocal = glm::inverse(model) * glm::vec4(hitWorld,1.0f);
-          return true;
+
+          hit = true;
+
+          if(hitDist < bestHitDist)
+          {
+            bestHitDist = hitDist;
+          }
         }
       }
     }
+  }
+
+  if(hit)
+  {
+    hitWorld = ray.origin + ray.direction*bestHitDist;
+    hitLocal = glm::inverse(model) * glm::vec4(hitWorld,1.0f);
+
+    return true;
   }
 
   //glm::vec3 a(-10, -10, 0);
