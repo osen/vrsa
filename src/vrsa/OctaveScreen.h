@@ -4,5 +4,5 @@ using namespace hydra;
 
 struct OctaveScreen : public Component
 {
-  void onInitialize();
+  void onInitialize(int octaveIndex);
 };

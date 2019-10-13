@@ -14,6 +14,7 @@ void Piano::onInitialize()
   loadSounds();
   int type = 0;
   size_t soundIdx = 0;
+  octaveIndex = -1;
 
   float ang = 180.0f / (float)(sounds.size() + 17);
   float f = -90;
@@ -93,7 +94,7 @@ void Piano::onTick()
         colliding(r, hitLocal, hitWorld) == true)
       {
         Environment::clear();
-        Environment::addEntity<OctaveScreen>();
+        Environment::addEntity<OctaveScreen>(octaveIndex);
       }
     }
   }
@@ -120,17 +121,18 @@ void Piano::selectKeyOctave(std::sr1::observer_ptr<Key> key)
     keyIdx++;
   }
 
-  size_t octaveIdx = (keyIdx / 12) * 12;
+  octaveIndex = (keyIdx / 12);
+  size_t octaveStartIdx = octaveIndex * 12;
 
   for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
-    keys.begin() + octaveIdx; it != keys.end() && it != keys.begin() + octaveIdx + 12; it++)
+    keys.begin() + octaveStartIdx; it != keys.end() && it != keys.begin() + octaveStartIdx + 12; it++)
   {
     (*it)->setSelected(2);
   }
 
   key->setSelected(1);
   key->play();
-  updateOctaveButton(*(keys.begin() + octaveIdx + 5));
+  updateOctaveButton(*(keys.begin() + octaveStartIdx + 5));
 }
 
 void Piano::selectKey(std::sr1::observer_ptr<Key> key)
