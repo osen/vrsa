@@ -1,6 +1,7 @@
 #include "ButtonBar.h"
 #include "MainScreen.h"
 #include "QuestionScreen.h"
+#include "HelpScreen.h"
 
 void ButtonBar::onInitialize(int mode)
 {
@@ -118,7 +119,7 @@ void ButtonBar::onTick()
     if(helpCollider && helpCollider->colliding(r, hitLocal, hitWorld) == true)
     {
       Environment::clear();
-      Environment::addEntity<QuestionScreen>();
+      Environment::addEntity<HelpScreen>();
     }
   }
 }
