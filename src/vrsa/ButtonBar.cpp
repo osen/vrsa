@@ -1,5 +1,6 @@
 #include "ButtonBar.h"
 #include "MainScreen.h"
+#include "QuestionScreen.h"
 
 void ButtonBar::onInitialize(int mode)
 {
@@ -19,7 +20,7 @@ void ButtonBar::onInitialize(int mode)
     e = Entity::create();
     mr = e->addComponent<ModelRenderer>();
     mr->setModel(Model::load("models/ExamButton/ExamButton"));
-    pianoCollider = e->addComponent<ModelCollider>();
+    examCollider = e->addComponent<ModelCollider>();
     e->getComponent<Transform>()->setPosition(Vector3(2.5, -2.5, -5));
     e->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
     e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
@@ -33,6 +34,18 @@ void ButtonBar::onInitialize(int mode)
     mr->setModel(Model::load("models/PianoButton/PianoButton"));
     pianoCollider = e->addComponent<ModelCollider>();
     e->getComponent<Transform>()->setPosition(Vector3(0, -2.5, -5));
+    e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+    e->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  }
+
+  if(mode == 2 || mode == 1)
+  {
+    e = Entity::create();
+    mr = e->addComponent<ModelRenderer>();
+    mr->setModel(Model::load("models/BackButton/BackButton"));
+    backCollider = e->addComponent<ModelCollider>();
+    e->getComponent<Transform>()->setPosition(Vector3(2.5, -2.5, -5));
+    e->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
     e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
     e->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
   }
@@ -60,6 +73,12 @@ void ButtonBar::onTick()
     }
 
     if(examCollider && examCollider->colliding(r, hitLocal, hitWorld) == true)
+    {
+      Environment::clear();
+      Environment::addEntity<QuestionScreen>();
+    }
+
+    if(backCollider && backCollider->colliding(r, hitLocal, hitWorld) == true)
     {
       Environment::clear();
       Environment::addEntity<MainScreen>();

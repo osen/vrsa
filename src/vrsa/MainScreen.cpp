@@ -3,10 +3,12 @@
 #include "Piano.h"
 #include "ButtonBar.h"
 #include "Fade.h"
+#include "VrManager.h"
 
 void MainScreen::onInitialize()
 {
   Environment::addEntity<Fade>(Vector3(1, 1, 1), true);
+  Environment::addEntity<VrManager>();
   Environment::addEntity<Player>();
   Environment::addEntity<ButtonBar>(0);
 

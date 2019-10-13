@@ -1,6 +1,5 @@
 #include "IntroScreen.h"
 #include "MainScreen.h"
-#include "VrManager.h"
 
 void IntroScreen::onInitialize()
 {
@@ -16,7 +15,6 @@ void IntroScreen::onTick()
   if(timeout <= 0)
   {
     Environment::addEntity<MainScreen>();
-    Environment::addEntity<VrManager>();
     getEntity()->kill();
   }
 }
