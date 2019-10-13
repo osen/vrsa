@@ -39,6 +39,9 @@ void Environment::clear()
   {
     instance->entities.at(i)->kill();
   }
+
+  instance->downKeys.clear();
+  Mouse::clearButtons();
 }
 
 void Environment::setupPaths(char *argv0)

@@ -524,6 +524,17 @@ public:
     return rtn.get();
   }
 
+  template <typename T, typename A, typename B>
+  T* addComponent(A a, B b)
+  {
+    std::shared_ptr<T> rtn = std::make_shared<T>();
+    rtn->entity = self;
+    components.push_back(rtn);
+    rtn->onInitialize(a, b);
+
+    return rtn.get();
+  }
+
   template <typename T>
   T* getComponent()
   {
@@ -672,6 +683,14 @@ public:
   {
     Entity* e = Entity::create();
     T* t = e->addComponent<T>(a);
+    return t;
+  }
+
+  template <typename T, typename A, typename B>
+  static T* addEntity(A a, B b)
+  {
+    Entity* e = Entity::create();
+    T* t = e->addComponent<T>(a, b);
     return t;
   }
 };

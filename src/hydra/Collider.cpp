@@ -20,10 +20,10 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
   Vector3 rot = getEntity()->getComponent<Transform>()->getRotation();
   Vector3 sca = getEntity()->getComponent<Transform>()->getScale();
 
-  model = glm::scale(model, glm::vec3(sca.x, sca.y, sca.z));
-
   model = glm::rotate(model, glm::radians(rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
   model = glm::rotate(model, glm::radians(rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+
+  model = glm::scale(model, glm::vec3(sca.x, sca.y, sca.z));
 
   model = glm::translate(model, mr->getOffset());
 

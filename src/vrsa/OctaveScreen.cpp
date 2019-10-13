@@ -2,9 +2,11 @@
 #include "Player.h"
 #include "ButtonBar.h"
 #include "Octave.h"
+#include "Fade.h"
 
 void OctaveScreen::onInitialize(int octaveIndex)
 {
+  Environment::addEntity<Fade>(Vector3(0, 0, 0), true);
   Environment::addEntity<Player>();
   Environment::addEntity<ButtonBar>(1);
 

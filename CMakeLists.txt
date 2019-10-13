@@ -42,5 +42,6 @@ add_executable(vrsa
   src/vrsa/ButtonBar.cpp
   src/vrsa/OctaveScreen.cpp
   src/vrsa/Octave.cpp
+  src/vrsa/Fade.cpp
 )
 target_link_libraries(vrsa hydra)

@@ -18,12 +18,6 @@ void Piano::onInitialize()
 
   float ang = 180.0f / (float)(sounds.size() + 17);
   float f = -90;
-
-  //std::cout << ang << std::endl;
-
-  //for(float f = -90; f <= 90; f += ang)
-  //while(true)
-
   int posIdx = 0;
 
   for(int i = 0; i < sounds.size(); i++)
