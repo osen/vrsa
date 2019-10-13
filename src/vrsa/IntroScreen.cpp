@@ -21,6 +21,12 @@ void IntroScreen::onTick()
 
 void IntroScreen::onGui()
 {
-  Gui::texture(Vector2(100, 100), logo.get());
+  Vector2 imgSize = Vector2(logo->getWidth(), logo->getHeight());
+
+  Vector2 scrSize = Vector2(Environment::getScreenWidth(),
+    Environment::getScreenHeight());
+
+  Gui::texture(Vector2(scrSize.x / 2 - imgSize.x / 2,
+    scrSize.y / 2 - imgSize.y / 2), logo.get());
 }
 

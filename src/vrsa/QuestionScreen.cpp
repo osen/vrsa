@@ -20,7 +20,7 @@ void QuestionScreen::onInitialize()
   Entity* fe = Entity::create();
   FontRenderer* fr = fe->addComponent<FontRenderer>();
   fr->setFont(Font::load("fonts/DroidWhiteLarge"));
-  fr->setMessage("Question: 0 / 24");
+  fr->setMessage("Question: 1 / 24");
   fe->getComponent<Transform>()->setPosition(Vector3(0, 0, -5));
   fe->getComponent<Transform>()->setRotation(Vector3(0, 180, 0));
 }

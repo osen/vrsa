@@ -14,5 +14,7 @@ private:
   std::sr1::observer_ptr<ModelCollider> examCollider;
   std::sr1::observer_ptr<ModelCollider> pianoCollider;
   std::sr1::observer_ptr<ModelCollider> backCollider;
+  std::sr1::observer_ptr<ModelCollider> nextCollider;
+  std::sr1::observer_ptr<ModelCollider> helpCollider;
 
 };
