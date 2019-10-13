@@ -1,5 +1,6 @@
 #include "Piano.h"
 #include "Key.h"
+#include "OctaveScreen.h"
 
 #include <glm/ext.hpp>
 
@@ -9,6 +10,7 @@
 void Piano::onInitialize()
 {
   getEntity()->addTag("piano");
+  preloadKeys();
   loadSounds();
   int type = 0;
   size_t soundIdx = 0;
@@ -90,6 +92,7 @@ void Piano::onTick()
         colliding(r, hitLocal, hitWorld) == true)
       {
         Environment::clear();
+        Environment::addEntity<OctaveScreen>();
       }
     }
   }
@@ -208,6 +211,16 @@ void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
   t->lookAt(Vector3(0, 0, 0));
   t->rotate(Vector3(0, 180, 0));
   t->setScale(Vector3(2, 2, 2));
+}
+
+void Piano::preloadKeys()
+{
+  Model::load("models/WhiteKey/WhiteKey");
+  Model::load("models/WhiteKey/highlight/WhiteKey");
+  Model::load("models/WhiteKey/selected/WhiteKey");
+  Model::load("models/BlackKey/BlackKey");
+  Model::load("models/BlackKey/highlight/BlackKey");
+  Model::load("models/BlackKey/selected/BlackKey");
 }
 
 void Piano::loadSounds()

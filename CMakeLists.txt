@@ -40,5 +40,6 @@ add_executable(vrsa
   src/vrsa/Key.cpp
   src/vrsa/VrManager.cpp
   src/vrsa/ButtonBar.cpp
+  src/vrsa/OctaveScreen.cpp
 )
 target_link_libraries(vrsa hydra)
