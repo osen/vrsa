@@ -9,6 +9,7 @@ add_library(rend
   src/rend/Exception.cpp
   src/rend/Context.cpp
   src/rend/Texture.cpp
+  src/rend/Shader.cpp
 )
 target_link_libraries(rend GLEW GL glut GLU)
 
@@ -28,6 +29,7 @@ add_library(hydra
   src/hydra/ModelRenderer.cpp
   src/hydra/Sound.cpp
   src/hydra/Texture.cpp
+  src/hydra/Shader.cpp
   src/hydra/Transform.cpp
   src/hydra/Util.cpp
   src/hydra/World.cpp

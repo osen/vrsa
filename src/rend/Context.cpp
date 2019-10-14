@@ -1,6 +1,7 @@
 #include "Context.h"
 #include "Texture.h"
 #include "Exception.h"
+#include "Shader.h"
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -23,6 +24,25 @@ std::sr1::shared_ptr<Context> Context::initialize(int argc, char* argv[])
   }
 
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+
+  return rtn;
+}
+
+std::sr1::shared_ptr<Shader> Context::createShader()
+{
+  GLuint id = 0;
+  id = glCreateProgram();
+
+  if(id == 0)
+  {
+    throw Exception("Failed to create shader program");
+  }
+
+  pollForError();
+
+  std::sr1::shared_ptr<Shader> rtn = std::sr1::make_shared<Shader>();
+  rtn->context = self.lock();
+  rtn->id = id;
 
   return rtn;
 }

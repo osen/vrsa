@@ -96,6 +96,18 @@ public:
   int getHeight();
 };
 
+struct Shader
+{
+  static std::sr1::shared_ptr<Shader> load(const std::string& path);
+
+  std::string getPath();
+
+private:
+  std::string path;
+  std::sr1::shared_ptr<rend::Shader> internal;
+
+};
+
 class Sound : public std::sr1::enable_observer
 {
   friend class hydra::Environment;
@@ -601,6 +613,7 @@ class Environment
   friend class hydra::Animation;
   friend class hydra::Sound;
   friend class hydra::Transform;
+  friend struct hydra::Shader;
 
   static std::shared_ptr<Environment> instance;
   static RegisterAssociation registrations[256];
@@ -612,6 +625,7 @@ class Environment
   std::vector<std::shared_ptr<Font> > fonts;
   std::vector<std::shared_ptr<Animation> > animations;
   std::vector<std::shared_ptr<Texture> > textures;
+  std::vector<std::shared_ptr<Shader> > shaders;
   std::vector<std::shared_ptr<Sound> > sounds;
   std::vector<std::shared_ptr<World> > worlds;
 

@@ -28,7 +28,7 @@ struct Texture : public std::sr1::noncopyable
   GLuint getId();
 
 private:
-  friend class Context;
+  friend struct Context;
 
   std::sr1::shared_ptr<Context> context;
   std::sr1::zero_initialized<GLuint> id;

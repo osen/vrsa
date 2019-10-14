@@ -12,4 +12,6 @@ using glm::ivec2;
 using glm::ivec3;
 using glm::ivec4;
 
+using glm::mat4;
+
 }

@@ -12,6 +12,8 @@ void MainScreen::onInitialize()
   Environment::addEntity<Player>();
   Environment::addEntity<ButtonBar>(0);
 
+  std::sr1::shared_ptr<Shader> s = Shader::load("shaders/default");
+
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   world = Model::load("models/MusicRoom/MusicRoom");
   mr->setModel(world.get());
