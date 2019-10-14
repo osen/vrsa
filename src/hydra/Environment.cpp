@@ -85,6 +85,11 @@ void Environment::setupPaths(char *argv0)
   std::cout << "Assets: " << assetsDirectory << std::endl;
 }
 
+std::sr1::shared_ptr<rend::Context> Environment::getContext()
+{
+  return instance->graphics;
+}
+
 void Environment::initializePre(int argc, char *argv[])
 {
   instance = std::make_shared<Environment>();
@@ -93,15 +98,8 @@ void Environment::initializePre(int argc, char *argv[])
 
   instance->screenWidth = 1024;
   instance->screenHeight = 768;
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-  glutInitWindowSize(getScreenWidth(), getScreenHeight());
-  glutCreateWindow("OpenGL|Distributed - Hydra");
 
-#ifndef OPENGLD
-  glewInit();
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-#endif
+  instance->graphics = rend::Context::initialize(argc, argv);
 
   instance->openAudio();
 

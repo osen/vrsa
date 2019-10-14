@@ -42,7 +42,7 @@ void FontRenderer::onPostRender()
   if(message.length() > 0)
   {
     Glyph g = font->getGlyph(message.at(0));
-    glBindTexture(GL_TEXTURE_2D, g.texture->id);
+    glBindTexture(GL_TEXTURE_2D, g.texture->internal->getId());
 
     for(size_t i = 0; i < message.length(); i++)
     {

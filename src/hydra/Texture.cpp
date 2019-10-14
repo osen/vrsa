@@ -13,17 +13,13 @@ Texture::Texture() { }
 
 Texture::Texture(Vector4 rgba)
 {
-  GLuint newId = 0;
-  glGenTextures(1, &newId);
-  id = newId;
-  glBindTexture(GL_TEXTURE_2D, id);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, &rgba);
+  // One pixel doesnt need linear interpolation
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  this->width = 1;
-  this->height = 1;
+  internal = Environment::getContext()->createTexture();
+  internal->setSize(1, 1);
+  internal->setPixel(0, 0, rgba);
 }
 
 Texture* Texture::load(std::string path)
@@ -50,7 +46,7 @@ Texture* Texture::load(std::string path)
 
   std::vector<std::string> split;
   Util::splitString(path, '/', split);
-  unsigned char** pixelData = new unsigned char*(); *pixelData = NULL;
+  unsigned char* pixelData = NULL;
 
   if(split.at(0) == "internal")
   {
@@ -58,7 +54,7 @@ Texture* Texture::load(std::string path)
 
     if(path == "internal/textures/button")
     {
-      res = lodepng_decode32(pixelData,
+      res = lodepng_decode32(&pixelData,
         &width, &height, button_texture, sizeof(button_texture));
     }
     else
@@ -75,68 +71,49 @@ Texture* Texture::load(std::string path)
   }
   else
   {
-    int error = lodepng_decode32_file(pixelData, &width, &height, std::string(Environment::getAssetsDirectory() + "/" + path + ".png").c_str());
+    int error = lodepng_decode32_file(&pixelData, &width, &height,
+      std::string(Environment::getAssetsDirectory() + "/" + path + ".png").c_str());
 
     if(error != 0)
     {
-      error = lodepng_decode32_file(pixelData, &width, &height, path.c_str());
+      error = lodepng_decode32_file(&pixelData, &width, &height, path.c_str());
 
       if(error != 0)
       {
-        std::cout << "Failed to load png "<<path<<" code: " << error << std::endl;
+        std::cout << "Failed to load png " << path << " code: " << error << std::endl;
         std::cout << lodepng_error_text(error) << std::endl;
-        throw std::exception();
+        throw Exception("Failed to load image");
       }
     }
   }
 
-  GLuint newId = 0;
-  glGenTextures(1, &newId);
-  rtn->id = newId;
-  glBindTexture(GL_TEXTURE_2D, rtn->id);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, *pixelData);
+  // Already default
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-/*
-  std::vector<GLfloat> pixels;
+  rtn->internal = Environment::getContext()->createTexture();
+  rtn->internal->setSize(width, height);
 
-  for(size_t i = 0; i < width * height * 4; i++)
+  for(size_t y = 0; y < height; y++)
   {
-    pixels.push_back(((float)(*pixelData)[i]) / 255.0f);
+    for(size_t x = 0; x < width; x++)
+    {
+      size_t idx = width * 4 * y + x * 4;
+
+      rend::vec4 rgba(
+        (float)pixelData[idx] / 255.0f,
+        (float)pixelData[idx+1] / 255.0f,
+        (float)pixelData[idx+2] / 255.0f,
+        (float)pixelData[idx+3] / 255.0f
+      );
+
+      rtn->internal->setPixel(x, y, rgba);
+    }
   }
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, &pixels[0]);
-*/
-  //std::cout << width << " " << height << std::endl;
-  /*
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  */
-
-  glGenerateMipmap(GL_TEXTURE_2D);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  //rtn->data.insert(rtn->data.end(), *pixelData,
-  //  *pixelData + width * height * 4);
-
-  for(size_t i = 0; i < width * height * 4; i++)
-  {
-    rtn->data.push_back((*pixelData)[i]);
-  }
-
-  free(*pixelData); delete pixelData;
-
-  rtn->width = width;
-  rtn->height = height;
+  free(pixelData);
 
   return rtn.get();
-}
-
-Texture::~Texture()
-{
-  GLuint oldId = id;
-  glDeleteTextures(1, &oldId);
 }
 
 std::string Texture::getPath()
@@ -146,25 +123,17 @@ std::string Texture::getPath()
 
 Vector4 Texture::getPixel(int x, int y)
 {
-  Vector4 rtn;
-  size_t i = (width * 4) * y + (x * 4);
-
-  rtn.x = data.at(i);
-  rtn.y = data.at(i+1);
-  rtn.z = data.at(i+2);
-  rtn.w = data.at(i+3);
-
-  return rtn;
+  return internal->getPixel(x, y) * 255.0f;
 }
 
 int Texture::getWidth()
 {
-  return width;
+  return internal->getSize().x;
 }
 
 int Texture::getHeight()
 {
-  return height;
+  return internal->getSize().y;
 }
 
 }

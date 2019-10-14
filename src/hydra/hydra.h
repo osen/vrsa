@@ -1,6 +1,8 @@
 #ifndef HYDRA_HYDRA_H
 #define HYDRA_HYDRA_H
 
+#include <rend/rend.h>
+
 #include <glm/glm.hpp>
 
 #ifdef OPENGLD
@@ -73,24 +75,20 @@ struct Ray
   Vector3 direction;
 };
 
-class Texture : public std::sr1::noncopyable, public std::sr1::enable_observer
+class Texture : public std::sr1::enable_observer
 {
   friend class hydra::WorldRenderer;
   friend class hydra::ModelRenderer;
   friend class hydra::FontRenderer;
   friend struct hydra::Gui;
 
-  std::sr1::zero_initialized<int> width;
-  std::sr1::zero_initialized<int> height;
-  std::vector<unsigned char> data;
-  std::sr1::zero_initialized<GLuint> id;
   std::string path;
+  std::sr1::shared_ptr<rend::Texture> internal;
 
 public:
   static Texture* load(std::string path);
   Texture();
   Texture(Vector4 rgba);
-  ~Texture();
 
   std::string getPath();
   Vector4 getPixel(int x, int y);
@@ -607,6 +605,8 @@ class Environment
   static std::shared_ptr<Environment> instance;
   static RegisterAssociation registrations[256];
 
+  std::sr1::shared_ptr<rend::Context> graphics;
+
   std::vector<std::shared_ptr<Entity> > entities;
   std::vector<std::shared_ptr<Model> > models;
   std::vector<std::shared_ptr<Font> > fonts;
@@ -669,6 +669,7 @@ public:
   static Entity* spawn(std::string name, Vector3 position, Vector3 rotation);
   static std::string getAssetsDirectory();
   static void clear();
+  static std::sr1::shared_ptr<rend::Context> getContext();
 
   template <typename T>
   static T* addEntity()

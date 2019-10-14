@@ -58,7 +58,7 @@ void Gui::texture(Vector4 position, Texture* texture)
   //glBindBuffer(GL_ARRAY_BUFFER, mesh->normalBuffer);
   //glNormalPointer(GL_FLOAT, 0, 0);
 
-  glBindTexture(GL_TEXTURE_2D, texture->id);
+  glBindTexture(GL_TEXTURE_2D, texture->internal->getId());
 
   glPushMatrix();
   glTranslatef(position.x, position.y, 0);
@@ -78,7 +78,7 @@ bool Gui::button(Vector4 position, std::string label)
 
   Mesh* mesh = Environment::instance->guiMesh.get();
   mesh->bind();
-  glBindTexture(GL_TEXTURE_2D, buttonTexture->id);
+  glBindTexture(GL_TEXTURE_2D, buttonTexture->internal->getId());
 
   glPushMatrix();
   glTranslatef(position.x, position.y, 0);
@@ -110,7 +110,7 @@ void Gui::text(Vector2 position, std::string label, Font* font)
   if(label.length() > 0)
   {
   Glyph g = font->getGlyph(label.at(0));
-  glBindTexture(GL_TEXTURE_2D, g.texture->id);
+  glBindTexture(GL_TEXTURE_2D, g.texture->internal->getId());
 
   for(size_t i = 0; i < label.length(); i++)
   {

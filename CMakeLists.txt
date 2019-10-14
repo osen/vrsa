@@ -5,6 +5,13 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/src
 )
 
+add_library(rend
+  src/rend/Exception.cpp
+  src/rend/Context.cpp
+  src/rend/Texture.cpp
+)
+target_link_libraries(rend GLEW GL glut GLU)
+
 add_library(hydra
   src/hydra/Mouse.cpp
   src/hydra/Animation.cpp
@@ -29,7 +36,7 @@ add_library(hydra
   src/hydra/lodepng.cpp
   src/hydra/tribox.cpp
 )
-target_link_libraries(hydra GLEW GL openal glut GLU ogg vorbis vorbisfile)
+target_link_libraries(hydra rend openal ogg vorbis vorbisfile)
 
 add_executable(vrsa
   src/vrsa/main.cpp

@@ -68,9 +68,7 @@ void WorldRenderer::onRender()
     glTexCoordPointer(2, GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(3));
     glNormalPointer(GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(5));
     
-    GLuint newId = 0;
-    glBindTexture(GL_TEXTURE_2D, newId);
-    world->materialGroups.at(i)->texture->id = newId;
+    glBindTexture(GL_TEXTURE_2D, world->materialGroups.at(i)->texture->internal->getId());
     glEnable(GL_ALPHA_TEST);
     //glAlphaFunc(GL_EQUAL, 1);
     glAlphaFunc(GL_GEQUAL, 0.8f);

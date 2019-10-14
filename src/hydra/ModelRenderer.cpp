@@ -205,7 +205,7 @@ void ModelRenderer::onRender()
       glTexCoordPointer(2, GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(3));
       glNormalPointer(GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(5));
 
-      glBindTexture(GL_TEXTURE_2D, model->parts.at(pi)->materialGroups.at(mgi)->texture->id);
+      glBindTexture(GL_TEXTURE_2D, model->parts.at(pi)->materialGroups.at(mgi)->texture->internal->getId());
 
       //if(model->parts.at(pi)->name != "LeftLowerLeg" && model->parts.at(pi)->name != "RightLowerLeg") continue;
       glDrawArrays(GL_TRIANGLES, 0, mesh->faces.size() * 3);
