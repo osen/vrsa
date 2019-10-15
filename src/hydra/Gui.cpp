@@ -26,6 +26,9 @@ void Gui::initialize()
   Environment::instance->guiMesh->addFace(c, d, a);
 
   Environment::instance->guiMesh->generateVbos();
+
+  Environment::instance->guiShader = Shader::load("shaders/gui");
+
 }
 
 void Gui::applyProjection()
@@ -47,23 +50,41 @@ void Gui::texture(Vector2 position, Texture* texture)
 
 void Gui::texture(Vector4 position, Texture* texture)
 {
-  applyProjection();
+  //applyProjection();
 
   Mesh* mesh = Environment::instance->guiMesh.get();
 
-  glPushMatrix();
-  glTranslatef(position.x, position.y, 0);
-  glScalef(position.z, position.w, 1);
+  //glPushMatrix();
+  //glTranslatef(position.x, position.y, 0);
+  //glScalef(position.z, position.w, 1);
 
-  mesh->bind();
+  Environment::instance->guiShader->internal->setUniform("u_Projection",
+    rend::ortho(0.0f, (float)Environment::getScreenWidth(),
+    (float)Environment::getScreenHeight(), 0.0f, -1.0f, 1.0f));
+
+  rend::mat4 m(1.0f);
+  m = rend::translate(m, rend::vec3(position.x, position.y, 0));
+  m = rend::scale(m, rend::vec3(position.z, position.w, 1));
+
+  Environment::instance->guiShader->internal->setUniform("u_Model", m);
+
+  //mesh->bind();
   glBindTexture(GL_TEXTURE_2D, texture->internal->getId());
 
+  Environment::instance->guiShader->internal->setAttribute("a_Position",
+    mesh->positions);
+
+  Environment::instance->guiShader->internal->setAttribute("a_TexCoord",
+    mesh->texCoords);
+
+  glUseProgram(Environment::instance->guiShader->internal->getId());
   glDrawArrays(GL_TRIANGLES, 0, mesh->faces.size() * 3);
+  glUseProgram(0);
 
-  glPopMatrix();
+  //glPopMatrix();
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  //glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 bool Gui::button(Vector4 position, std::string label)

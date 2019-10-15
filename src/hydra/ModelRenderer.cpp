@@ -80,12 +80,12 @@ void ModelRenderer::onRender()
     return;
   }
 
-  glPushMatrix();
-  //Environment::getCamera()->applyProjection();
-  Environment::getCamera()->applyView();
+  //glPushMatrix();
+  ////Environment::getCamera()->applyProjection();
+  //Environment::getCamera()->applyView();
 
   Transform* t = getEntity()->getComponent<Transform>();
-  t->applyModel();
+  //t->applyModel();
 
   mat4 projection = Environment::getCamera()->getProjection();
   mat4 view = Environment::getCamera()->getView();
@@ -98,31 +98,31 @@ void ModelRenderer::onRender()
   modelMat = rend::translate(modelMat, offset);
   modelMat = rend::translate(modelMat, -model->getCenter());
 
-  glTranslatef(
-    offset.x,
-    offset.y,
-    offset.z);
+  //glTranslatef(
+  //  offset.x,
+  //  offset.y,
+  //  offset.z);
 
-  glTranslatef(
-    -model->getCenter().x,
-    -model->getCenter().y,
-    -model->getCenter().z);
+  //glTranslatef(
+  //  -model->getCenter().x,
+  //  -model->getCenter().y,
+  //  -model->getCenter().z);
 
   for(size_t pi = 0; pi < model->parts.size(); pi++)
   {
-    glPushMatrix();
+    //glPushMatrix();
 
     rend::mat4 partMat = rend::translate(modelMat, model->parts.at(pi)->offset);
 
-    glTranslatef(
-      model->parts.at(pi)->offset.x,
-      model->parts.at(pi)->offset.y,
-      model->parts.at(pi)->offset.z);
+    //glTranslatef(
+    //  model->parts.at(pi)->offset.x,
+    //  model->parts.at(pi)->offset.y,
+    //  model->parts.at(pi)->offset.z);
 
     for(size_t ai = 0; ai < animations.size(); ai++)
     {
       // TODO; apply animation to modern matrix
-      animations.at(ai)->apply(model->parts.at(pi).get(), frame);
+      //animations.at(ai)->apply(model->parts.at(pi).get(), frame);
     }
 
     getMaterial()->setVariable("u_Model", partMat);
@@ -138,16 +138,21 @@ void ModelRenderer::onRender()
       glBindTexture(GL_TEXTURE_2D, model->parts.at(pi)->materialGroups.at(mgi)->texture->internal->getId());
 
       material->apply();
+      material->shader->internal->setAttribute("a_Position", mesh->positions);
+      material->shader->internal->setAttribute("a_TexCoord", mesh->texCoords);
+
+      glUseProgram(material->shader->internal->getId());
       glDrawArrays(GL_TRIANGLES, 0, mesh->faces.size() * 3);
+      glUseProgram(0);
     }
 
-    glPopMatrix();
+    //glPopMatrix();
   }
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 
-  glPopMatrix();
+  //glPopMatrix();
 }
 
 void ModelRenderer::setModel(Model* model)

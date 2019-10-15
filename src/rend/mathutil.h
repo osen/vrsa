@@ -19,6 +19,7 @@ using glm::rotate;
 using glm::scale;
 using glm::inverse;
 using glm::perspective;
+using glm::ortho;
 
 using glm::radians;
 

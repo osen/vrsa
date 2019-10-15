@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include "Context.h"
 #include "Exception.h"
+#include "Buffer.h"
 
 #include <sr1/vector>
 
@@ -15,6 +16,7 @@ struct VariableInfo
   std::sr1::zero_initialized<bool> attrib;
 
   mat4 mat4Val;
+  std::sr1::shared_ptr<Buffer> bufferVal;
 };
 
 Shader::~Shader()
@@ -31,13 +33,36 @@ GLuint Shader::getId()
 void Shader::setUniform(const std::string& variable, mat4 value)
 {
   std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_MAT4, false);
-  if(vi->mat4Val == value) return;
+  //if(vi->mat4Val == value) return;
 
   glUseProgram(id); context->pollForError();
   glUniformMatrix4fv(vi->loc, 1, false, glm::value_ptr(value)); context->pollForError();
   glUseProgram(0); context->pollForError();
 
   vi->mat4Val = value;
+}
+
+void Shader::setAttribute(const std::string& variable, const std::sr1::shared_ptr<Buffer>& value)
+{
+  GLenum type = value->type;
+  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, type, true);
+  //if(vi->bufferVal == value) return;
+
+  int size = 0;
+
+  if(type == GL_FLOAT) size = 1;
+  else if(type == GL_FLOAT_VEC2) size = 2;
+  else if(type == GL_FLOAT_VEC3) size = 3;
+  else throw Exception("Invalid buffer type");
+
+  glBindBuffer(GL_ARRAY_BUFFER, value->getId()); context->pollForError();
+  //glUseProgram(id); context->pollForError();
+  glVertexAttribPointer(vi->loc, size, GL_FLOAT, GL_FALSE, 0, 0); context->pollForError();
+  //glUseProgram(0); context->pollForError();
+  glEnableVertexAttribArray(vi->loc); context->pollForError();
+  glBindBuffer(GL_ARRAY_BUFFER, 0); context->pollForError();
+
+  vi->bufferVal = value;
 }
 
 std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& name, GLenum type, bool attrib)

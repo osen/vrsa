@@ -24,6 +24,7 @@ struct Buffer : public std::sr1::noncopyable
 
 private:
   friend struct Context;
+  friend struct Shader;
 
   std::sr1::shared_ptr<Context> context;
   std::sr1::vector<float> floatData;

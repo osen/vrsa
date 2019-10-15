@@ -110,6 +110,8 @@ struct Shader
 
 private:
   friend struct Material;
+  friend class ModelRenderer;
+  friend class Gui;
 
   std::string path;
   std::sr1::shared_ptr<rend::Shader> internal;
@@ -658,6 +660,8 @@ class Environment
   static RegisterAssociation registrations[256];
 
   std::sr1::shared_ptr<rend::Context> graphics;
+
+  std::sr1::shared_ptr<Shader> guiShader;
 
   std::vector<std::shared_ptr<Entity> > entities;
   std::vector<std::shared_ptr<Model> > models;
