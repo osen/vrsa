@@ -346,7 +346,7 @@ class FontRenderer : public Component
   std::sr1::observer_ptr<Font> font;
   std::string message;
 
-  virtual void onPostRender();
+  virtual void onRender();
 
 public:
   void setFont(Font *font);

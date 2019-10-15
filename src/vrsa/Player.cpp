@@ -23,7 +23,7 @@ void Player::onTick()
 
   if(Mouse::getButton(1) == true)
   {
-    getEntity()->getComponent<Transform>()->move(Vector3(0, 0, 1), 1);
+    getEntity()->getComponent<Transform>()->move(Vector3(0, 0, -1), 25 * Environment::getDeltaTime());
   }
 
   lastMouse = mpos;

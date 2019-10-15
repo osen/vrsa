@@ -1,13 +1,13 @@
 #include "hydra.h"
 
-#include <iostream>
+#include <GL/glew.h>
 
-#define BUFFER_OFFSET(bytes) ((GLvoid*)(sizeof(GLfloat) * bytes))
+#include <iostream>
 
 namespace hydra
 {
 
-void FontRenderer::onPostRender()
+void FontRenderer::onRender()
 {
   if(!Environment::getCamera())
   {
@@ -15,29 +15,25 @@ void FontRenderer::onPostRender()
     return;
   }
 
-  Vector2 size(font->getWidth(message), font->getHeight());
-  float sizeMod = 3.0f / size.x;
+  //float sizeMod = size.x;
 
   glPushMatrix();
   //Environment::getCamera()->applyProjection();
   Environment::getCamera()->applyView();
 
   Transform* t = getEntity()->getComponent<Transform>();
-
-  hydra::Entity* player = hydra::Entity::findByTag("player");
-  Vector3 origRotation = getEntity()->getTransform()->getRotation();
-
-  if(player)
-  {
-    getEntity()->getTransform()->lookAt(player->getTransform()->getPosition());
-  }
-
-  t->rotate(Vector3(0, 180, 0));
   t->applyModel();
-  getEntity()->getTransform()->setRotation(origRotation);
+  glRotatef(180, 0, 1, 0);
 
+  //getEntity()->getTransform()->setRotation(origRotation);
+
+  Vector2 size(font->getWidth(message), font->getHeight());
+  //float sizeMod = 3.0f / size.x;
+  float sizeMod = 1.0f;
   size *= sizeMod;
   glTranslatef(size.x / -2.0f, 0, 0);
+
+  glFrontFace(GL_CW);
 
   if(message.length() > 0)
   {
@@ -47,15 +43,7 @@ void FontRenderer::onPostRender()
     for(size_t i = 0; i < message.length(); i++)
     {
       g = font->getGlyph(message.at(i));
-/*
-      glBindBuffer(GL_ARRAY_BUFFER, g.mesh->positionBuffer);
-      glVertexPointer(3, GL_FLOAT, 0, 0);
-      glBindBuffer(GL_ARRAY_BUFFER, g.mesh->texCoordBuffer);
-      glTexCoordPointer(2, GL_FLOAT, 0, 0);
-*/
-      glBindBuffer(GL_ARRAY_BUFFER, g.mesh->buffer);
-      glVertexPointer(3, GL_FLOAT, 8 * sizeof(GLfloat), 0);
-      glTexCoordPointer(2, GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(3));
+      g.mesh->bind();
 
       size = Vector2(font->getWidth(std::string("") + message.at(i)), font->getHeight());
       size *= sizeMod;
@@ -68,6 +56,8 @@ void FontRenderer::onPostRender()
       glTranslatef(size.x + (1.0f * sizeMod), 0, 0);
     }
   }
+
+  glFrontFace(GL_CCW);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);

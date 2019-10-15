@@ -75,15 +75,15 @@ Vector3 Transform::getRotation()
  ****************************************************************************/
 Vector3 Transform::getRelative(Vector3 position)
 {
-  Vector4 pos4 = Vector4(position, 1);
+  Matrix mat(1.0f);
 
-  Matrix mat = glm::translate(getPosition());
+  mat = glm::rotate(mat, glm::radians(rotation.z), Vector3(0, 0, 1));
+  mat = glm::rotate(mat, glm::radians(rotation.y), Vector3(0, 1, 0));
+  mat = glm::rotate(mat, glm::radians(rotation.x), Vector3(1, 0, 0));
 
-  mat = mat * glm::rotate(glm::radians(rotation.x), Vector3(1,0,0)) *
-              glm::rotate(glm::radians(rotation.y), Vector3(0,1,0)) *
-              glm::rotate(glm::radians(rotation.z), Vector3(0,0,1));
+  Vector3 rel = mat * Vector4(position, 1);
 
-  return mat * pos4;
+  return getPosition() + rel;
 }
 
 Vector3 Transform::getForward()
