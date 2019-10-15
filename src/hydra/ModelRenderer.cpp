@@ -2,12 +2,6 @@
 
 #include <iostream>
 
-//#define BUFFER_OFFSET(bytes) ((char*)0 + (bytes))
-//#define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + (bytes))
-//#define BUFFER_OFFSET(bytes) (GLvoid*)(sizeof(GLfloat) * bytes)
-//#define BUFFER_OFFSET(bytes) (GLvoid*)(bytes)
-#define BUFFER_OFFSET(bytes) ((GLvoid*)(sizeof(GLfloat) * bytes))
-
 namespace hydra
 {
 
@@ -140,12 +134,7 @@ void ModelRenderer::onRender()
       if(!mg->texture) continue;
 
       Mesh* mesh = mg->mesh.get();
-
-      glBindBuffer(GL_ARRAY_BUFFER, mesh->buffer);
-      glVertexPointer(3, GL_FLOAT, 8 * sizeof(GLfloat), 0);
-      glTexCoordPointer(2, GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(3));
-      glNormalPointer(GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(5));
-
+      mesh->bind();
       glBindTexture(GL_TEXTURE_2D, model->parts.at(pi)->materialGroups.at(mgi)->texture->internal->getId());
 
       material->apply();

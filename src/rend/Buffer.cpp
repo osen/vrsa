@@ -1,0 +1,82 @@
+#include "Buffer.h"
+#include "Exception.h"
+#include "Context.h"
+
+namespace rend
+{
+
+Buffer::~Buffer()
+{
+  GLuint delId = id;
+  glDeleteBuffers(1, &delId);
+  context->pollForError();
+}
+
+void Buffer::add(float value)
+{
+  if(type != 0 && type != GL_FLOAT)
+  {
+    throw Exception("Attempt to mix types");
+  }
+
+  type = GL_FLOAT;
+  floatData.push_back(value);
+  dirty = true;
+}
+
+void Buffer::add(vec2 value)
+{
+  if(type != 0 && type != GL_FLOAT_VEC2)
+  {
+    throw Exception("Attempt to mix types");
+  }
+
+  type = GL_FLOAT_VEC2;
+  floatData.push_back(value.x);
+  floatData.push_back(value.y);
+  dirty = true;
+}
+
+void Buffer::add(vec3 value)
+{
+  if(type != 0 && type != GL_FLOAT_VEC3)
+  {
+    throw Exception("Attempt to mix types");
+  }
+
+  type = GL_FLOAT_VEC3;
+  floatData.push_back(value.x);
+  floatData.push_back(value.y);
+  floatData.push_back(value.z);
+  dirty = true;
+}
+
+GLuint Buffer::getId()
+{
+  if(dirty)
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    context->pollForError();
+
+    if(type == GL_FLOAT || type == GL_FLOAT_VEC2 || type == GL_FLOAT_VEC3)
+    {
+      glBufferData(GL_ARRAY_BUFFER, sizeof(floatData.at(0)) * floatData.size(),
+        &floatData.at(0), GL_STATIC_DRAW);
+
+      context->pollForError();
+    }
+    else
+    {
+      throw Exception("TODO: Support other types of data");
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    context->pollForError();
+
+    dirty = false;
+  }
+
+  return id;
+}
+
+}

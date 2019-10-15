@@ -10,6 +10,7 @@ add_library(rend
   src/rend/Context.cpp
   src/rend/Texture.cpp
   src/rend/Shader.cpp
+  src/rend/Buffer.cpp
 )
 target_link_libraries(rend GLEW GL glut GLU)
 

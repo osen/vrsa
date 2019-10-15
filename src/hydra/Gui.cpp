@@ -50,22 +50,16 @@ void Gui::texture(Vector4 position, Texture* texture)
   applyProjection();
 
   Mesh* mesh = Environment::instance->guiMesh.get();
-  mesh->bind();
-  //glBindBuffer(GL_ARRAY_BUFFER, mesh->positionBuffer);
-  //glVertexPointer(3, GL_FLOAT, 0, 0);
-  //glBindBuffer(GL_ARRAY_BUFFER, mesh->texCoordBuffer);
-  //glTexCoordPointer(2, GL_FLOAT, 0, 0);
-  //glBindBuffer(GL_ARRAY_BUFFER, mesh->normalBuffer);
-  //glNormalPointer(GL_FLOAT, 0, 0);
-
-  glBindTexture(GL_TEXTURE_2D, texture->internal->getId());
 
   glPushMatrix();
   glTranslatef(position.x, position.y, 0);
   glScalef(position.z, position.w, 1);
-  //glScalef(128, 128, 1);
+
   mesh->bind();
+  glBindTexture(GL_TEXTURE_2D, texture->internal->getId());
+
   glDrawArrays(GL_TRIANGLES, 0, mesh->faces.size() * 3);
+
   glPopMatrix();
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);

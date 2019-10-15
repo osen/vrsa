@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Exception.h"
 #include "Shader.h"
+#include "Buffer.h"
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -54,6 +55,19 @@ std::sr1::shared_ptr<Texture> Context::createTexture()
   pollForError();
 
   std::sr1::shared_ptr<Texture> rtn = std::sr1::make_shared<Texture>();
+  rtn->context = self.lock();
+  rtn->id = id;
+
+  return rtn;
+}
+
+std::sr1::shared_ptr<Buffer> Context::createBuffer()
+{
+  GLuint id = 0;
+  glGenBuffers(1, &id);
+  pollForError();
+
+  std::sr1::shared_ptr<Buffer> rtn = std::sr1::make_shared<Buffer>();
   rtn->context = self.lock();
   rtn->id = id;
 

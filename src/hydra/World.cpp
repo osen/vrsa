@@ -12,19 +12,38 @@ namespace hydra
 
 void Mesh::bind()
 {
-  glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glVertexPointer(3, GL_FLOAT, 8 * sizeof(GLfloat), 0);
-  glTexCoordPointer(2, GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(3));
-  glNormalPointer(GL_FLOAT, 8 * sizeof(GLfloat), BUFFER_OFFSET(5));
+  glBindBuffer(GL_ARRAY_BUFFER, positions->getId());
+  glVertexPointer(3, GL_FLOAT, 0, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, texCoords->getId());
+  glTexCoordPointer(2, GL_FLOAT, 0, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, normals->getId());
+  glNormalPointer(GL_FLOAT, 0, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Mesh::generateVbos()
 {
   std::vector<GLfloat> data;
 
+  positions = Environment::getContext()->createBuffer();
+  texCoords = Environment::getContext()->createBuffer();
+  normals = Environment::getContext()->createBuffer();
+
   for(size_t f = 0; f < faces.size(); f++)
   {
     Face face = faces.at(f);
+
+    positions->add(face.a.position);
+    texCoords->add(face.a.texCoord);
+    normals->add(face.a.normal);
+
+    positions->add(face.b.position);
+    texCoords->add(face.b.texCoord);
+    normals->add(face.b.normal);
+
+    positions->add(face.c.position);
+    texCoords->add(face.c.texCoord);
+    normals->add(face.c.normal);
 
     data.push_back(face.a.position.x);
     data.push_back(face.a.position.y);

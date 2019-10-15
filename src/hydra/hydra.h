@@ -167,6 +167,10 @@ class Mesh : public std::sr1::noncopyable
   std::vector<Face> faces;
   std::sr1::zero_initialized<GLuint> buffer;
 
+  std::sr1::shared_ptr<rend::Buffer> positions;
+  std::sr1::shared_ptr<rend::Buffer> texCoords;
+  std::sr1::shared_ptr<rend::Buffer> normals;
+
 public:
   ~Mesh();
   Face getFace(size_t i);
