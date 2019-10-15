@@ -17,6 +17,7 @@ void MainScreen::onInitialize()
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   world = Model::load("models/MusicRoom/MusicRoom");
   mr->setModel(world.get());
+  mr->getMaterial()->setShader(s);
   getEntity()->getComponent<Transform>()->setScale(Vector3(7, 7, 7));
   getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
 

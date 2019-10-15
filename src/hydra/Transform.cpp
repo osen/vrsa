@@ -173,4 +173,16 @@ void Transform::applyModel()
   glScalef(scale.x, scale.y, scale.z);
 }
 
+mat4 Transform::getModel()
+{
+  mat4 rtn(1.0f);
+
+  rtn = rend::translate(rtn, getPosition());
+  rtn = rend::rotate(rtn, getRotation().y, vec3(0, 1, 0));
+  rtn = rend::rotate(rtn, getRotation().x, vec3(1, 0, 0));
+  rtn = rend::scale(rtn, scale);
+
+  return rtn;
+}
+
 }

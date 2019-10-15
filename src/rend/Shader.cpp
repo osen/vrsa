@@ -7,6 +7,16 @@
 namespace rend
 {
 
+struct VariableInfo
+{
+  std::string name;
+  std::sr1::zero_initialized<GLint> loc;
+  std::sr1::zero_initialized<int> type;
+  std::sr1::zero_initialized<bool> attrib;
+
+  mat4 mat4Val;
+};
+
 Shader::~Shader()
 {
   glDeleteProgram(id);
@@ -18,17 +28,93 @@ GLuint Shader::getId()
   return id;
 }
 
-void Shader::setUniform(const std::string variable, mat4 value)
+void Shader::setUniform(const std::string& variable, mat4 value)
 {
+  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_MAT4, false);
+  if(vi->mat4Val == value) return;
 
+  glUseProgram(id); context->pollForError();
+  glUniformMatrix4fv(vi->loc, 1, false, glm::value_ptr(value)); context->pollForError();
+  glUseProgram(0); context->pollForError();
+
+  vi->mat4Val = value;
 }
 
-void Shader::setSource(const std::string source)
+std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& name, GLenum type, bool attrib)
+{
+  for(std::sr1::vector<std::sr1::shared_ptr<VariableInfo> >::iterator it = cache.begin();
+    it != cache.end(); it++)
+  {
+    if((*it)->name == name)
+    {
+      if ((*it)->type != type || (*it)->attrib != attrib)
+      {
+        throw Exception("Variable requested as wrong type");
+      }
+
+      return *it;
+    }
+  }
+
+  std::sr1::shared_ptr<VariableInfo> rtn = std::sr1::make_shared<VariableInfo>();
+  rtn->name = name;
+  rtn->attrib = attrib;
+  rtn->type = type;
+
+  GLsizei unusedA = 0;
+  GLint unusedB = 0;
+  GLenum rtnType = 0;
+
+  if(attrib == false)
+  {
+    rtn->loc = glGetUniformLocation(id, name.c_str());
+    context->pollForError();
+
+    if(rtn->loc == -1)
+    {
+      throw Exception("The specified variable was not found in the shader");
+    }
+
+    glGetActiveUniform(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
+    context->pollForError();
+
+    if(rtnType != type)
+    {
+      throw Exception("The requested uniform had the wrong type");
+    }
+  }
+  else
+  {
+    rtn->loc = glGetAttribLocation(id, name.c_str());
+    context->pollForError();
+
+    if(rtn->loc == -1)
+    {
+      throw Exception("The specified variable was not found in the shader");
+    }
+
+    glGetActiveAttrib(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
+    context->pollForError();
+
+    if(rtnType != type)
+    {
+      throw Exception("The requested attribute had the wrong type");
+    }
+  }
+
+  cache.push_back(rtn);
+
+  return rtn;
+}
+
+void Shader::setSource(const std::string& source)
 {
   GLuint vertId = 0;
   GLuint fragId = 0;
   int success = 0;
   const GLchar* src = NULL;
+
+  cache.clear();
 
   std::string vertSrc = "";
   vertSrc += "#version 120\n";

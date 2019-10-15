@@ -62,6 +62,25 @@ void Camera::applyProjection()
   glMatrixMode(GL_MODELVIEW);
 }
 
+mat4 Camera::getProjection()
+{
+  mat4 rtn = rend::perspective(rend::radians(65.0f),
+    (float)Environment::getScreenWidth() / (float)Environment::getScreenHeight(),
+    0.1f, 1000.0f);
+
+  return rtn;
+}
+
+mat4 Camera::getView()
+{
+  mat4 rtn = getEntity()->getTransform()->getModel();
+  rtn = rend::inverse(rtn);
+
+  rtn = rend::translate(rtn, -(smoothPosition + offset));
+
+  return rtn;
+}
+
 void Camera::applyView()
 {
   //glTranslatef(250, 250, 0);

@@ -17,6 +17,7 @@
 #include <sr1/noncopyable>
 #include <sr1/zero_initialized>
 #include <sr1/memory>
+#include <sr1/vector>
 
 #include <vector>
 #include <string>
@@ -31,6 +32,11 @@ typedef glm::mat4 Matrix;
 typedef glm::vec2 Vector2;
 typedef glm::vec3 Vector3;
 typedef glm::vec4 Vector4;
+
+using rend::mat4;
+using rend::vec2;
+using rend::vec3;
+using rend::vec4;
 
 struct Part;
 struct ColliderColumn;
@@ -103,8 +109,30 @@ struct Shader
   std::string getPath();
 
 private:
+  friend struct Material;
+
   std::string path;
   std::sr1::shared_ptr<rend::Shader> internal;
+
+};
+
+struct MaterialVariable;
+
+struct Material
+{
+  void setShader(const std::sr1::shared_ptr<Shader>& shader);
+
+  void setVariable(const std::string& name, const mat4& value);
+
+private:
+  friend class ModelRenderer;
+
+  std::sr1::shared_ptr<Shader> shader;
+
+  std::sr1::vector<std::sr1::shared_ptr<MaterialVariable> > variables;
+
+  std::sr1::shared_ptr<MaterialVariable> getVariable(const std::string& name, int type);
+  void apply();
 
 };
 
@@ -289,18 +317,21 @@ class ModelRenderer : public Component
   std::sr1::zero_initialized<double> frame;
   Vector2 screenCoordinate;
   Vector3 offset;
+  std::sr1::shared_ptr<Material> material;
 
   virtual void onRender();
   virtual void onTick();
-  void updateScreenPosition(Transform* cameraTransform);
 
 public:
+  void onInitialize();
+
   void setOffset(Vector3 offset);
   Vector3 getOffset();
   void setModel(Model* model);
   Model* getModel();
   void attachAnimation(Animation* animation);
   void detachAnimation(Animation* animation);
+  std::sr1::shared_ptr<Material> getMaterial();
 
   Vector2 getScreenCoordinate();
 
@@ -432,6 +463,8 @@ public:
   virtual void onInitialize();
   virtual void onRender();
   Ray createRay(Vector2 screenPosition);
+  mat4 getProjection();
+  mat4 getView();
 
   static void setClearColor(Vector4 clearColor);
   static Vector4 getClearColor();
@@ -467,6 +500,8 @@ public:
   Vector3 getForward();
   Vector3 getRight();
   Vector3 getRelative(Vector3 position);
+
+  mat4 getModel();
 
   //simple Vector3 lerp without collision checking
   void moveTowards(Vector3 target, float speed);

@@ -27,6 +27,7 @@ add_library(hydra
   src/hydra/Keyboard.cpp
   src/hydra/Model.cpp
   src/hydra/ModelRenderer.cpp
+  src/hydra/Material.cpp
   src/hydra/Sound.cpp
   src/hydra/Texture.cpp
   src/hydra/Shader.cpp

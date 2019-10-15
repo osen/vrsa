@@ -14,4 +14,12 @@ using glm::ivec4;
 
 using glm::mat4;
 
+using glm::translate;
+using glm::rotate;
+using glm::scale;
+using glm::inverse;
+using glm::perspective;
+
+using glm::radians;
+
 }
