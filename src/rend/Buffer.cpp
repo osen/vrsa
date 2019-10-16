@@ -12,6 +12,14 @@ Buffer::~Buffer()
   context->pollForError();
 }
 
+int Buffer::getSize()
+{
+  if(type == GL_FLOAT_VEC3) return floatData.size() / 3;
+  else if(type == GL_FLOAT_VEC2) return floatData.size() / 2;
+  else if(type == GL_FLOAT) return floatData.size() / 1;
+  else throw Exception("TODO: Support other types of data");
+}
+
 void Buffer::add(float value)
 {
   if(type != 0 && type != GL_FLOAT)

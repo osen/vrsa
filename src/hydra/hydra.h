@@ -54,6 +54,7 @@ class ModelRenderer;
 class FontRenderer;
 class Transform;
 class Sound;
+struct Material;
 
 struct Extent
 {
@@ -87,6 +88,7 @@ class Texture : public std::sr1::enable_observer
   friend class hydra::ModelRenderer;
   friend class hydra::FontRenderer;
   friend struct hydra::Gui;
+  friend struct hydra::Material;
 
   std::string path;
   std::sr1::shared_ptr<rend::Texture> internal;
@@ -125,9 +127,11 @@ struct Material
   void setShader(const std::sr1::shared_ptr<Shader>& shader);
 
   void setVariable(const std::string& name, const mat4& value);
+  void setVariable(const std::string& name, const std::sr1::observer_ptr<Texture>& value);
 
 private:
   friend class ModelRenderer;
+  friend class Gui;
 
   std::sr1::shared_ptr<Shader> shader;
 
@@ -662,6 +666,7 @@ class Environment
   std::sr1::shared_ptr<rend::Context> graphics;
 
   std::sr1::shared_ptr<Shader> guiShader;
+  std::sr1::shared_ptr<Material> guiMaterial;
 
   std::vector<std::shared_ptr<Entity> > entities;
   std::vector<std::shared_ptr<Model> > models;

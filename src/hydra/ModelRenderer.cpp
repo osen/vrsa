@@ -47,6 +47,7 @@ void ModelRenderer::attachAnimation(Animation* animation)
       return;
     }
   }
+
   animations.push_back(animation);
 }
 
@@ -80,12 +81,7 @@ void ModelRenderer::onRender()
     return;
   }
 
-  //glPushMatrix();
-  ////Environment::getCamera()->applyProjection();
-  //Environment::getCamera()->applyView();
-
   Transform* t = getEntity()->getComponent<Transform>();
-  //t->applyModel();
 
   mat4 projection = Environment::getCamera()->getProjection();
   mat4 view = Environment::getCamera()->getView();
@@ -98,26 +94,9 @@ void ModelRenderer::onRender()
   modelMat = rend::translate(modelMat, offset);
   modelMat = rend::translate(modelMat, -model->getCenter());
 
-  //glTranslatef(
-  //  offset.x,
-  //  offset.y,
-  //  offset.z);
-
-  //glTranslatef(
-  //  -model->getCenter().x,
-  //  -model->getCenter().y,
-  //  -model->getCenter().z);
-
   for(size_t pi = 0; pi < model->parts.size(); pi++)
   {
-    //glPushMatrix();
-
     rend::mat4 partMat = rend::translate(modelMat, model->parts.at(pi)->offset);
-
-    //glTranslatef(
-    //  model->parts.at(pi)->offset.x,
-    //  model->parts.at(pi)->offset.y,
-    //  model->parts.at(pi)->offset.z);
 
     for(size_t ai = 0; ai < animations.size(); ai++)
     {
@@ -130,29 +109,19 @@ void ModelRenderer::onRender()
     for(size_t mgi = 0; mgi < model->parts.at(pi)->materialGroups.size(); mgi++)
     {
       std::shared_ptr<MaterialGroup> mg = model->parts.at(pi)->materialGroups.at(mgi);
-
       if(!mg->texture) continue;
 
-      Mesh* mesh = mg->mesh.get();
-      mesh->bind();
-      glBindTexture(GL_TEXTURE_2D, model->parts.at(pi)->materialGroups.at(mgi)->texture->internal->getId());
+      getMaterial()->setVariable("u_Texture",
+        model->parts.at(pi)->materialGroups.at(mgi)->texture);
 
       material->apply();
+
+      Mesh* mesh = mg->mesh.get();
       material->shader->internal->setAttribute("a_Position", mesh->positions);
       material->shader->internal->setAttribute("a_TexCoord", mesh->texCoords);
-
-      glUseProgram(material->shader->internal->getId());
-      glDrawArrays(GL_TRIANGLES, 0, mesh->faces.size() * 3);
-      glUseProgram(0);
+      material->shader->internal->render();
     }
-
-    //glPopMatrix();
   }
-
-  //glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  //glPopMatrix();
 }
 
 void ModelRenderer::setModel(Model* model)

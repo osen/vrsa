@@ -31,4 +31,11 @@ Response, correct?
 Repeats, 0 .. 3/5
 Timestamp
 
+---------
+
+1st key correct
+Correct location or -1, -2 , 1 ,0 etc
+
 Octave include next N
+
+

@@ -9,9 +9,11 @@ struct MaterialVariable
   std::sr1::zero_initialized<int> type;
 
   rend::mat4 mat4Val;
+  std::sr1::observer_ptr<Texture> textureVal;
 };
 
 #define VAR_MAT4 1
+#define VAR_TEXTURE 2
 
 void Material::apply()
 {
@@ -21,6 +23,10 @@ void Material::apply()
     if((*it)->type == VAR_MAT4)
     {
       shader->internal->setUniform((*it)->name, (*it)->mat4Val);
+    }
+    else if((*it)->type == VAR_TEXTURE)
+    {
+      shader->internal->setSampler((*it)->name, (*it)->textureVal->internal);
     }
     else
     {
@@ -38,6 +44,12 @@ void Material::setVariable(const std::string& name, const mat4& value)
 {
   std::sr1::shared_ptr<MaterialVariable> var = getVariable(name, VAR_MAT4);
   var->mat4Val = value;
+}
+
+void Material::setVariable(const std::string& name, const std::sr1::observer_ptr<Texture>& value)
+{
+  std::sr1::shared_ptr<MaterialVariable> var = getVariable(name, VAR_TEXTURE);
+  var->textureVal = value;
 }
 
 std::sr1::shared_ptr<MaterialVariable> Material::getVariable(const std::string& name, int type)

@@ -21,6 +21,7 @@ struct Buffer : public std::sr1::noncopyable
   void add(vec3 value);
 
   GLuint getId();
+  int getSize();
 
 private:
   friend struct Context;

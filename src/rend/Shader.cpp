@@ -2,6 +2,7 @@
 #include "Context.h"
 #include "Exception.h"
 #include "Buffer.h"
+#include "Texture.h"
 
 #include <sr1/vector>
 
@@ -11,13 +12,27 @@ namespace rend
 struct VariableInfo
 {
   std::string name;
+  std::string typeName;
   std::sr1::zero_initialized<GLint> loc;
   std::sr1::zero_initialized<int> type;
   std::sr1::zero_initialized<bool> attrib;
 
   mat4 mat4Val;
   std::sr1::shared_ptr<Buffer> bufferVal;
+  std::sr1::shared_ptr<Texture> textureVal;
+
+  static std::string convertType(GLenum type);
 };
+
+std::string VariableInfo::convertType(GLenum type)
+{
+  if(type == GL_FLOAT) return "GL_FLOAT";
+  else if(type == GL_FLOAT_VEC2) return "GL_FLOAT_VEC2";
+  else if(type == GL_FLOAT_VEC3) return "GL_FLOAT_VEC3";
+  else if(type == GL_FLOAT_MAT4) return "GL_FLOAT_MAT4";
+  else if(type == GL_SAMPLER_2D) return "GL_SAMPLER_2D";
+  else throw Exception(std::string("Invalid type"));
+}
 
 Shader::~Shader()
 {
@@ -30,38 +45,77 @@ GLuint Shader::getId()
   return id;
 }
 
+void Shader::render()
+{
+  glUseProgram(id); context->pollForError();
+
+  int activeTexture = 0;
+  int vertices = -1;
+
+  for(std::sr1::vector<std::sr1::shared_ptr<VariableInfo> >::iterator it = cache.begin();
+    it != cache.end(); it++)
+  {
+    if((*it)->attrib == false)
+    {
+      if((*it)->type == GL_FLOAT_MAT4)
+      {
+        glUniformMatrix4fv((*it)->loc, 1, false, glm::value_ptr((*it)->mat4Val)); context->pollForError();
+      }
+      else if((*it)->type == GL_SAMPLER_2D)
+      {
+        glActiveTexture(GL_TEXTURE0 + activeTexture); context->pollForError();
+        glBindTexture(GL_TEXTURE_2D, (*it)->textureVal->getId()); context->pollForError();
+        glUniform1i((*it)->loc, activeTexture); context->pollForError();
+        activeTexture++;
+      }
+    }
+    else
+    {
+      int size = 0;
+      if((*it)->type == GL_FLOAT) size = 1;
+      else if((*it)->type == GL_FLOAT_VEC2) size = 2;
+      else if((*it)->type == GL_FLOAT_VEC3) size = 3;
+      else throw Exception("Invalid buffer type");
+
+      glBindBuffer(GL_ARRAY_BUFFER, (*it)->bufferVal->getId()); context->pollForError();
+      glVertexAttribPointer((*it)->loc, size, GL_FLOAT, GL_FALSE, 0, 0); context->pollForError();
+      glEnableVertexAttribArray((*it)->loc); context->pollForError();
+      glBindBuffer(GL_ARRAY_BUFFER, 0); context->pollForError();
+
+      size = (*it)->bufferVal->getSize();
+
+      if(vertices == -1)
+      {
+        vertices = size;
+      }
+
+      if(vertices != size)
+      {
+        throw Exception("The specified attribute streams are of different sizes");
+      }
+    }
+  }
+
+  glDrawArrays(GL_TRIANGLES, 0, vertices); context->pollForError();
+
+  glUseProgram(0); context->pollForError();
+}
+
+void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<Texture>& value)
+{
+  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_SAMPLER_2D, false);
+  vi->textureVal = value;
+}
+
 void Shader::setUniform(const std::string& variable, mat4 value)
 {
   std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_MAT4, false);
-  //if(vi->mat4Val == value) return;
-
-  glUseProgram(id); context->pollForError();
-  glUniformMatrix4fv(vi->loc, 1, false, glm::value_ptr(value)); context->pollForError();
-  glUseProgram(0); context->pollForError();
-
   vi->mat4Val = value;
 }
 
 void Shader::setAttribute(const std::string& variable, const std::sr1::shared_ptr<Buffer>& value)
 {
-  GLenum type = value->type;
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, type, true);
-  //if(vi->bufferVal == value) return;
-
-  int size = 0;
-
-  if(type == GL_FLOAT) size = 1;
-  else if(type == GL_FLOAT_VEC2) size = 2;
-  else if(type == GL_FLOAT_VEC3) size = 3;
-  else throw Exception("Invalid buffer type");
-
-  glBindBuffer(GL_ARRAY_BUFFER, value->getId()); context->pollForError();
-  //glUseProgram(id); context->pollForError();
-  glVertexAttribPointer(vi->loc, size, GL_FLOAT, GL_FALSE, 0, 0); context->pollForError();
-  //glUseProgram(0); context->pollForError();
-  glEnableVertexAttribArray(vi->loc); context->pollForError();
-  glBindBuffer(GL_ARRAY_BUFFER, 0); context->pollForError();
-
+  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, value->type, true);
   vi->bufferVal = value;
 }
 
@@ -74,7 +128,8 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
     {
       if ((*it)->type != type || (*it)->attrib != attrib)
       {
-        throw Exception("Variable requested as wrong type");
+        throw Exception("Variable [" + name + "] requested as wrong type [" +
+          VariableInfo::convertType((*it)->type));
       }
 
       return *it;
@@ -85,6 +140,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
   rtn->name = name;
   rtn->attrib = attrib;
   rtn->type = type;
+  rtn->typeName = VariableInfo::convertType(type);
 
   GLsizei unusedA = 0;
   GLint unusedB = 0;
@@ -97,7 +153,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
 
     if(rtn->loc == -1)
     {
-      throw Exception("The specified variable was not found in the shader");
+      throw Exception("The specified uniform [" + name + "] was not found in the shader");
     }
 
     glGetActiveUniform(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
@@ -105,7 +161,8 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
 
     if(rtnType != type)
     {
-      throw Exception("The requested uniform had the wrong type");
+      throw Exception("The requested uniform [" + name + "] had the wrong type [" +
+        VariableInfo::convertType(rtn->type) + "]");
     }
   }
   else
@@ -115,7 +172,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
 
     if(rtn->loc == -1)
     {
-      throw Exception("The specified variable was not found in the shader");
+      throw Exception("The specified attribute [" + name + "] was not found in the shader");
     }
 
     glGetActiveAttrib(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
