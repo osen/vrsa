@@ -1,6 +1,7 @@
 #include "Piano.h"
 #include "Key.h"
 #include "OctaveScreen.h"
+#include "Octave.h"
 
 #include <glm/ext.hpp>
 
@@ -41,7 +42,7 @@ void Piano::onInitialize()
 
     if(type != 5 && type != 13)
     {
-      Key* key = Environment::addEntity<Key>();
+      Key* key = Environment::addEntity<Key>(i);
       key->setType(keyType);
       key->setSound(sounds.at(soundIdx));
       soundIdx++;
@@ -75,8 +76,8 @@ void Piano::onTick()
 
     if(k)
     {
-      //selectKey(k);
-      selectKeyOctave(k);
+      selectKey(k);
+      //selectKeyOctave(k);
     }
 
     if(octaveButton)
@@ -87,8 +88,11 @@ void Piano::onTick()
       if(octaveButton->getComponent<ModelCollider>()->
         colliding(r, hitLocal, hitWorld) == true)
       {
+        OctaveConstruction oc;
+        oc.index = octaveIndex;
+
         Environment::clear();
-        Environment::addEntity<OctaveScreen>(octaveIndex);
+        Environment::addEntity<OctaveScreen>(oc);
       }
     }
   }
@@ -149,6 +153,8 @@ void Piano::selectKey(std::sr1::observer_ptr<Key> key)
 
     keyIdx++;
   }
+
+  octaveIndex = keyIdx;
 
   //int oct = 7;
 

@@ -5,10 +5,10 @@
 
 #include <sstream>
 
-void Octave::onInitialize(int index)
+void Octave::onInitialize(const OctaveConstruction& oc)
 {
   //std::cout << "Octave Index: " << index << std::endl;
-  this->index = index;
+  this->index = oc.index;
   loadSounds();
 
   int type = 0;
@@ -39,7 +39,7 @@ void Octave::onInitialize(int index)
 
     if(type != 5 && type != 13)
     {
-      Key* key = Environment::addEntity<Key>();
+      Key* key = Environment::addEntity<Key>(posIdx);
       key->setType(keyType);
       key->setSound(sounds.at(soundIdx));
       soundIdx++;

@@ -1,11 +1,12 @@
 #include "OctaveScreen.h"
 #include "Player.h"
 #include "ButtonBar.h"
+#include "Key.h"
 #include "Octave.h"
 #include "Fade.h"
 #include "VrManager.h"
 
-void OctaveScreen::onInitialize(int octaveIndex)
+void OctaveScreen::onInitialize(const OctaveConstruction& oc)
 {
   Environment::addEntity<Fade>(Vector3(0, 0, 0), true);
   Environment::addEntity<Player>();
@@ -18,6 +19,6 @@ void OctaveScreen::onInitialize(int octaveIndex)
   getEntity()->getComponent<Transform>()->setScale(Vector3(7, 7, 7));
   getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
 
-  Environment::addEntity<Octave>(octaveIndex);
+  Environment::addEntity<Octave>(oc);
 }
 

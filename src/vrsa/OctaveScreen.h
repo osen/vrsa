@@ -2,7 +2,9 @@
 
 using namespace hydra;
 
+struct OctaveConstruction;
+
 struct OctaveScreen : public Component
 {
-  void onInitialize(int octaveIndex);
+  void onInitialize(const OctaveConstruction& oc);
 };

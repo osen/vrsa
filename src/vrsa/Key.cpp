@@ -1,8 +1,11 @@
 #include "Key.h"
 
-void Key::onInitialize()
+void Key::onInitialize(int index)
 {
+  this->index = index;
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
+  material = mr->getMaterial();
+  material->setShader(Shader::load("shaders/key"));
   setType(0);
   ModelCollider* mc = getEntity()->addComponent<ModelCollider>();
 }
@@ -36,32 +39,50 @@ int Key::getType()
 
 void Key::refresh()
 {
-  Model* model = NULL;
-
   if(type == 0 && selected == 0)
   {
-    model = Model::load("models/WhiteKey/WhiteKey");
+    material->setVariable("u_Color", Vector4(1, 1, 1, 1));
   }
   else if(type == 0 && selected == 1)
   {
-    model = Model::load("models/WhiteKey/selected/WhiteKey");
+    material->setVariable("u_Color", Vector4(0, 0, 1, 1));
   }
   else if(type == 0 && selected == 2)
   {
-    model = Model::load("models/WhiteKey/highlight/WhiteKey");
+    material->setVariable("u_Color", Vector4(0.5, 0.5, 1, 1));
   }
   else if(type == 1 && selected == 0)
   {
-    model = Model::load("models/BlackKey/BlackKey");
+    material->setVariable("u_Color", Vector4(0, 0, 0, 1));
   }
   else if(type == 1 && selected == 1)
   {
-    model = Model::load("models/BlackKey/selected/BlackKey");
+    material->setVariable("u_Color", Vector4(0, 0, 1, 1));
   }
   else if(type == 1 && selected == 2)
   {
-    model = Model::load("models/BlackKey/highlight/BlackKey");
+    material->setVariable("u_Color", Vector4(0, 0, 0.5, 1));
   }
 
-  getEntity()->getComponent<ModelRenderer>()->setModel(model);
+  if(type == 0)
+  {
+    getEntity()->getComponent<ModelRenderer>()->setModel(
+    Model::load("models/WhiteKey/WhiteKey"));
+  }
+  else
+  {
+    getEntity()->getComponent<ModelRenderer>()->setModel(
+    Model::load("models/BlackKey/BlackKey"));
+  }
 }
+
+std::sr1::observer_ptr<Sound> Key::getSound()
+{
+  return sound;
+}
+
+int Key::getIndex()
+{
+  return index;
+}
+

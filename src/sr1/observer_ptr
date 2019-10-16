@@ -13,7 +13,24 @@ namespace sr1
 {
 
 template <typename T>
-struct _enable_observer;
+struct _enable_observer
+{
+  _enable_observer()
+  {
+    _self.reset(this, dummy);
+  }
+
+private:
+  template <typename R>
+  friend struct observer_ptr;
+
+  static void dummy(_enable_observer* ptr) { }
+
+  shared_ptr<_enable_observer> _self;
+
+};
+
+using enable_observer = _enable_observer<int>;
 
 template <typename T>
 struct observer_ptr
@@ -300,26 +317,6 @@ private:
   weak_ptr<T> ptr;
 
 };
-
-template <typename T>
-struct _enable_observer
-{
-  _enable_observer()
-  {
-    _self.reset(this, dummy);
-  }
-
-private:
-  template <typename R>
-  friend struct observer_ptr;
-
-  static void dummy(_enable_observer* ptr) { }
-
-  shared_ptr<_enable_observer> _self;
-
-};
-
-using enable_observer = _enable_observer<int>;
 
 }
 
