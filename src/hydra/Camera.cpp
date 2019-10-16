@@ -101,17 +101,8 @@ Ray Camera::createRay(Vector2 screenPosition)
   float sw = Environment::getScreenWidth();
   float sh = Environment::getScreenHeight();
 
-  glm::mat4 projection = glm::perspective(glm::radians(65.0f), sw / sh, 0.1f, 1000.0f);
-
-  glm::mat4 view;
-  view = glm::rotate(view, glm::radians(getEntity()->getTransform()->getRotation().x), glm::vec3(-1, 0, 0));
-  view = glm::rotate(view, glm::radians(getEntity()->getTransform()->getRotation().y), glm::vec3(0, -1, 0));
-
-  Vector3 p = smoothPosition;
-  //Vector3 p = getEntity()->getTransform()->getPosition();
-  p += offset;
-  view = glm::translate(view, p);
-  //view = glm::translate(view, glm::vec3(100, 100, 100));
+  glm::mat4 projection = getProjection();
+  glm::mat4 view = getView();
 
   glm::vec3 worldSpaceNear = glm::unProject(glm::vec3(screenPosition.x, sh - screenPosition.y, 0.0),
     view, projection, glm::vec4(0.0, 0.0, sw, sh));
@@ -121,9 +112,8 @@ Ray Camera::createRay(Vector2 screenPosition)
 
   Ray rtn;
 
-  rtn.origin = smoothPosition + offset;
+  rtn.origin = rend::vec3(rend::inverse(view) * vec4(0, 0, 0, 1));
   rtn.direction = glm::normalize(worldSpaceFar - worldSpaceNear);
-  //rtn.direction = worldSpaceFar - worldSpaceNear;
 
   return rtn;
 }

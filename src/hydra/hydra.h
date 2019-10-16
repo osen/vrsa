@@ -127,6 +127,7 @@ struct Material
   void setShader(const std::sr1::shared_ptr<Shader>& shader);
 
   void setVariable(const std::string& name, const mat4& value);
+  void setVariable(const std::string& name, const vec4& value);
   void setVariable(const std::string& name, const std::sr1::observer_ptr<Texture>& value);
 
 private:
@@ -665,8 +666,8 @@ class Environment
 
   std::sr1::shared_ptr<rend::Context> graphics;
 
-  std::sr1::shared_ptr<Shader> guiShader;
   std::sr1::shared_ptr<Material> guiMaterial;
+  std::sr1::shared_ptr<Material> fontMaterial;
 
   std::vector<std::shared_ptr<Entity> > entities;
   std::vector<std::shared_ptr<Model> > models;

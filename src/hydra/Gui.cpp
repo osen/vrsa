@@ -7,6 +7,7 @@ Texture* Gui::buttonTexture = NULL;
 
 void Gui::initialize()
 {
+/*
   buttonTexture = Texture::load("internal/textures/button");
 
   Environment::instance->guiMesh = std::make_shared<Mesh>();
@@ -26,6 +27,7 @@ void Gui::initialize()
   Environment::instance->guiMesh->addFace(c, d, a);
 
   Environment::instance->guiMesh->generateVbos();
+*/
 
   std::sr1::shared_ptr<rend::Buffer> buffer =
     Environment::getContext()->createBuffer();
@@ -42,6 +44,9 @@ void Gui::initialize()
 
   Environment::instance->guiMaterial = std::sr1::make_shared<Material>();
   Environment::instance->guiMaterial->setShader(shader);
+
+  Environment::instance->fontMaterial = std::sr1::make_shared<Material>();
+  Environment::instance->fontMaterial->setShader(Shader::load("shaders/font"));
 }
 
 void Gui::applyProjection()
@@ -84,6 +89,7 @@ void Gui::texture(Vector4 position, Texture* texture)
   guiMaterial->shader->internal->render();
 }
 
+/*
 bool Gui::button(Vector4 position, std::string label)
 {
   applyProjection();
@@ -104,6 +110,7 @@ bool Gui::button(Vector4 position, std::string label)
 
   return false;
 }
+*/
 
 void Gui::text(Vector2 position, std::string label, Font* font)
 {
@@ -112,45 +119,40 @@ void Gui::text(Vector2 position, std::string label, Font* font)
     font = Font::load("fonts/army");
   }
 
+  std::sr1::shared_ptr<Material> fontMaterial = Environment::instance->fontMaterial;
+  fontMaterial->setVariable("u_Color", Vector4(1, 0, 0, 1));
+
+  fontMaterial->setVariable("u_Projection",
+    rend::ortho(0.0f, (float)Environment::getScreenWidth(),
+    (float)Environment::getScreenHeight(), 0.0f, -1.0f, 1.0f));
+
   Vector2 size(font->getWidth(label), font->getHeight());
-
-  glPushMatrix();
-  applyProjection();
-
-  glTranslatef(position.x, position.y + size.y, 0);
+  rend::mat4 m(1.0f);
+  m = rend::translate(m, rend::vec3(position.x, position.y + size.y, 0));
 
   if(label.length() > 0)
   {
-  Glyph g = font->getGlyph(label.at(0));
-  glBindTexture(GL_TEXTURE_2D, g.texture->internal->getId());
+    Glyph g = font->getGlyph(label.at(0));
+    fontMaterial->setVariable("u_Texture", g.texture);
 
-  for(size_t i = 0; i < label.length(); i++)
-  {
-    g = font->getGlyph(label.at(i));
-    g.mesh->bind();
+    for(size_t i = 0; i < label.length(); i++)
+    {
+      g = font->getGlyph(label.at(i));
 
-/*
-    glBindBuffer(GL_ARRAY_BUFFER, g.mesh->positionBuffer);
-    glVertexPointer(3, GL_FLOAT, 0, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, g.mesh->texCoordBuffer);
-    glTexCoordPointer(2, GL_FLOAT, 0, 0);
-*/
+      size = Vector2(font->getWidth(std::string("") + label.at(i)), font->getHeight());
+      rend::mat4 gm = rend::scale(m, rend::vec3(size.x, -size.y, 1));
 
-    size = Vector2(font->getWidth(std::string("") + label.at(i)), font->getHeight());
+      fontMaterial->setVariable("u_View", rend::mat4(1.0f));
+      fontMaterial->setVariable("u_Model", gm);
+      fontMaterial->apply();
 
-    glPushMatrix();
-    glScalef(size.x, -size.y, 1);
-    glDrawArrays(GL_TRIANGLES, 0, g.mesh->faces.size() * 3);
-    glPopMatrix();
+      fontMaterial->shader->internal->setAttribute("a_Position", g.mesh->positions);
+      fontMaterial->shader->internal->setAttribute("a_TexCoord", g.mesh->texCoords);
+      fontMaterial->shader->internal->render();
 
-    glTranslatef(size.x + 1.0f, 0, 0);
+      m = rend::translate(m, rend::vec3(size.x + 1.0f, 0, 0));
+    }
   }
-  }
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glPopMatrix();
 }
 
 }
