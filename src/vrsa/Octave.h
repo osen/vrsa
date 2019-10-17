@@ -23,8 +23,6 @@ struct Octave : public Component
 private:
   std::sr1::vector<std::sr1::observer_ptr<Key> > keys;
   std::sr1::vector<std::sr1::observer_ptr<Sound> > sounds;
-  std::sr1::zero_initialized<int> index;
-
-  void loadSounds();
+  std::sr1::zero_initialized<int> startIndex;
 
 };

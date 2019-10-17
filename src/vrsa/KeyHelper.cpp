@@ -6,6 +6,20 @@
 
 using namespace hydra;
 
+KeyInfo KeyHelper::octaveLayout(int startIndex, int index)
+{
+  KeyInfo ski = pianoLayout(startIndex);
+  KeyInfo ki = pianoLayout(startIndex + index);
+
+  ki.position -= ski.position;
+  ki.position *= 120.0f;
+  ki.position /= 14.0f;
+
+  //std::cout << ki.position << std::endl;
+
+  return ki;
+}
+
 KeyInfo KeyHelper::pianoLayout(int index)
 {
   int type = 0;
@@ -37,7 +51,8 @@ KeyInfo KeyHelper::pianoLayout(int index)
         ki.type = 1;
       }
 
-      ki.position = (float)position / 118.0f;
+      ki.position = (float)position / 120.0f;
+      ki.octaveIndex = octaveIdx;
 
       std::stringstream trunk;
       trunk << "audio/octave";
@@ -47,6 +62,7 @@ KeyInfo KeyHelper::pianoLayout(int index)
       base << octaveIdx;
       ki.audioPath = trunk.str() + idxToNote(i % 12) + base.str();
 
+      //std::cout << ki.position << std::endl;
       return ki;
     }
 

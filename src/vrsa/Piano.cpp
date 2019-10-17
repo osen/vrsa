@@ -149,7 +149,7 @@ void Piano::selectKey(std::sr1::observer_ptr<Key> key)
 
   if(keyIdx + 13 <= keys.size())
   {
-    updateOctaveButton(keys.at(keyIdx + 3));
+    updateOctaveButton(keys.at(keyIdx + 6));
   }
   else
   {
