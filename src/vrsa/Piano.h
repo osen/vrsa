@@ -21,8 +21,8 @@ private:
   std::sr1::vector<std::sr1::observer_ptr<Sound> > sounds;
   std::sr1::zero_initialized<int> octaveIndex;
 
-  void preloadKeys();
-  void loadSounds();
+  //void preloadKeys();
+  //void loadSounds();
   void updateOctaveButton(std::sr1::observer_ptr<Key> key);
 
 };

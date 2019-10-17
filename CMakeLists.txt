@@ -56,5 +56,6 @@ add_executable(vrsa
   src/vrsa/Fade.cpp
   src/vrsa/QuestionScreen.cpp
   src/vrsa/HelpScreen.cpp
+  src/vrsa/KeyHelper.cpp
 )
 target_link_libraries(vrsa hydra)

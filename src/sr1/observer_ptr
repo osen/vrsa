@@ -98,9 +98,10 @@ struct observer_ptr
    *
    * Allows for a copy assignment.
    *********************************************************/
-  observer_ptr& operator=(const observer_ptr<T>& t)
+  observer_ptr& operator=(const observer_ptr& t)
   {
-    reset(t);
+    //reset(t);
+    ptr = t.ptr;
 
     return *this;
   }
@@ -113,7 +114,8 @@ struct observer_ptr
   template <typename R>
   observer_ptr& operator=(const observer_ptr<R>& r)
   {
-    reset(r);
+    //reset(r);
+    ptr = r.ptr;
 
     return *this;
   }
@@ -245,7 +247,8 @@ struct observer_ptr
   template <typename R>
   void reset(const observer_ptr<R>& r)
   {
-    reset(r.get());
+    //reset(r.get());
+    ptr = r.ptr;
   }
 
   template <typename R>
