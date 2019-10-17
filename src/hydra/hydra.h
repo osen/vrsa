@@ -113,6 +113,7 @@ struct Shader
 private:
   friend struct Material;
   friend class ModelRenderer;
+  friend class FontRenderer;
   friend class Gui;
 
   std::string path;
@@ -133,6 +134,7 @@ struct Material
 private:
   friend class ModelRenderer;
   friend class Gui;
+  friend class FontRenderer;
 
   std::sr1::shared_ptr<Shader> shader;
 
@@ -352,12 +354,19 @@ class FontRenderer : public Component
 {
   std::sr1::observer_ptr<Font> font;
   std::string message;
+  Vector3 offset;
+  std::sr1::zero_initialized<float> scale;
+  std::sr1::shared_ptr<Material> material;
 
   virtual void onRender();
 
 public:
+  void onInitialize();
+
   void setFont(Font *font);
   void setMessage(std::string message);
+  void setOffset(Vector3 offset);
+  void setScale(float scale);
 
 };
 

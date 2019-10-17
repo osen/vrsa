@@ -75,6 +75,7 @@ void Piano::onTick()
   }
 }
 
+/*
 void Piano::selectKeyOctave(std::sr1::observer_ptr<Key> key)
 {
   for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
@@ -109,6 +110,7 @@ void Piano::selectKeyOctave(std::sr1::observer_ptr<Key> key)
   key->play();
   updateOctaveButton(*(keys.begin() + octaveStartIdx + 5));
 }
+*/
 
 void Piano::selectKey(std::sr1::observer_ptr<Key> key)
 {
@@ -149,11 +151,11 @@ void Piano::selectKey(std::sr1::observer_ptr<Key> key)
 
   if(keyIdx + 13 <= keys.size())
   {
-    updateOctaveButton(keys.at(keyIdx + 6));
+    updateOctaveButton(octaveIndex, keys.at(keyIdx + 6));
   }
   else
   {
-    updateOctaveButton(std::sr1::observer_ptr<Key>());
+    updateOctaveButton(0, std::sr1::observer_ptr<Key>());
   }
 }
 
@@ -185,7 +187,7 @@ std::sr1::observer_ptr<Key> Piano::getKey(Ray ray)
   return rtn;
 }
 
-void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
+void Piano::updateOctaveButton(int octaveStartIndex, std::sr1::observer_ptr<Key> key)
 {
   if(!key)
   {
@@ -197,6 +199,8 @@ void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
     return;
   }
 
+  FontRenderer* fr = NULL;
+
   if(!octaveButton)
   {
     octaveButton = Entity::create();
@@ -204,6 +208,12 @@ void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
 
     octaveButton->addComponent<ModelRenderer>()->setModel(
       Model::load("models/OctaveButton/OctaveButton"));
+
+    FontRenderer* fr = octaveButton->addComponent<FontRenderer>();
+    fr->setFont(Font::load("fonts/DroidWhite"));
+    //fr->setOffset(Vector3(0, 3, -10));
+    fr->setOffset(Vector3(-3, 0.75f, -10));
+    fr->setScale(0.035f);
   }
 
   Transform* t = octaveButton->getComponent<Transform>();
@@ -214,6 +224,9 @@ void Piano::updateOctaveButton(std::sr1::observer_ptr<Key> key)
   t->lookAt(Vector3(0, 0, 0));
   t->rotate(Vector3(0, 180, 0));
   t->setScale(Vector3(2, 2, 2));
+
+  fr = octaveButton->getComponent<FontRenderer>();
+  fr->setMessage(KeyHelper::idxToNote(octaveStartIndex));
 }
 
 /*

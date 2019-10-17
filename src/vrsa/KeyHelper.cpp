@@ -75,6 +75,8 @@ KeyInfo KeyHelper::pianoLayout(int index)
 
 std::string KeyHelper::idxToNote(int index)
 {
+  index = index % 12;
+
   if(index == 0) return "C";
   else if(index == 1) return "CS";
   else if(index == 2) return "D";

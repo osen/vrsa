@@ -22,6 +22,6 @@ void HelpScreen::onInitialize()
   fr->setFont(Font::load("fonts/DroidWhiteLarge"));
   fr->setMessage("Help Topics");
   fe->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
-  fe->getComponent<Transform>()->setRotation(Vector3(0, 180, 0));
+  //fe->getComponent<Transform>()->setRotation(Vector3(0, 180, 0));
   fe->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
 }

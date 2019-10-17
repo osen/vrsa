@@ -7,6 +7,19 @@
 namespace hydra
 {
 
+void FontRenderer::onInitialize()
+{
+  material = std::sr1::make_shared<Material>();
+  material->setShader(Shader::load("shaders/font"));
+
+  scale = 1;
+}
+
+void FontRenderer::setScale(float scale)
+{
+  this->scale = scale;
+}
+
 void FontRenderer::onRender()
 {
   if(!Environment::getCamera())
@@ -17,21 +30,21 @@ void FontRenderer::onRender()
 
   //float sizeMod = size.x;
 
-  glPushMatrix();
-  //Environment::getCamera()->applyProjection();
-  Environment::getCamera()->applyView();
+  mat4 projection = Environment::getCamera()->getProjection();
+  material->setVariable("u_Projection", projection);
+
+  mat4 view = Environment::getCamera()->getView();
+  material->setVariable("u_View", view);
 
   Transform* t = getEntity()->getComponent<Transform>();
-  t->applyModel();
-  glRotatef(180, 0, 1, 0);
-
-  //getEntity()->getTransform()->setRotation(origRotation);
+  mat4 modelMat = t->getModel();
+  modelMat = rend::translate(modelMat, offset);
+  //modelMat = rend::rotate(modelMat, rend::radians(180.0f), rend::vec3(0, 1, 0));
 
   Vector2 size(font->getWidth(message), font->getHeight());
-  //float sizeMod = 3.0f / size.x;
-  float sizeMod = 1.0f;
+  float sizeMod = scale;
   size *= sizeMod;
-  glTranslatef(size.x / -2.0f, 0, 0);
+  modelMat = rend::translate(modelMat, rend::vec3(size.x / -2.0f, 0, 0));
 
   glFrontFace(GL_CW);
 
@@ -43,26 +56,31 @@ void FontRenderer::onRender()
     for(size_t i = 0; i < message.length(); i++)
     {
       g = font->getGlyph(message.at(i));
-      g.mesh->bind();
 
       size = Vector2(font->getWidth(std::string("") + message.at(i)), font->getHeight());
       size *= sizeMod;
 
-      glPushMatrix();
-      glScalef(size.x, size.y, 1);
-      glDrawArrays(GL_TRIANGLES, 0, font->mesh->faces.size() * 3);
-      glPopMatrix();
+      material->setVariable("u_Texture", g.texture);
+      material->setVariable("u_Color", Vector4(1, 1, 1, 1));
 
-      glTranslatef(size.x + (1.0f * sizeMod), 0, 0);
+      rend::mat4 glyphMat = rend::scale(modelMat, rend::vec3(size.x, size.y, 1));
+      material->setVariable("u_Model", glyphMat);
+      material->apply();
+
+      material->shader->internal->setAttribute("a_Position", g.mesh->positions);
+      material->shader->internal->setAttribute("a_TexCoord", g.mesh->texCoords);
+      material->shader->internal->render();
+
+      modelMat = rend::translate(modelMat, rend::vec3(size.x + (1.0f * sizeMod), 0, 0));
     }
   }
 
   glFrontFace(GL_CCW);
+}
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glPopMatrix();
+void FontRenderer::setOffset(Vector3 offset)
+{
+  this->offset = offset;
 }
 
 void FontRenderer::setFont(Font *font)

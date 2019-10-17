@@ -13,7 +13,6 @@ struct Piano : public Component
 
   std::sr1::observer_ptr<Key> getKey(Ray ray);
   void selectKey(std::sr1::observer_ptr<Key> key);
-  void selectKeyOctave(std::sr1::observer_ptr<Key> key);
 
 private:
   std::sr1::vector<std::sr1::observer_ptr<Key> > keys;
@@ -23,6 +22,6 @@ private:
 
   //void preloadKeys();
   //void loadSounds();
-  void updateOctaveButton(std::sr1::observer_ptr<Key> key);
+  void updateOctaveButton(int octaveStartIndex, std::sr1::observer_ptr<Key> key);
 
 };
