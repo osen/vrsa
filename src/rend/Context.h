@@ -6,6 +6,7 @@ namespace rend
 struct Texture;
 struct Shader;
 struct Buffer;
+struct RenderTexture;
 
 struct Context
 {
@@ -14,11 +15,13 @@ struct Context
   std::sr1::shared_ptr<Texture> createTexture();
   std::sr1::shared_ptr<Shader> createShader();
   std::sr1::shared_ptr<Buffer> createBuffer();
+  std::sr1::shared_ptr<RenderTexture> createRenderTexture();
 
 private:
   friend struct Texture;
   friend struct Shader;
   friend struct Buffer;
+  friend struct RenderTexture;
 
   std::sr1::weak_ptr<Context> self;
 

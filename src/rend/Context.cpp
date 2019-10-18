@@ -1,5 +1,6 @@
 #include "Context.h"
 #include "Texture.h"
+#include "RenderTexture.h"
 #include "Exception.h"
 #include "Shader.h"
 #include "Buffer.h"
@@ -57,6 +58,32 @@ std::sr1::shared_ptr<Texture> Context::createTexture()
   std::sr1::shared_ptr<Texture> rtn = std::sr1::make_shared<Texture>();
   rtn->context = self.lock();
   rtn->id = id;
+
+  return rtn;
+}
+
+std::sr1::shared_ptr<RenderTexture> Context::createRenderTexture()
+{
+  GLuint id = 0;
+  glGenTextures(1, &id);
+  pollForError();
+
+  GLuint fboId = 0;
+  glGenFramebuffers(1, &fboId);
+  pollForError();
+
+  GLuint rboId = 0;
+  glGenRenderbuffers(1, &rboId);
+  pollForError();
+
+  std::sr1::shared_ptr<RenderTexture> rtn = std::sr1::make_shared<RenderTexture>();
+
+  rtn->context = self.lock();
+  rtn->id = id;
+  rtn->fboId = fboId;
+  rtn->rboId = rboId;
+
+  rtn->setSize(256, 256);
 
   return rtn;
 }

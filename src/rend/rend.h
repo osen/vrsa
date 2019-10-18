@@ -3,6 +3,7 @@
 
 #include "Context.h"
 #include "Texture.h"
+#include "RenderTexture.h"
 #include "Shader.h"
 #include "Buffer.h"
 #include "mathutil.h"

@@ -82,6 +82,19 @@ struct Ray
   Vector3 direction;
 };
 
+struct RenderTarget : public std::sr1::enable_observer
+{
+  static std::sr1::shared_ptr<RenderTarget> create();
+
+private:
+  friend class hydra::ModelRenderer;
+  friend class hydra::FontRenderer;
+  friend struct hydra::Gui;
+  friend struct hydra::Material;
+
+  std::sr1::shared_ptr<rend::RenderTexture> internal;
+};
+
 class Texture : public std::sr1::enable_observer
 {
   friend class hydra::WorldRenderer;
@@ -475,6 +488,7 @@ class Camera : public Component
   std::sr1::zero_initialized<int> id;
   Vector3 smoothPosition;
   Vector3 offset;
+  std::sr1::shared_ptr<RenderTarget> renderTarget;
 
 public:
   void applyProjection();

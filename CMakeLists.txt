@@ -9,6 +9,7 @@ add_library(rend
   src/rend/Exception.cpp
   src/rend/Context.cpp
   src/rend/Texture.cpp
+  src/rend/RenderTexture.cpp
   src/rend/Shader.cpp
   src/rend/Buffer.cpp
 )
