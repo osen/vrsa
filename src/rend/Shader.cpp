@@ -3,8 +3,11 @@
 #include "Exception.h"
 #include "Buffer.h"
 #include "Texture.h"
+#include "RenderTexture.h"
 
 #include <sr1/vector>
+
+#include <array>
 
 namespace rend
 {
@@ -45,6 +48,27 @@ Shader::~Shader()
 GLuint Shader::getId()
 {
   return id;
+}
+
+void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
+{
+  std::array<GLint, 4> viewport = {0};
+  glGetIntegerv(GL_VIEWPORT, &viewport.at(0));
+
+  glBindFramebuffer(GL_FRAMEBUFFER, target->getId());
+  context->pollForError();
+
+  glViewport(0, 0, target->getWidth(), target->getHeight());
+  context->pollForError();
+
+  render();
+  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //context->pollForError();
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  context->pollForError();
+
+  glViewport(viewport.at(0), viewport.at(1), viewport.at(2), viewport.at(3));
 }
 
 void Shader::render()

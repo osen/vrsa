@@ -32,6 +32,7 @@ add_library(hydra
   src/hydra/Material.cpp
   src/hydra/Sound.cpp
   src/hydra/Texture.cpp
+  src/hydra/RenderTarget.cpp
   src/hydra/Shader.cpp
   src/hydra/Transform.cpp
   src/hydra/Util.cpp

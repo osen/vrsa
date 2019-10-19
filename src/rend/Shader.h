@@ -16,12 +16,15 @@ struct Context;
 struct VariableInfo;
 struct Buffer;
 struct Texture;
+struct RenderTexture;
 
 struct Shader : public std::sr1::noncopyable
 {
   ~Shader();
 
   void render();
+  void render(const std::sr1::shared_ptr<RenderTexture>& target);
+
   GLuint getId();
   void setSource(const std::string& source);
 

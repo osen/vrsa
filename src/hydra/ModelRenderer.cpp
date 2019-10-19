@@ -86,6 +86,8 @@ void ModelRenderer::onRender()
   mat4 projection = Environment::getCamera()->getProjection();
   mat4 view = Environment::getCamera()->getView();
 
+  std::sr1::shared_ptr<RenderTarget> rt = Environment::getCamera()->getRenderTarget();
+
   getMaterial()->setVariable("u_Projection", projection);
   getMaterial()->setVariable("u_View", view);
 
@@ -119,7 +121,15 @@ void ModelRenderer::onRender()
       Mesh* mesh = mg->mesh.get();
       material->shader->internal->setAttribute("a_Position", mesh->positions);
       material->shader->internal->setAttribute("a_TexCoord", mesh->texCoords);
-      material->shader->internal->render();
+
+      if(rt)
+      {
+        material->shader->internal->render(rt->internal);
+      }
+      else
+      {
+        material->shader->internal->render();
+      }
     }
   }
 }

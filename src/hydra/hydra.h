@@ -499,6 +499,8 @@ public:
   Ray createRay(Vector2 screenPosition);
   mat4 getProjection();
   mat4 getView();
+  void setRenderTarget(const std::sr1::shared_ptr<RenderTarget>& renderTarget);
+  std::sr1::shared_ptr<RenderTarget> getRenderTarget();
 
   static void setClearColor(Vector4 clearColor);
   static Vector4 getClearColor();

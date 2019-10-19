@@ -11,6 +11,7 @@ namespace rend
 {
 
 struct Context;
+struct Shader;
 
 struct RenderTexture : public std::sr1::noncopyable
 {
@@ -26,6 +27,7 @@ struct RenderTexture : public std::sr1::noncopyable
 
 private:
   friend struct Context;
+  friend struct Shader;
 
   std::sr1::shared_ptr<Context> context;
   std::sr1::zero_initialized<GLuint> fboId;

@@ -15,6 +15,16 @@ void Camera::setClearColor(Vector4 clearColor)
   glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 }
 
+void Camera::setRenderTarget(const std::sr1::shared_ptr<RenderTarget>& renderTarget)
+{
+  this->renderTarget = renderTarget;
+}
+
+std::sr1::shared_ptr<RenderTarget> Camera::getRenderTarget()
+{
+  return renderTarget;
+}
+
 Vector4 Camera::getClearColor()
 {
   return clearColor;
@@ -23,6 +33,7 @@ Vector4 Camera::getClearColor()
 void Camera::onInitialize()
 {
   Environment::setCamera(this); // TODO: No this
+  //setRenderTarget(RenderTarget::create());
 }
 
 void Camera::setOffset(Vector3 offset)
