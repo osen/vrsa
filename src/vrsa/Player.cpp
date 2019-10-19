@@ -31,5 +31,5 @@ void Player::onTick()
 
 void Player::onGui()
 {
-  Gui::texture(Vector2(10, 10), camera->getRenderTarget().get());
+  Gui::texture(Vector2(10, 10), camera->getRenderTarget());
 }

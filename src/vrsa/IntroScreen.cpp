@@ -6,6 +6,9 @@ void IntroScreen::onInitialize()
   logo = Texture::load("images/BULogo");
   Environment::getCamera()->setClearColor(Vector4(1, 1, 1, 1));
   timeout = 1;
+
+  std::cout << logo.get() << std::endl;
+  std::cout << Texture::load("images/BULogo") << std::endl;
 }
 
 void IntroScreen::onTick()
@@ -27,6 +30,6 @@ void IntroScreen::onGui()
     Environment::getScreenHeight());
 
   Gui::texture(Vector2(scrSize.x / 2 - imgSize.x / 2,
-    scrSize.y / 2 - imgSize.y / 2), logo.get());
+    scrSize.y / 2 - imgSize.y / 2), logo);
 }
 

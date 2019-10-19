@@ -720,10 +720,10 @@ class Environment
   std::vector<std::shared_ptr<Font> > fonts;
   std::vector<std::shared_ptr<Animation> > animations;
   std::vector<std::shared_ptr<Texture> > textures;
-  std::vector<std::shared_ptr<Shader> > shaders;
+  std::vector<std::sr1::shared_ptr<Shader> > shaders;
   std::vector<std::shared_ptr<Sound> > sounds;
   std::vector<std::shared_ptr<World> > worlds;
-  std::vector<std::weak_ptr<RenderTarget> > renderTargets;
+  std::vector<std::sr1::weak_ptr<RenderTarget> > renderTargets;
 
   std::vector<unsigned char> keys;
   std::vector<unsigned char> downKeys;
@@ -812,8 +812,8 @@ struct Gui
   static void initialize();
 
   static void applyProjection();
-  static void texture(Vector4 position, TextureAdapter* texture);
-  static void texture(Vector2 position, TextureAdapter* texture);
+  static void texture(Vector4 position, const std::sr1::observer_ptr<TextureAdapter>& texture);
+  static void texture(Vector2 position, const std::sr1::observer_ptr<TextureAdapter>& texture);
   static bool button(Vector4 position, std::string label);
   static void text(Vector2 position, std::string label, Font* font = NULL);
 };

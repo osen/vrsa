@@ -27,6 +27,8 @@ std::sr1::shared_ptr<Context> Context::initialize(int argc, char* argv[])
 
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
+  rtn->self = rtn;
+
   return rtn;
 }
 

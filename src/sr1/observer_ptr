@@ -20,6 +20,8 @@ struct _enable_observer
     _self.reset(this, dummy);
   }
 
+  virtual ~_enable_observer() { }
+
 private:
   template <typename R>
   friend struct observer_ptr;
@@ -100,8 +102,8 @@ struct observer_ptr
    *********************************************************/
   observer_ptr& operator=(const observer_ptr& t)
   {
-    //reset(t);
-    ptr = t.ptr;
+    //ptr = t.ptr;
+    reset(t);
 
     return *this;
   }
@@ -114,8 +116,8 @@ struct observer_ptr
   template <typename R>
   observer_ptr& operator=(const observer_ptr<R>& r)
   {
-    //reset(r);
-    ptr = r.ptr;
+    //ptr = r.ptr;
+    reset(r);
 
     return *this;
   }
@@ -195,8 +197,7 @@ struct observer_ptr
    *********************************************************/
   shared_ptr_lock_ptr<T> operator->() const
   {
-    //return shared_ptr_lock_ptr<T>(ptr.lock().ref);
-    return shared_ptr_lock_ptr<T>(ptr.ref);
+    return shared_ptr_lock_ptr<T>(ptr.ptr, ptr.ref);
   }
 
   /*********************************************************
@@ -235,26 +236,27 @@ struct observer_ptr
   template <typename R>
   void reset(const weak_ptr<R>& r)
   {
-    reset(r.lock());
+    //reset(r.lock());
+    ptr = r;
   }
 
   template <typename R>
   void reset(const shared_ptr<R>& r)
   {
-    reset(r.get());
+    ptr = r;
   }
 
   template <typename R>
   void reset(const observer_ptr<R>& r)
   {
-    //reset(r.get());
     ptr = r.ptr;
   }
 
   template <typename R>
   void reset(R* r)
   {
-    ptr = static_pointer_cast<R>(r->_self);
+    //ptr = static_pointer_cast<R>(r->_self);
+    ptr = dynamic_pointer_cast<R>(r->_self);
   }
 
   void reset()
