@@ -1,4 +1,5 @@
 #include "mathutil.h"
+#include "TextureAdapter.h"
 
 #include <GL/glew.h>
 
@@ -12,7 +13,7 @@ namespace rend
 
 struct Context;
 
-struct Texture : public std::sr1::noncopyable
+struct Texture : public TextureAdapter, public std::sr1::noncopyable
 {
   ~Texture();
 
@@ -26,6 +27,7 @@ struct Texture : public std::sr1::noncopyable
   int getHeight() const;
 
   GLuint getId();
+  GLuint getTexId();
 
 private:
   friend struct Context;

@@ -136,4 +136,9 @@ int Texture::getHeight()
   return internal->getSize().y;
 }
 
+std::sr1::shared_ptr<rend::TextureAdapter> Texture::getInternal()
+{
+  return internal;
+}
+
 }

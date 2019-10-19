@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "Texture.h"
 #include "RenderTexture.h"
+#include "TextureAdapter.h"
 
 #include <sr1/vector>
 
@@ -23,7 +24,7 @@ struct VariableInfo
   mat4 mat4Val;
   vec4 vec4Val;
   std::sr1::shared_ptr<Buffer> bufferVal;
-  std::sr1::shared_ptr<Texture> textureVal;
+  std::sr1::shared_ptr<TextureAdapter> textureVal;
 
   static std::string convertType(GLenum type);
 };
@@ -69,6 +70,8 @@ void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
   context->pollForError();
 
   glViewport(viewport.at(0), viewport.at(1), viewport.at(2), viewport.at(3));
+
+  render();
 }
 
 void Shader::render()
@@ -94,7 +97,7 @@ void Shader::render()
       else if((*it)->type == GL_SAMPLER_2D)
       {
         glActiveTexture(GL_TEXTURE0 + activeTexture); context->pollForError();
-        glBindTexture(GL_TEXTURE_2D, (*it)->textureVal->getId()); context->pollForError();
+        glBindTexture(GL_TEXTURE_2D, (*it)->textureVal->getTexId()); context->pollForError();
         glUniform1i((*it)->loc, activeTexture); context->pollForError();
         activeTexture++;
       }
@@ -131,7 +134,7 @@ void Shader::render()
   glUseProgram(0); context->pollForError();
 }
 
-void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<Texture>& value)
+void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<TextureAdapter>& value)
 {
   std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_SAMPLER_2D, false);
   vi->textureVal = value;

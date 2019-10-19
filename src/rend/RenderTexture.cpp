@@ -20,6 +20,23 @@ RenderTexture::~RenderTexture()
   context->pollForError();
 }
 
+GLuint RenderTexture::getTexId()
+{
+  return id;
+}
+
+void RenderTexture::clear()
+{
+  glBindFramebuffer(GL_FRAMEBUFFER, getId());
+  context->pollForError();
+
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  context->pollForError();
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  context->pollForError();
+}
+
 GLuint RenderTexture::getId()
 {
   if(dirty)

@@ -82,20 +82,38 @@ struct Ray
   Vector3 direction;
 };
 
-struct RenderTarget : public std::sr1::enable_observer
+struct TextureAdapter : public std::sr1::enable_observer
+{
+  virtual int getWidth() = 0;
+  virtual int getHeight() = 0;
+
+private:
+  friend struct hydra::Material;
+
+  virtual std::sr1::shared_ptr<rend::TextureAdapter> getInternal() = 0;
+};
+
+struct RenderTarget : public TextureAdapter
 {
   static std::sr1::shared_ptr<RenderTarget> create();
 
+  ~RenderTarget();
+  int getWidth();
+  int getHeight();
+
 private:
+  friend class hydra::Environment;
   friend class hydra::ModelRenderer;
   friend class hydra::FontRenderer;
   friend struct hydra::Gui;
   friend struct hydra::Material;
 
   std::sr1::shared_ptr<rend::RenderTexture> internal;
+
+  std::sr1::shared_ptr<rend::TextureAdapter> getInternal();
 };
 
-class Texture : public std::sr1::enable_observer
+class Texture : public TextureAdapter
 {
   friend class hydra::WorldRenderer;
   friend class hydra::ModelRenderer;
@@ -105,6 +123,8 @@ class Texture : public std::sr1::enable_observer
 
   std::string path;
   std::sr1::shared_ptr<rend::Texture> internal;
+
+  std::sr1::shared_ptr<rend::TextureAdapter> getInternal();
 
 public:
   static Texture* load(std::string path);
@@ -142,7 +162,7 @@ struct Material
 
   void setVariable(const std::string& name, const mat4& value);
   void setVariable(const std::string& name, const vec4& value);
-  void setVariable(const std::string& name, const std::sr1::observer_ptr<Texture>& value);
+  void setVariable(const std::string& name, const std::sr1::observer_ptr<TextureAdapter>& value);
 
 private:
   friend class ModelRenderer;
@@ -685,6 +705,7 @@ class Environment
   friend class hydra::Sound;
   friend class hydra::Transform;
   friend struct hydra::Shader;
+  friend struct hydra::RenderTarget;
 
   static std::shared_ptr<Environment> instance;
   static RegisterAssociation registrations[256];
@@ -702,6 +723,7 @@ class Environment
   std::vector<std::shared_ptr<Shader> > shaders;
   std::vector<std::shared_ptr<Sound> > sounds;
   std::vector<std::shared_ptr<World> > worlds;
+  std::vector<std::weak_ptr<RenderTarget> > renderTargets;
 
   std::vector<unsigned char> keys;
   std::vector<unsigned char> downKeys;
@@ -790,8 +812,8 @@ struct Gui
   static void initialize();
 
   static void applyProjection();
-  static void texture(Vector4 position, Texture* texture);
-  static void texture(Vector2 position, Texture* texture);
+  static void texture(Vector4 position, TextureAdapter* texture);
+  static void texture(Vector2 position, TextureAdapter* texture);
   static bool button(Vector4 position, std::string label);
   static void text(Vector2 position, std::string label, Font* font = NULL);
 };

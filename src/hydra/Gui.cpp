@@ -60,13 +60,13 @@ void Gui::applyProjection()
   glMatrixMode(GL_MODELVIEW);
 }
 
-void Gui::texture(Vector2 position, Texture* texture)
+void Gui::texture(Vector2 position, TextureAdapter* texture)
 {
   Gui::texture(Vector4(position.x, position.y,
     texture->getWidth(), texture->getHeight()), texture);
 }
 
-void Gui::texture(Vector4 position, Texture* texture)
+void Gui::texture(Vector4 position, TextureAdapter* texture)
 {
   Mesh* mesh = Environment::instance->guiMesh.get();
 

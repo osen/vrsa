@@ -11,6 +11,11 @@ Texture::~Texture()
   context->pollForError();
 }
 
+GLuint Texture::getTexId()
+{
+  return getId();
+}
+
 GLuint Texture::getId()
 {
   if(dirty)

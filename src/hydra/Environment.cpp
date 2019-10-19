@@ -275,6 +275,19 @@ void Environment::display()
   glViewport(0, 0, instance->screenWidth, instance->screenHeight);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  for(auto it = instance->renderTargets.begin();
+    it != instance->renderTargets.end(); it++)
+  {
+    if((*it).lock())
+    {
+      (*it).lock()->internal->clear();
+    }
+    else
+    {
+      it = instance->renderTargets.erase(it);
+    }
+  }
+
   glPushMatrix();
   glLoadIdentity();
 
