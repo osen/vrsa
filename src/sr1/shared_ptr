@@ -341,6 +341,10 @@ private:
         ref.data()->shared--;
       }
     }
+    else
+    {
+      ref.data()->shared--;
+    }
 
     ref = NULL;
     ptr = NULL;

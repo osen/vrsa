@@ -7,8 +7,15 @@ void VrManager::onInitialize()
 
 void VrManager::onGui()
 {
+  Camera* camera = Environment::getCamera();
+
+  Gui::texture(Vector2(10, 10), camera->getRenderTarget());
+  Gui::texture(Vector2(10 + camera->getRenderTarget()->getWidth() + 10, 10), camera->getRenderTarget());
+
   Gui::text(Vector2(10, 10), "Renderer: OpenGL [4.5 core]", font.get());
   Gui::text(Vector2(10, 40), "VR Driver: OpenVR [disconnected]", font.get());
   Gui::text(Vector2(10, 70), "Audio: OpenAL [soft, mono]", font.get());
+
+
 }
 

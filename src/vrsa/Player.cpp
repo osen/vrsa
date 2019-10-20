@@ -29,7 +29,3 @@ void Player::onTick()
   lastMouse = mpos;
 }
 
-void Player::onGui()
-{
-  Gui::texture(Vector2(10, 10), camera->getRenderTarget());
-}
