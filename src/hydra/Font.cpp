@@ -76,6 +76,7 @@ void Font::generateGlyphs()
 
     a.texCoord = Vector3(glyphs.at(i).x * tx,
       (glyphs.at(i).y + glyphs.at(i).height) * ty, 0);
+    a.texCoord.y = 1.0f - a.texCoord.y;
 
     Vertex b;
     //b.position = Vector3(-0.5f, 0.5f, 0);
@@ -83,6 +84,7 @@ void Font::generateGlyphs()
 
     b.texCoord = Vector3(glyphs.at(i).x * tx,
       glyphs.at(i).y * ty, 0);
+    b.texCoord.y = 1.0f - b.texCoord.y;
 
     Vertex c;
     //c.position = Vector3(0.5f, 0.5f, 0);
@@ -90,6 +92,7 @@ void Font::generateGlyphs()
 
     c.texCoord = Vector3((glyphs.at(i).x + glyphs.at(i).width) * tx,
       glyphs.at(i).y * ty, 0);
+    c.texCoord.y = 1.0f - c.texCoord.y;
 
     glyphs.at(i).mesh->addFace(a, b, c);
     Vertex d;
@@ -98,6 +101,7 @@ void Font::generateGlyphs()
 
     d.texCoord = Vector3((glyphs.at(i).x + glyphs.at(i).width) * tx,
       (glyphs.at(i).y + glyphs.at(i).height) * ty, 0);
+    d.texCoord.y = 1.0f - d.texCoord.y;
 
     glyphs.at(i).mesh->addFace(c, d, a);
 

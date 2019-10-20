@@ -146,7 +146,7 @@ void Model::processVtLine(std::vector<std::string>& splitLine, DataStore& store)
 {
   store.texCoords.push_back(Vector2(
     atof(splitLine.at(1).c_str()),
-    1.0f - atof(splitLine.at(2).c_str())
+    atof(splitLine.at(2).c_str())
   ));
 }
 

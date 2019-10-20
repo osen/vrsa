@@ -12,18 +12,18 @@ void Gui::initialize()
 
   Environment::instance->guiMesh = std::make_shared<Mesh>();
   Vertex a;
-  a.position = Vector3(0, 0, 0);
-  a.texCoord = Vector3(0, 0, 0);
+  a.position = Vector3(0, 1, 0);
+  a.texCoord = Vector3(0, 1, 0);
   Vertex b;
-  b.position = Vector3(0, 1, 0);
-  b.texCoord = Vector3(0, 1, 0);
+  b.position = Vector3(0, 0, 0);
+  b.texCoord = Vector3(0, 0, 0);
   Vertex c;
-  c.position = Vector3(1, 1, 0);
-  c.texCoord = Vector3(1, 1, 0);
+  c.position = Vector3(1, 0, 0);
+  c.texCoord = Vector3(1, 0, 0);
   Environment::instance->guiMesh->addFace(a, b, c);
   Vertex d;
-  d.position = Vector3(1, 0, 0);
-  d.texCoord = Vector3(1, 0, 0);
+  d.position = Vector3(1, 1, 0);
+  d.texCoord = Vector3(1, 1, 0);
   Environment::instance->guiMesh->addFace(c, d, a);
 
   Environment::instance->guiMesh->generateVbos();

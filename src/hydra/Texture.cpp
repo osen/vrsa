@@ -107,7 +107,7 @@ Texture* Texture::load(std::string path)
         (float)pixelData[idx+3] / 255.0f
       );
 
-      rtn->internal->setPixel(x, y, rgba);
+      rtn->internal->setPixel(x, (height - 1) - y, rgba);
     }
   }
 

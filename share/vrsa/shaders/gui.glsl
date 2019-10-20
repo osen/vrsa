@@ -11,6 +11,7 @@ void main()
 {
   gl_Position = u_Projection * u_Model * vec4(a_Position, 0, 1);
   v_TexCoord = a_Position;
+  v_TexCoord.y = 1 - v_TexCoord.y;
 }
 
 #endif
