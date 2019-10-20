@@ -37,9 +37,9 @@ void Fade::onTick()
 
 void Fade::onGui()
 {
-  //std::sr1::shared_ptr<Texture> pixel =
-  //  std::sr1::make_shared<Texture>(Vector4(color.x, color.y, color.z, amount));
+  std::sr1::shared_ptr<Texture> pixel =
+    std::sr1::make_shared<Texture>(Vector4(color.x, color.y, color.z, amount));
 
-  //Gui::texture(Vector4(0, 0,
-  //  Environment::getScreenWidth(), Environment::getScreenHeight()), pixel);
+  Gui::texture(Vector4(0, 0,
+    Environment::getScreenWidth(), Environment::getScreenHeight()), pixel);
 }

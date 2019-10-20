@@ -181,6 +181,7 @@ struct observer_ptr
    *********************************************************/
   T& operator*() const
   {
+    // TODO: Should this do the lock check?
     return *ptr.lock();
   }
 

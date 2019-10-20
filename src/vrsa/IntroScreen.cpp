@@ -6,9 +6,6 @@ void IntroScreen::onInitialize()
   logo = Texture::load("images/BULogo");
   Environment::getCamera()->setClearColor(Vector4(1, 1, 1, 1));
   timeout = 1;
-
-  std::cout << logo.get() << std::endl;
-  std::cout << Texture::load("images/BULogo") << std::endl;
 }
 
 void IntroScreen::onTick()
