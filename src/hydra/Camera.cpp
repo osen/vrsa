@@ -33,7 +33,6 @@ Vector4 Camera::getClearColor()
 void Camera::onInitialize()
 {
   Environment::setCamera(this); // TODO: No this
-  setRenderTarget(RenderTarget::create());
 }
 
 void Camera::setOffset(Vector3 offset)

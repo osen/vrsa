@@ -4,14 +4,12 @@
 //#include "Key.h"
 #include "Octave.h"
 #include "Fade.h"
-#include "VrManager.h"
 
 void OctaveScreen::onInitialize(const OctaveConstruction& oc)
 {
   Environment::addEntity<Fade>(Vector3(0, 0, 0), true);
   Environment::addEntity<Player>();
   Environment::addEntity<ButtonBar>(1);
-  Environment::addEntity<VrManager>();
 
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   Model* world = Model::load("models/MusicRoom/MusicRoom");

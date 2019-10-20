@@ -15,7 +15,7 @@ template <typename T>
 class weak_ptr
 {
 public:
-  weak_ptr() : ptr(NULL), ref(NULL) { }
+  weak_ptr() { }
 
   weak_ptr& operator=(const weak_ptr& other)
   {
@@ -24,7 +24,7 @@ public:
     return *this;
   }
 
-  weak_ptr(const weak_ptr& copy) : ref(NULL)
+  weak_ptr(const weak_ptr& copy)
   {
     operator=(copy);
   }
@@ -38,7 +38,7 @@ public:
   }
 
   template <typename U>
-  weak_ptr(const weak_ptr<U>& copy) : ref(NULL)
+  weak_ptr(const weak_ptr<U>& copy)
   {
     operator=(copy);
   }
@@ -52,9 +52,9 @@ public:
   }
 
   template <typename U>
-  weak_ptr(const shared_ptr<U>& copy) : ref(NULL)
+  weak_ptr(const shared_ptr<U>& copy)
   {
-    *this = copy;
+    operator=(copy);
   }
 
   ~weak_ptr()
@@ -66,7 +66,7 @@ public:
   {
     if(!ref) return 0;
 
-    return ref->shared;
+    return ref.data()->shared;
   }
 
   shared_ptr<T> lock() const
@@ -75,7 +75,7 @@ public:
 
     if(ref)
     {
-      if(ref->shared)
+      if(ref.data()->shared)
       {
         rtn.aquire(ptr, ref);
       }
@@ -91,18 +91,18 @@ public:
       return;
     }
 
-    ref->weak--;
+    ref.data()->weak--;
 
-    if(ref->weak < 1)
+    if(ref.data()->weak < 1)
     {
-      if(ref->shared < 1)
+      if(ref.data()->shared < 1)
       {
         delete ref;
       }
     }
 
-    ref = NULL;
     ptr = NULL;
+    ref = NULL;
   }
 
 private:
@@ -115,8 +115,8 @@ private:
   template <typename U>
   friend struct observer_ptr;
 
-  T* ptr;
-  shared_ptr_refcount *ref;
+  zero_initialized<T*> ptr;
+  zero_initialized<shared_ptr_refcount*> ref;
 
   void aquire(T* ptr, shared_ptr_refcount *ref)
   {
@@ -126,8 +126,8 @@ private:
     }
 
     reset();
-    this->ref = ref;
     this->ptr = ptr;
+    this->ref = ref;
   }
 };
 

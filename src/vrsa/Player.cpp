@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "VrManager.h"
 
 #include <iostream>
 
@@ -6,6 +7,8 @@ void Player::onInitialize()
 {
   camera = getEntity()->addComponent<Camera>();
   camera->setClearColor(Vector4(0.5f, 0.5f, 0.5f, 1));
+
+  Environment::addEntity<VrManager>();
 }
 
 void Player::onTick()

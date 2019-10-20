@@ -135,6 +135,15 @@ void Piano::selectKey(std::sr1::observer_ptr<Key> key)
 
   octaveIndex = keyIdx;
 
+  key->setSelected(1);
+  key->play();
+
+  if(keyIdx + 12 >= keys.size())
+  {
+    updateOctaveButton(0, std::sr1::observer_ptr<Key>());
+    return;
+  }
+
   for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
     kit + 1; it != keys.end(); it++)
   {
@@ -146,17 +155,7 @@ void Piano::selectKey(std::sr1::observer_ptr<Key> key)
     (*it)->setSelected(2);
   }
 
-  key->setSelected(1);
-  key->play();
-
-  if(keyIdx + 13 <= keys.size())
-  {
-    updateOctaveButton(octaveIndex, keys.at(keyIdx + 6));
-  }
-  else
-  {
-    updateOctaveButton(0, std::sr1::observer_ptr<Key>());
-  }
+  updateOctaveButton(octaveIndex, keys.at(keyIdx + 6));
 }
 
 std::sr1::observer_ptr<Key> Piano::getKey(Ray ray)

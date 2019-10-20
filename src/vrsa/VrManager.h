@@ -5,6 +5,7 @@ using namespace hydra;
 struct VrManager : public Component
 {
   void onInitialize();
+  void onTick();
   void onGui();
 
 private:

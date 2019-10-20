@@ -723,7 +723,7 @@ class Environment
   std::vector<std::sr1::shared_ptr<Shader> > shaders;
   std::vector<std::shared_ptr<Sound> > sounds;
   std::vector<std::shared_ptr<World> > worlds;
-  std::vector<std::sr1::weak_ptr<RenderTarget> > renderTargets;
+  std::sr1::vector<std::sr1::weak_ptr<RenderTarget> > renderTargets;
 
   std::vector<unsigned char> keys;
   std::vector<unsigned char> downKeys;

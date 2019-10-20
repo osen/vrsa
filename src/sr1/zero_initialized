@@ -55,6 +55,9 @@ private:
   friend class shared_ptr;
 
   template <typename U>
+  friend class weak_ptr;
+
+  template <typename U>
   friend class shared_ptr_lock_ref;
 
   template <typename U>
