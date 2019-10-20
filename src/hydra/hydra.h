@@ -503,12 +503,12 @@ public:
 
 class Camera : public Component
 {
-  static Vector4 clearColor;
 
   std::sr1::zero_initialized<int> id;
   Vector3 smoothPosition;
   Vector3 offset;
   std::sr1::shared_ptr<RenderTarget> renderTarget;
+  Vector4 clearColor;
 
 public:
   void applyProjection();
@@ -522,8 +522,8 @@ public:
   void setRenderTarget(const std::sr1::shared_ptr<RenderTarget>& renderTarget);
   std::sr1::shared_ptr<RenderTarget> getRenderTarget();
 
-  static void setClearColor(Vector4 clearColor);
-  static Vector4 getClearColor();
+  void setClearColor(Vector4 clearColor);
+  Vector4 getClearColor();
 };
 
 struct ColliderType
@@ -706,6 +706,7 @@ class Environment
   friend class hydra::Transform;
   friend struct hydra::Shader;
   friend struct hydra::RenderTarget;
+  friend class hydra::Camera;
 
   static std::shared_ptr<Environment> instance;
   static RegisterAssociation registrations[256];
@@ -724,6 +725,7 @@ class Environment
   std::vector<std::shared_ptr<Sound> > sounds;
   std::vector<std::shared_ptr<World> > worlds;
   std::sr1::vector<std::sr1::weak_ptr<RenderTarget> > renderTargets;
+  std::sr1::vector<std::sr1::observer_ptr<Camera> > cameras;
 
   std::vector<unsigned char> keys;
   std::vector<unsigned char> downKeys;

@@ -5,10 +5,13 @@
 
 void Player::onInitialize()
 {
-  camera = getEntity()->addComponent<Camera>();
-  camera->setClearColor(Vector4(0.5f, 0.5f, 0.5f, 1));
+  leftCamera = getEntity()->addComponent<Camera>();
+  leftCamera->setClearColor(Vector4(1.0f, 0.5f, 0.5f, 1));
 
-  Environment::addEntity<VrManager>();
+  rightCamera = getEntity()->addComponent<Camera>();
+  rightCamera->setClearColor(Vector4(0.5f, 0.5f, 1.0f, 1));
+
+  Environment::addEntity<VrManager>(leftCamera, rightCamera);
 }
 
 void Player::onTick()

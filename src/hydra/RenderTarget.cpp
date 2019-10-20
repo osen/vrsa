@@ -9,8 +9,6 @@ std::sr1::shared_ptr<RenderTarget> RenderTarget::create()
 
   rtn->internal = Environment::getContext()->createRenderTexture();
 
-  Environment::instance->renderTargets.push_back(rtn);
-
   return rtn;
 }
 

@@ -7,12 +7,10 @@
 namespace hydra
 {
 
-Vector4 Camera::clearColor(0, 0, 0.2f, 1);
-
 void Camera::setClearColor(Vector4 clearColor)
 {
-  Camera::clearColor = clearColor;
-  glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+  this->clearColor = clearColor;
+  //glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 }
 
 void Camera::setRenderTarget(const std::sr1::shared_ptr<RenderTarget>& renderTarget)
@@ -33,6 +31,7 @@ Vector4 Camera::getClearColor()
 void Camera::onInitialize()
 {
   Environment::setCamera(this); // TODO: No this
+  Environment::instance->cameras.push_back(this);
 }
 
 void Camera::setOffset(Vector3 offset)

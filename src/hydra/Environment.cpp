@@ -123,7 +123,7 @@ void Environment::initializePre(int argc, char *argv[])
   //Vector4 col = Camera::getClearColor();
   //glClearColor(col.x, col.y, col.z, col.w);
   //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  Camera::setClearColor(Vector4(0, 0, 0.2f, 1.0f));
+  //Camera::setClearColor(Vector4(0, 0, 0.2f, 1.0f));
 
 #ifdef USE_GLUTEN
   gnEnable(GN_TEXTURE_2D);
@@ -273,34 +273,46 @@ void Environment::display()
   instance->screenWidth = glutGet(GLUT_WINDOW_WIDTH);
   instance->screenHeight = glutGet(GLUT_WINDOW_HEIGHT);
   glViewport(0, 0, instance->screenWidth, instance->screenHeight);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  for(auto it = instance->renderTargets.begin();
-    it != instance->renderTargets.end();)
+  for(auto it = instance->cameras.begin();
+    it != instance->cameras.end();)
   {
-    if((*it).lock())
+    if((*it))
     {
-      (*it).lock()->internal->clear();
       it++;
     }
     else
     {
-      it = instance->renderTargets.erase(it);
+      it = instance->cameras.erase(it);
     }
   }
-
-  glPushMatrix();
-  glLoadIdentity();
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_NORMAL_ARRAY);
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+  glPushMatrix();
 
-  getCamera()->applyProjection();
-
-  for(size_t i = 0; i < instance->entities.size(); i++)
+  for(auto it = instance->cameras.begin();
+    it != instance->cameras.end(); it++)
   {
-    instance->entities.at(i)->render();
+    instance->camera = *it;
+
+    if(instance->camera->getRenderTarget())
+    {
+      Vector4 cc = instance->camera->getClearColor();
+      glClearColor(cc.x, cc.y, cc.z, cc.w);
+      instance->camera->getRenderTarget()->internal->clear();
+    }
+
+    glLoadIdentity();
+    getCamera()->applyProjection();
+
+    for(size_t i = 0; i < instance->entities.size(); i++)
+    {
+      instance->entities.at(i)->render();
+    }
   }
 
   glDisable(GL_DEPTH_TEST);

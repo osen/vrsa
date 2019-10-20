@@ -4,7 +4,7 @@
 void IntroScreen::onInitialize()
 {
   logo = Texture::load("images/BULogo");
-  Environment::getCamera()->setClearColor(Vector4(1, 1, 1, 1));
+  //Environment::getCamera()->setClearColor(Vector4(1, 1, 1, 1));
   timeout = 1;
 }
 
