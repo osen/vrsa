@@ -8,6 +8,7 @@ struct MaterialVariable
   std::string name;
   std::sr1::zero_initialized<int> type;
 
+  std::sr1::zero_initialized<float> floatVal;
   rend::vec4 vec4Val;
   rend::mat4 mat4Val;
   std::sr1::observer_ptr<TextureAdapter> textureVal;
@@ -16,6 +17,7 @@ struct MaterialVariable
 #define VAR_MAT4 1
 #define VAR_VEC4 2
 #define VAR_TEXTURE 3
+#define VAR_FLOAT 4
 
 void Material::apply()
 {
@@ -34,6 +36,10 @@ void Material::apply()
     {
       shader->internal->setSampler((*it)->name, (*it)->textureVal->getInternal());
     }
+    else if((*it)->type == VAR_FLOAT)
+    {
+      shader->internal->setUniform((*it)->name, (*it)->floatVal);
+    }
     else
     {
       throw Exception("TODO: Should not get here");
@@ -44,6 +50,12 @@ void Material::apply()
 void Material::setShader(const std::sr1::shared_ptr<Shader>& shader)
 {
   this->shader = shader;
+}
+
+void Material::setVariable(const std::string& name, float value)
+{
+  std::sr1::shared_ptr<MaterialVariable> var = getVariable(name, VAR_FLOAT);
+  var->floatVal = value;
 }
 
 void Material::setVariable(const std::string& name, const mat4& value)

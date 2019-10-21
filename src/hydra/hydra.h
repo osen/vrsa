@@ -160,6 +160,7 @@ struct Material
 {
   void setShader(const std::sr1::shared_ptr<Shader>& shader);
 
+  void setVariable(const std::string& name, float value);
   void setVariable(const std::string& name, const mat4& value);
   void setVariable(const std::string& name, const vec4& value);
   void setVariable(const std::string& name, const std::sr1::observer_ptr<TextureAdapter>& value);

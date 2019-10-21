@@ -270,7 +270,7 @@ struct observer_ptr
    *
    * Allows for initialized check [if(var)].
    *********************************************************/
-  operator bool() const
+  explicit operator bool() const
   {
     return !operator!();
   }

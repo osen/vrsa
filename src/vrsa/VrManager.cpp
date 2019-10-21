@@ -31,9 +31,17 @@ void VrManager::onGui()
 {
   if(leftCamera->getRenderTarget())
   {
-    Gui::texture(Vector2(10, 10), leftCamera->getRenderTarget());
+    Vector2 size(Environment::getScreenWidth(),
+      Environment::getScreenHeight());
 
-    Gui::texture(Vector2(10 + leftCamera->getRenderTarget()->getWidth() + 10, 10),
+    size.x -= 30;
+    size.x /= 2;
+
+    size.y -= 20;
+
+    Gui::texture(Vector4(10, 10, size.x, size.y), leftCamera->getRenderTarget());
+
+    Gui::texture(Vector4(10 + size.x + 10, 10, size.x, size.y),
       rightCamera->getRenderTarget());
   }
 

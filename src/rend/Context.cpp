@@ -6,26 +6,18 @@
 #include "Buffer.h"
 
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 
 namespace rend
 {
 
-std::sr1::shared_ptr<Context> Context::initialize(int argc, char* argv[])
+std::sr1::shared_ptr<Context> Context::initialize()
 {
   std::sr1::shared_ptr<Context> rtn = std::sr1::make_shared<Context>();
-
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-  glutInitWindowSize(800, 600);
-  glutCreateWindow("Rend Renderer");
 
   if(glewInit() != GLEW_OK)
   {
     throw Exception("Failed to initialize glew");
   }
-
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
   rtn->self = rtn;
 

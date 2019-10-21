@@ -28,7 +28,7 @@ void FontRenderer::onRender()
     return;
   }
 
-  //float sizeMod = size.x;
+  std::sr1::shared_ptr<RenderTarget> rt = Environment::getCamera()->getRenderTarget();
 
   mat4 projection = Environment::getCamera()->getProjection();
   material->setVariable("u_Projection", projection);
@@ -69,7 +69,15 @@ void FontRenderer::onRender()
 
       material->shader->internal->setAttribute("a_Position", g.mesh->positions);
       material->shader->internal->setAttribute("a_TexCoord", g.mesh->texCoords);
-      material->shader->internal->render();
+
+      if(rt)
+      {
+        material->shader->internal->render(rt->internal);
+      }
+      else
+      {
+        material->shader->internal->render();
+      }
 
       modelMat = rend::translate(modelMat, rend::vec3(size.x + (1.0f * sizeMod), 0, 0));
     }

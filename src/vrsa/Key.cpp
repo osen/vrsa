@@ -10,6 +10,20 @@ void Key::onInitialize(int index)
   ModelCollider* mc = getEntity()->addComponent<ModelCollider>();
 }
 
+void Key::onTick()
+{
+  if(selected == 1)
+  {
+    time += Environment::getDeltaTime();
+  }
+  else
+  {
+    time = 0;
+  }
+
+  material->setVariable("u_Time", time);
+}
+
 void Key::setSound(std::sr1::observer_ptr<Sound> sound)
 {
   this->sound = sound;

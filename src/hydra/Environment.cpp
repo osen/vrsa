@@ -99,8 +99,14 @@ void Environment::initializePre(int argc, char *argv[])
   instance->screenWidth = 1024;
   instance->screenHeight = 768;
 
-  instance->graphics = rend::Context::initialize(argc, argv);
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+  glutInitWindowSize(800, 600);
+  glutCreateWindow("VRSA");
 
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+
+  instance->graphics = rend::Context::initialize();
   instance->openAudio();
 
   glutDisplayFunc(display);

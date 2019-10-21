@@ -21,6 +21,7 @@ struct VariableInfo
   std::sr1::zero_initialized<int> type;
   std::sr1::zero_initialized<bool> attrib;
 
+  std::sr1::zero_initialized<float> floatVal;
   mat4 mat4Val;
   vec4 vec4Val;
   std::sr1::shared_ptr<Buffer> bufferVal;
@@ -37,6 +38,7 @@ std::string VariableInfo::convertType(GLenum type)
   else if(type == GL_FLOAT_VEC4) return "GL_FLOAT_VEC4";
   else if(type == GL_FLOAT_MAT4) return "GL_FLOAT_MAT4";
   else if(type == GL_SAMPLER_2D) return "GL_SAMPLER_2D";
+  else if(type == GL_FLOAT) return "GL_FLOAT";
   else throw Exception(std::string("Invalid type"));
 }
 
@@ -101,6 +103,10 @@ void Shader::render()
         glUniform1i((*it)->loc, activeTexture); context->pollForError();
         activeTexture++;
       }
+      else if((*it)->type == GL_FLOAT)
+      {
+        glUniform1f((*it)->loc, (*it)->floatVal); context->pollForError();
+      }
     }
     else
     {
@@ -138,6 +144,12 @@ void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<
 {
   std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_SAMPLER_2D, false);
   vi->textureVal = value;
+}
+
+void Shader::setUniform(const std::string& variable, float value)
+{
+  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT, false);
+  vi->floatVal = value;
 }
 
 void Shader::setUniform(const std::string& variable, mat4 value)
