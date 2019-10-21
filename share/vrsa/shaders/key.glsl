@@ -21,12 +21,20 @@ void main()
 
 uniform vec4 u_Color;
 uniform sampler2D u_Texture;
+uniform float u_Time;
 
 varying vec2 v_TexCoord;
 
 void main()
 {
   vec4 color = (u_Color + texture2D(u_Texture, v_TexCoord)) / 2;
+
+  if(u_Time != 0)
+  {
+    float pulse = 0.5 + (1 - sin(u_Time * 5) / 2);
+    color.rgb *= pulse;
+  }
+
   gl_FragColor = color;
 }
 
