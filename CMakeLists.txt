@@ -15,7 +15,11 @@ add_library(rend
   src/rend/Shader.cpp
   src/rend/Buffer.cpp
 )
-target_link_libraries(rend GLEW GL glut GLU)
+if(MSVC)
+  target_link_libraries(rend glew32 opengl32 freeglut glu32)
+else()
+  target_link_libraries(rend GLEW GL glut GLU)
+endif()
 
 add_library(hydra
   src/hydra/Mouse.cpp
@@ -44,7 +48,11 @@ add_library(hydra
   src/hydra/lodepng.cpp
   src/hydra/tribox.cpp
 )
-target_link_libraries(hydra rend openal)
+if(MSVC)
+  target_link_libraries(hydra rend openal32)
+else()
+  target_link_libraries(hydra rend openal)
+endif()
 
 add_executable(vrsa
   src/vrsa/main.cpp

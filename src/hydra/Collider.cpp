@@ -8,6 +8,8 @@
 namespace hydra
 {
 
+//#define NEW_GLM
+
 bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
 {
   ModelRenderer* mr = getEntity()->getComponent<ModelRenderer>();
@@ -29,7 +31,7 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
   bool hit = false;
   float bestHitDist = std::numeric_limits<float>::max();
 
-#ifdef _WIN32
+#ifdef NEW_GLM
   glm::vec2 bary;
   float baryDist = 0;
 #else
@@ -53,7 +55,7 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
         Vector3 b = model * glm::vec4(f.b.position, 1.0f);
         Vector3 c = model * glm::vec4(f.c.position, 1.0f);
 
-#ifdef _WIN32
+#ifdef NEW_GLM
         glm::vec2 bary;
         if(glm::intersectRayTriangle(ray.origin, ray.direction, a, b, c, bary, baryDist))
 #else
@@ -64,7 +66,7 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
           //Converting barycentric to cartesian to get hit point
           //Weird but see https://github.com/g-truc/glm/issues/6
 
-#ifdef _WIN32
+#ifdef NEW_GLM
           float hitDist = baryDist;
 #else
           float hitDist = bary.z;

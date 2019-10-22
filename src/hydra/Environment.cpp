@@ -46,6 +46,9 @@ void Environment::clear()
 
 void Environment::setupPaths(char *argv0)
 {
+#if _WIN32
+  assetsDirectory = "../share/vrsa/";
+#else
   FILE* process = NULL;
   std::string command;
   char buffer[512] = {0};
@@ -78,8 +81,6 @@ void Environment::setupPaths(char *argv0)
   assetsDirectory = prefix + "/share/" + name;
 
   //TODO TEMPORY WINDOWS WORK-AROUND
-#if _WIN32
-  assetsDirectory = "share/tmgg/";
 #endif
 
   std::cout << "Assets: " << assetsDirectory << std::endl;
