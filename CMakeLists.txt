@@ -44,7 +44,7 @@ add_library(hydra
   src/hydra/lodepng.cpp
   src/hydra/tribox.cpp
 )
-target_link_libraries(hydra rend openal ogg vorbis vorbisfile)
+target_link_libraries(hydra rend openal)
 
 add_executable(vrsa
   src/vrsa/main.cpp

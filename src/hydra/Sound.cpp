@@ -1,9 +1,8 @@
 #include "hydra.h"
 
-#ifndef EMSCRIPTEN
-  #include <AL/al.h>
-  #include <vorbis/vorbisfile.h>
-#endif
+#include <AL/al.h>
+
+#include "stb_vorbis.h"
 
 #include <iostream>
 #include <vector>
@@ -11,11 +10,6 @@
 
 namespace hydra
 {
-
-#ifndef EMSCRIPTEN
-void load_ogg(std::string fileName, std::vector<char> &buffer,
-  ALenum &format, ALsizei &freq);
-#endif
 
 Sound* Sound::load(std::string path)
 {
@@ -31,7 +25,6 @@ Sound* Sound::load(std::string path)
   rtn->path = path;
   Environment::instance->sounds.push_back(rtn);
 
-#ifndef EMSCRIPTEN
   ALenum format = 0;
   ALsizei freq = 0;
   std::vector<char> bufferData;
@@ -39,11 +32,10 @@ Sound* Sound::load(std::string path)
   alGenBuffers(1, &rtn->id);
 
   path += ".ogg";
-  load_ogg(std::string(Environment::getAssetsDirectory() + "/" + path).c_str(), bufferData, format, freq);
+  loadOgg(std::string(Environment::getAssetsDirectory() + "/" + path).c_str(), bufferData, format, freq);
 
   alBufferData(rtn->id, format, &bufferData[0],
     static_cast<ALsizei>(bufferData.size()), freq);
-#endif
 
   return rtn.get();
 }
@@ -55,8 +47,6 @@ Sound::~Sound()
 
 void Sound::play()
 {
-  //std::cout << "Play: " << path << std::endl;
-#ifndef EMSCRIPTEN
   ALuint sid = 0;
   alGenSources(1, &sid);
   alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
@@ -65,7 +55,6 @@ void Sound::play()
   alSourcePlay(sid);
 
   hydra::Environment::instance->audioSources.push_back(sid);
-#endif
 }
 
 std::string Sound::getPath()
@@ -75,7 +64,6 @@ std::string Sound::getPath()
 
 void Sound::play(float vol, float varMin, float varMax)
 {
-#ifndef EMSCRIPTEN
   //For better rand resolution
   varMin*=1000.0f;
   varMax*=1000.0f;
@@ -91,37 +79,25 @@ void Sound::play(float vol, float varMin, float varMax)
   alSourcePlay(sid);
 
   hydra::Environment::instance->audioSources.push_back(sid);
-#endif
 }
 
-#ifndef EMSCRIPTEN
-/****************************************************************************
- *
- * load_ogg - Populate passed in references with audio data 
- *
- ****************************************************************************/
-void load_ogg(std::string fileName, std::vector<char> &buffer,
+void Sound::loadOgg(const std::string& fileName, std::vector<char>& buffer,
   ALenum &format, ALsizei &freq)
 {
-  int endian = 0;
-  int bitStream = 0;
-  long bytes = 0;
-  char array[2048] = {0};
-  vorbis_info *pInfo = NULL;
-  OggVorbis_File oggFile = {0};
+  int channels = 0;
+  int sampleRate = 0;
+  short *output = NULL;
 
-  // Use the inbuilt fopen to create a file descriptor
-  if(ov_fopen(fileName.c_str(), &oggFile) != 0)
+  size_t samples = stb_vorbis_decode_filename(
+    fileName.c_str(), &channels, &sampleRate, &output);
+
+  if(samples == -1)
   {
-    std::cout << "Failed to open file '" << fileName << "' for decoding" << std::endl;
-    throw std::exception();
+    throw Exception("Failed to open file '" + fileName + "' for decoding");
   }
 
-  // Extract information from the file header
-  pInfo = ov_info(&oggFile, -1);
-
   // Record the format required by OpenAL
-  if(pInfo->channels == 1)
+  if(channels == 1)
   {
     format = AL_FORMAT_MONO16;
   }
@@ -131,32 +107,13 @@ void load_ogg(std::string fileName, std::vector<char> &buffer,
   }
 
   // Record the sample rate required by OpenAL
-  freq = pInfo->rate;
+  freq = sampleRate;
 
-  // Keep reading bytes from the file to populate the output buffer
-  while(true)
-  {
-    // Read bytes into temporary array
-    bytes = ov_read(&oggFile, array, 2048, endian, 2, 1, &bitStream);
+  buffer.resize(samples * 2);
+  memcpy(&buffer.at(0), output, buffer.size());
 
-    if(bytes < 0)
-    {
-      ov_clear(&oggFile);
-      std::cout << "Failed to decode file '" << fileName << "'." << std::endl;
-      throw std::exception();
-    }
-    else if(bytes == 0)
-    {
-      break;
-    }
-
-    // Copy from temporary array into output buffer
-    buffer.insert(buffer.end(), array, array + bytes);
-  }
-
-  // Clean up and close the file
-  ov_clear(&oggFile);
+  // Clean up the read data
+  free(output);
 }
-#endif
 
 }

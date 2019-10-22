@@ -183,6 +183,9 @@ class Sound : public std::sr1::enable_observer
 {
   friend class hydra::Environment;
 
+  static void loadOgg(const std::string& fileName,
+    std::vector<char>& buffer, ALenum &format, ALsizei &freq);
+
   ALuint id;
   std::string path;
 
