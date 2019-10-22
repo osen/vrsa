@@ -147,7 +147,7 @@ private:
   friend struct Material;
   friend class ModelRenderer;
   friend class FontRenderer;
-  friend class Gui;
+  friend struct Gui;
 
   std::string path;
   std::sr1::shared_ptr<rend::Shader> internal;
@@ -167,7 +167,7 @@ struct Material
 
 private:
   friend class ModelRenderer;
-  friend class Gui;
+  friend struct Gui;
   friend class FontRenderer;
 
   std::sr1::shared_ptr<Shader> shader;

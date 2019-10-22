@@ -1,6 +1,6 @@
 #include "hydra.h"
 
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 namespace hydra
 {

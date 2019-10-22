@@ -12,7 +12,6 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
 {
   ModelRenderer* mr = getEntity()->getComponent<ModelRenderer>();
   Model* m = mr->getModel();
-  glm::vec3 bary;
   
   Vector3 pos = getEntity()->getComponent<Transform>()->getPosition();
   glm::mat4 model = glm::translate(glm::mat4(1), pos);
@@ -29,6 +28,13 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
 
   bool hit = false;
   float bestHitDist = std::numeric_limits<float>::max();
+
+#ifdef _WIN32
+  glm::vec2 bary;
+  float baryDist = 0;
+#else
+  glm::vec3 bary;
+#endif
 
   for(size_t pi = 0; pi < m->parts.size(); pi++)
   {
@@ -47,11 +53,22 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
         Vector3 b = model * glm::vec4(f.b.position, 1.0f);
         Vector3 c = model * glm::vec4(f.c.position, 1.0f);
 
+#ifdef _WIN32
+        glm::vec2 bary;
+        if(glm::intersectRayTriangle(ray.origin, ray.direction, a, b, c, bary, baryDist))
+#else
+        glm::vec3 bary;
         if(glm::intersectRayTriangle(ray.origin, ray.direction, a, b, c, bary))
+#endif
         {
           //Converting barycentric to cartesian to get hit point
           //Weird but see https://github.com/g-truc/glm/issues/6
+
+#ifdef _WIN32
+          float hitDist = baryDist;
+#else
           float hitDist = bary.z;
+#endif
 
           hit = true;
 

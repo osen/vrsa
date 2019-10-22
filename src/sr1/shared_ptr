@@ -171,10 +171,10 @@ template <typename T>
 class weak_ptr;
 
 template <typename T>
-class observer_ptr;
+struct observer_ptr;
 
 template <typename T>
-class _enable_observer;
+struct _enable_observer;
 
 template <typename T>
 shared_ptr<T> make_shared();
@@ -290,10 +290,10 @@ private:
   friend class shared_ptr;
 
   template <typename U>
-  friend class observer_ptr;
+  friend struct observer_ptr;
 
   template <typename U>
-  friend class _enable_observer;
+  friend struct _enable_observer;
 
   template <typename U>
   friend shared_ptr<U> make_shared();
