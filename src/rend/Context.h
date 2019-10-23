@@ -25,8 +25,6 @@ private:
 
   std::sr1::weak_ptr<Context> self;
 
-  void pollForError();
-
 };
 
 }

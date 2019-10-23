@@ -7,9 +7,10 @@ namespace rend
 
 Buffer::~Buffer()
 {
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
   GLuint delId = id;
   glDeleteBuffers(1, &delId);
-  context->pollForError();
+  pollForError();
 }
 
 int Buffer::getSize()
@@ -64,14 +65,14 @@ GLuint Buffer::getId()
   if(dirty)
   {
     glBindBuffer(GL_ARRAY_BUFFER, id);
-    context->pollForError();
+    pollForError();
 
     if(type == GL_FLOAT || type == GL_FLOAT_VEC2 || type == GL_FLOAT_VEC3)
     {
       glBufferData(GL_ARRAY_BUFFER, sizeof(floatData.at(0)) * floatData.size(),
         &floatData.at(0), GL_STATIC_DRAW);
 
-      context->pollForError();
+      pollForError();
     }
     else
     {
@@ -79,7 +80,7 @@ GLuint Buffer::getId()
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    context->pollForError();
+    pollForError();
 
     dirty = false;
   }

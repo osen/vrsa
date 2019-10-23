@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "Context.h"
+#include "Exception.h"
 
 namespace rend
 {
@@ -8,7 +9,7 @@ Texture::~Texture()
 {
   GLuint delId = id;
   glDeleteTextures(1, &delId);
-  context->pollForError();
+  pollForError();
 }
 
 GLuint Texture::getTexId()
@@ -21,16 +22,16 @@ GLuint Texture::getId()
   if(dirty)
   {
     glBindTexture(GL_TEXTURE_2D, id);
-    context->pollForError();
+    pollForError();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(0));
-    context->pollForError();
+    pollForError();
 
     glGenerateMipmap(GL_TEXTURE_2D);
-    context->pollForError();
+    pollForError();
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    context->pollForError();
+    pollForError();
 
     dirty = false;
   }

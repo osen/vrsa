@@ -97,20 +97,4 @@ std::sr1::shared_ptr<Buffer> Context::createBuffer()
   return rtn;
 }
 
-void Context::pollForError()
-{
-  while(true)
-  {
-    GLenum err = glGetError();
-
-    if(err == GL_NO_ERROR)
-    {
-      break;
-    }
-
-    //throw Exception((char*)gluErrorString(err));
-    std::cout << "Warning: " << (char*)gluErrorString(err) << std::endl;
-  }
-}
-
 }

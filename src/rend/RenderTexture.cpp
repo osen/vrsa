@@ -9,15 +9,15 @@ RenderTexture::~RenderTexture()
 {
   GLuint delId = id;
   glDeleteTextures(1, &delId);
-  context->pollForError();
+  pollForError();
 
   delId = fboId;
   glDeleteFramebuffers(1, &delId); 
-  context->pollForError();
+  pollForError();
 
   delId = rboId;
   glDeleteRenderbuffers(1, &delId); 
-  context->pollForError();
+  pollForError();
 }
 
 GLuint RenderTexture::getTexId()
@@ -28,13 +28,13 @@ GLuint RenderTexture::getTexId()
 void RenderTexture::clear()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, getId());
-  context->pollForError();
+  pollForError();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  context->pollForError();
+  pollForError();
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  context->pollForError();
+  pollForError();
 }
 
 GLuint RenderTexture::getId()
@@ -42,28 +42,28 @@ GLuint RenderTexture::getId()
   if(dirty)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, fboId);
-    context->pollForError();
+    pollForError();
 
-    glBindTexture(GL_TEXTURE_2D, id); context->pollForError();
+    glBindTexture(GL_TEXTURE_2D, id); pollForError();
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.x, size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    context->pollForError();
+    pollForError();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    context->pollForError();
+    pollForError();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    context->pollForError();
+    pollForError();
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
-    context->pollForError();
+    pollForError();
     glBindTexture(GL_TEXTURE_2D, 0);
-    context->pollForError();
+    pollForError();
 
     glBindRenderbuffer(GL_RENDERBUFFER, rboId);
-    context->pollForError();
+    pollForError();
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, size.x, size.y);
-    context->pollForError();
+    pollForError();
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboId);
-    context->pollForError();
+    pollForError();
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    context->pollForError();
+    pollForError();
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -71,7 +71,7 @@ GLuint RenderTexture::getId()
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    context->pollForError();
+    pollForError();
     dirty = false;
   }
 

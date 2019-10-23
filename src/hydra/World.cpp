@@ -12,13 +12,7 @@ namespace hydra
 
 void Mesh::bind()
 {
-  glBindBuffer(GL_ARRAY_BUFFER, positions->getId());
-  glVertexPointer(3, GL_FLOAT, 0, 0);
-  glBindBuffer(GL_ARRAY_BUFFER, texCoords->getId());
-  glTexCoordPointer(2, GL_FLOAT, 0, 0);
-  glBindBuffer(GL_ARRAY_BUFFER, normals->getId());
-  glNormalPointer(GL_FLOAT, 0, 0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  std::cout << "TODO: Obsolete" << std::endl;
 }
 
 void Mesh::generateVbos()
@@ -72,13 +66,6 @@ void Mesh::generateVbos()
     data.push_back(face.c.normal.y);
     data.push_back(face.c.normal.z);
   }
-
-  GLuint newId = 0;
-  glGenBuffers(1, &newId);
-  buffer = newId;
-  glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(data.at(0)) * data.size(), &data.at(0), GL_STATIC_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Mesh::addFace(Vector3 a, Vector3 b, Vector3 c)
@@ -101,10 +88,7 @@ void Mesh::addFace(Vertex a, Vertex b, Vertex c)
 
 Mesh::~Mesh()
 {
-  if(!buffer) return;
-  GLuint oldId = 0;
-  oldId = buffer;
-  glDeleteBuffers(1, &oldId);
+
 }
 
 void World::processUsemtlLine(std::vector<std::string>& splitLine, DataStore& store)

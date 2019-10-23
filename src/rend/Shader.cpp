@@ -45,7 +45,7 @@ std::string VariableInfo::convertType(GLenum type)
 Shader::~Shader()
 {
   glDeleteProgram(id);
-  context->pollForError();
+  pollForError();
 }
 
 GLuint Shader::getId()
@@ -57,19 +57,18 @@ void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
 {
   std::array<GLint, 4> viewport = {0};
   glGetIntegerv(GL_VIEWPORT, &viewport.at(0));
+  pollForError();
 
   glBindFramebuffer(GL_FRAMEBUFFER, target->getId());
-  context->pollForError();
+  pollForError();
 
   glViewport(0, 0, target->getWidth(), target->getHeight());
-  context->pollForError();
+  pollForError();
 
   render();
-  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  //context->pollForError();
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  context->pollForError();
+  pollForError();
 
   glViewport(viewport.at(0), viewport.at(1), viewport.at(2), viewport.at(3));
 
@@ -78,7 +77,7 @@ void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
 
 void Shader::render()
 {
-  glUseProgram(id); context->pollForError();
+  glUseProgram(id); pollForError();
 
   int activeTexture = 0;
   int vertices = -1;
@@ -90,22 +89,22 @@ void Shader::render()
     {
       if((*it)->type == GL_FLOAT_MAT4)
       {
-        glUniformMatrix4fv((*it)->loc, 1, false, glm::value_ptr((*it)->mat4Val)); context->pollForError();
+        glUniformMatrix4fv((*it)->loc, 1, false, glm::value_ptr((*it)->mat4Val)); pollForError();
       }
       else if((*it)->type == GL_FLOAT_VEC4)
       {
-        glUniform4fv((*it)->loc, 1, glm::value_ptr((*it)->vec4Val)); context->pollForError();
+        glUniform4fv((*it)->loc, 1, glm::value_ptr((*it)->vec4Val)); pollForError();
       }
       else if((*it)->type == GL_SAMPLER_2D)
       {
-        glActiveTexture(GL_TEXTURE0 + activeTexture); context->pollForError();
-        glBindTexture(GL_TEXTURE_2D, (*it)->textureVal->getTexId()); context->pollForError();
-        glUniform1i((*it)->loc, activeTexture); context->pollForError();
+        glActiveTexture(GL_TEXTURE0 + activeTexture); pollForError();
+        glBindTexture(GL_TEXTURE_2D, (*it)->textureVal->getTexId()); pollForError();
+        glUniform1i((*it)->loc, activeTexture); pollForError();
         activeTexture++;
       }
       else if((*it)->type == GL_FLOAT)
       {
-        glUniform1f((*it)->loc, (*it)->floatVal); context->pollForError();
+        glUniform1f((*it)->loc, (*it)->floatVal); pollForError();
       }
     }
     else
@@ -116,10 +115,10 @@ void Shader::render()
       else if((*it)->type == GL_FLOAT_VEC3) size = 3;
       else throw Exception("Invalid buffer type");
 
-      glBindBuffer(GL_ARRAY_BUFFER, (*it)->bufferVal->getId()); context->pollForError();
-      glVertexAttribPointer((*it)->loc, size, GL_FLOAT, GL_FALSE, 0, 0); context->pollForError();
-      glEnableVertexAttribArray((*it)->loc); context->pollForError();
-      glBindBuffer(GL_ARRAY_BUFFER, 0); context->pollForError();
+      glBindBuffer(GL_ARRAY_BUFFER, (*it)->bufferVal->getId()); pollForError();
+      glVertexAttribPointer((*it)->loc, size, GL_FLOAT, GL_FALSE, 0, 0); pollForError();
+      glEnableVertexAttribArray((*it)->loc); pollForError();
+      glBindBuffer(GL_ARRAY_BUFFER, 0); pollForError();
 
       size = (*it)->bufferVal->getSize();
 
@@ -135,9 +134,9 @@ void Shader::render()
     }
   }
 
-  glDrawArrays(GL_TRIANGLES, 0, vertices); context->pollForError();
+  glDrawArrays(GL_TRIANGLES, 0, vertices); pollForError();
 
-  glUseProgram(0); context->pollForError();
+  glUseProgram(0); pollForError();
 }
 
 void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<TextureAdapter>& value)
@@ -200,7 +199,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
   if(attrib == false)
   {
     rtn->loc = glGetUniformLocation(id, name.c_str());
-    context->pollForError();
+    pollForError();
 
     if(rtn->loc == -1)
     {
@@ -208,7 +207,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
     }
 
     glGetActiveUniform(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
-    context->pollForError();
+    pollForError();
 
     if(rtnType != type)
     {
@@ -219,7 +218,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
   else
   {
     rtn->loc = glGetAttribLocation(id, name.c_str());
-    context->pollForError();
+    pollForError();
 
     if(rtn->loc == -1)
     {
@@ -227,7 +226,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
     }
 
     glGetActiveAttrib(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
-    context->pollForError();
+    pollForError();
 
     if(rtnType != type)
     {
@@ -256,29 +255,29 @@ void Shader::setSource(const std::string& source)
   src = vertSrc.c_str();
 
   vertId = glCreateShader(GL_VERTEX_SHADER);
-  context->pollForError();
+  pollForError();
 
   glShaderSource(vertId, 1, &src, NULL);
-  context->pollForError();
+  pollForError();
 
   glCompileShader(vertId);
-  context->pollForError();
+  pollForError();
 
   glGetShaderiv(vertId, GL_COMPILE_STATUS, &success);
-  context->pollForError();
+  pollForError();
 
   if(!success)
   {
     int length = 0;
     glGetShaderiv(vertId, GL_INFO_LOG_LENGTH, &length);
-    context->pollForError();
+    pollForError();
 
     std::sr1::vector<char> infoLog(length);
     glGetShaderInfoLog(vertId, length, NULL, &infoLog.at(0));
-    context->pollForError();
+    pollForError();
 
     glDeleteShader(vertId);
-    context->pollForError();
+    pollForError();
 
     std::string msg = &infoLog.at(0);
     throw Exception(msg);
@@ -291,71 +290,71 @@ void Shader::setSource(const std::string& source)
   src = fragSrc.c_str();
 
   fragId = glCreateShader(GL_FRAGMENT_SHADER);
-  context->pollForError();
+  pollForError();
 
   glShaderSource(fragId, 1, &src, NULL);
-  context->pollForError();
+  pollForError();
 
   glCompileShader(fragId);
-  context->pollForError();
+  pollForError();
 
   glGetShaderiv(fragId, GL_COMPILE_STATUS, &success);
-  context->pollForError();
+  pollForError();
 
   if(!success)
   {
     int length = 0;
     glGetShaderiv(fragId, GL_INFO_LOG_LENGTH, &length);
-    context->pollForError();
+    pollForError();
 
     std::sr1::vector<char> infoLog(length);
     glGetShaderInfoLog(fragId, length, NULL, &infoLog.at(0));
-    context->pollForError();
+    pollForError();
 
     glDeleteShader(fragId);
-    context->pollForError();
+    pollForError();
 
     std::string msg = &infoLog.at(0);
     throw Exception(msg);
   }
 
   glAttachShader(id, vertId);
-  context->pollForError();
+  pollForError();
 
   glAttachShader(id, fragId);
-  context->pollForError();
+  pollForError();
 
   glLinkProgram(id);
-  context->pollForError();
+  pollForError();
 
   glGetProgramiv(id, GL_LINK_STATUS, &success);
-  context->pollForError();
+  pollForError();
 
   if(!success)
   {
     int length = 0;
     glGetProgramiv(id, GL_INFO_LOG_LENGTH, &length);
-    context->pollForError();
+    pollForError();
 
     std::sr1::vector<char> infoLog(length);
     glGetProgramInfoLog(id, length, NULL, &infoLog.at(0));
-    context->pollForError();
+    pollForError();
 
     std::string msg = &infoLog.at(0);
     throw Exception(msg);
   }
 
   glDetachShader(id, vertId);
-  context->pollForError();
+  pollForError();
 
   glDetachShader(id, fragId);
-  context->pollForError();
+  pollForError();
 
   glDeleteShader(vertId);
-  context->pollForError();
+  pollForError();
 
   glDeleteShader(fragId);
-  context->pollForError();
+  pollForError();
 }
 
 }
