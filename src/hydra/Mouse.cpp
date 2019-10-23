@@ -1,10 +1,6 @@
 #include "hydra.h"
 
-#ifdef OPENGLD
-  #include <GL/glut.h>
-#else
-  #include <GL/freeglut.h>
-#endif
+#include <SDL2/SDL.h>
 
 namespace hydra
 {
@@ -72,7 +68,8 @@ bool Mouse::getButtonDown(int button)
 
 void Mouse::mouse(int button, int state, int x, int y)
 {
-  if(state == GLUT_DOWN)
+  button -= 1;
+  if(state == SDL_PRESSED)
   {
     buttons.at(button) = true;
     buttonsDown.at(button) = true;

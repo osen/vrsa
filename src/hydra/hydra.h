@@ -4,12 +4,8 @@
 #include <rend/rend.h>
 
 #include <glm/glm.hpp>
-
-#ifdef OPENGLD
-  #include <GL/gl.h>
-#else
-  #include <GL/glew.h>
-#endif
+#include <GL/glew.h>
+#include <SDL2/SDL.h>
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -733,6 +729,7 @@ class Environment
 
   std::vector<unsigned char> keys;
   std::vector<unsigned char> downKeys;
+  std::sr1::zero_initialized<bool> running;
   std::sr1::zero_initialized<float> deltaTime;
   std::sr1::zero_initialized<float> lastTime;
   std::sr1::zero_initialized<time_t> startTime;
@@ -741,6 +738,9 @@ class Environment
   std::sr1::observer_ptr<Camera> camera;
   std::string prefix;
   std::string assetsDirectory;
+
+  std::sr1::zero_initialized<SDL_Window*> window;
+  std::sr1::zero_initialized<SDL_GLContext> glContext;
 
   ALCdevice* device;
   ALCcontext* context;

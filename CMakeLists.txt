@@ -16,9 +16,9 @@ add_library(rend
   src/rend/Buffer.cpp
 )
 if(MSVC)
-  target_link_libraries(rend glew32 opengl32 freeglut glu32)
+  target_link_libraries(rend glew32 opengl32 SDL2 glu32)
 else()
-  target_link_libraries(rend GLEW GL glut GLU)
+  target_link_libraries(rend GLEW GL SDL2 GLU)
 endif()
 
 add_library(hydra

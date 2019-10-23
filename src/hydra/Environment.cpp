@@ -1,14 +1,9 @@
 #include "hydra.h"
 
-#ifdef OPENGLD
-  #include <GL/glut.h>
-#else
-  #include <GL/freeglut.h>
-#endif
+#include <SDL2/SDL.h>
 
 #ifdef _WIN32
   #include <windows.h>
-  //Shitty windows system
   #define popen _popen
   #define pclose _pclose
 #else
@@ -20,9 +15,6 @@
 #include <string.h>
 
 #include <time.h>
-
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
 
 namespace hydra
 {
@@ -97,35 +89,44 @@ void Environment::initializePre(int argc, char *argv[])
 
   instance->setupPaths(argv[0]);
 
-  instance->screenWidth = 1024;
-  instance->screenHeight = 768;
+  instance->screenWidth = 640;
+  instance->screenHeight = 480;
 
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-  glutInitWindowSize(800, 600);
-  glutCreateWindow("VRSA");
+  if(SDL_Init(SDL_INIT_VIDEO) < 0)
+  {
+    throw Exception("Failed to initialize window system");
+  }
 
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+  instance->window = SDL_CreateWindow("VRSA",
+    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+    instance->screenWidth, instance->screenHeight,
+    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+  if(!instance->window)
+  {
+    throw Exception("Failed to create window");
+  }
+
+  instance->glContext = SDL_GL_CreateContext(instance->window);
+
+  if(!instance->glContext)
+  {
+    throw Exception("Failed to create OpenGL context");
+  }
+
+  if(SDL_GL_SetSwapInterval(1) < 0)
+  {
+    // Failed to enable Vsync
+  }
 
   instance->graphics = rend::Context::initialize();
   instance->openAudio();
 
-  glutDisplayFunc(display);
-  glutIdleFunc(idle);
-
-  glutKeyboardFunc(Keyboard::keyboard);
-  glutMotionFunc(Mouse::motion);
-  glutPassiveMotionFunc(Mouse::motion);
-  glutMouseFunc(Mouse::mouse);
-
-  // TODO
-  //glutSpecialFunc(Keyboard::keyboardSpecial);
-  //glutSpecialUpFunc(Keyboard::keyboardSpecialUp);
-
-  glutKeyboardUpFunc(Keyboard::keyboardUp);
-
-  // TODO
-  //glutReshapeFunc(reshape);
+  //glutKeyboardFunc(Keyboard::keyboard);
+  //glutMotionFunc(Mouse::motion);
+  //glutPassiveMotionFunc(Mouse::motion);
+  //glutMouseFunc(Mouse::mouse);
+  //glutKeyboardUpFunc(Keyboard::keyboardUp);
 
   //Vector4 col = Camera::getClearColor();
   //glClearColor(col.x, col.y, col.z, col.w);
@@ -161,8 +162,48 @@ void Environment::initializePost()
 
   instance->startTime = time(NULL);
 
-  glutFullScreen();
-  glutMainLoop();
+  //glutFullScreen();
+  SDL_SetWindowFullscreen(instance->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+  instance->running = true;
+  SDL_Event e = {0};
+
+  while(instance->running)
+  {
+    while(SDL_PollEvent(&e) != 0)
+    {
+      if(e.type == SDL_QUIT)
+      {
+        instance->running = false;
+      }
+      else if(e.type == SDL_KEYDOWN)
+      {
+        Keyboard::keyboard(e.key.keysym.sym, 0, 0);
+      }
+      else if(e.type == SDL_KEYUP)
+      {
+        Keyboard::keyboardUp(e.key.keysym.sym, 0, 0);
+      }
+      else if(e.type == SDL_MOUSEMOTION)
+      {
+        int mx = 0;
+        int my = 0;
+        SDL_GetMouseState(&mx, &my);
+        Mouse::motion(mx, my);
+      }
+      else if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP)
+      {
+        int mx = 0;
+        int my = 0;
+        SDL_GetMouseState(&mx, &my);
+        Mouse::mouse(e.button.button, e.button.state, mx, my);
+      }
+    }
+
+    idle();
+    display();
+    SDL_GL_SwapWindow(instance->window);
+  }
 
   instance->closeAudio();
 
@@ -277,8 +318,12 @@ void Environment::repaint()
 
 void Environment::display()
 {
-  instance->screenWidth = glutGet(GLUT_WINDOW_WIDTH);
-  instance->screenHeight = glutGet(GLUT_WINDOW_HEIGHT);
+  int width = 0;
+  int height = 0;
+
+  SDL_GetWindowSize(instance->window, &width, &height);
+  instance->screenWidth = width;
+  instance->screenHeight = height;
   glViewport(0, 0, instance->screenWidth, instance->screenHeight);
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -345,8 +390,6 @@ void Environment::display()
   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
   glPopMatrix();
-
-  glutSwapBuffers();
 }
 
 void Environment::idle()
@@ -393,8 +436,6 @@ void Environment::idle()
 
   instance->downKeys.clear();
   Mouse::clearButtons();
-
-  glutPostRedisplay();
 }
 
 void Environment::registerType(std::string type, void (*attachFunc)(Entity*))
@@ -450,10 +491,10 @@ void Environment::updateDeltaTime()
 
   if(instance->lastTime == 0)
   {
-    instance->lastTime = (float)glutGet(GLUT_ELAPSED_TIME);
+    instance->lastTime = (float)SDL_GetTicks();
   }
 
-  diffTime = (float)glutGet(GLUT_ELAPSED_TIME) - instance->lastTime;
+  diffTime = (float)SDL_GetTicks() - instance->lastTime;
 
   if(diffTime < 1000.0f / targetFps)
   {
@@ -463,12 +504,12 @@ void Environment::updateDeltaTime()
 #else
     //usleep(((1000.0f / targetFps) - diffTime) * 900);
 #endif
-    diffTime = (float)glutGet(GLUT_ELAPSED_TIME) - instance->lastTime;
+    diffTime = (float)SDL_GetTicks() - instance->lastTime;
   }
 
   deltaTime = diffTime / 1000.0f;
   //std::cout << deltaTime * 1000.0f << std::endl;
-  instance->lastTime = (float)glutGet(GLUT_ELAPSED_TIME);
+  instance->lastTime = (float)SDL_GetTicks();
 
   if(deltaTime > 0.25f)
   {
@@ -490,14 +531,12 @@ time_t Environment::getLifeTime()
 
 void Environment::exit()
 {
-  glutLeaveMainLoop();
+  instance->running = false;
 }
 
 void Environment::setTitle(std::string title)
 {
-#ifndef OPENGLD
-  glutSetWindowTitle(title.c_str());
-#endif
+  SDL_SetWindowTitle(instance->window, title.c_str());
 }
 
 Entity* Environment::spawn(std::string name, Vector3 position, Vector3 rotation)
