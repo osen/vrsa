@@ -25,6 +25,13 @@ float direction = 0.5f;
 std::shared_ptr<Environment> Environment::instance;
 RegisterAssociation Environment::registrations[256];
 
+Environment::~Environment()
+{
+  SDL_GL_DeleteContext(glContext);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+}
+
 void Environment::clear()
 {
   for(size_t i = 0; i < instance->entities.size(); i++)
@@ -122,36 +129,10 @@ void Environment::initializePre(int argc, char *argv[])
   instance->graphics = rend::Context::initialize();
   instance->openAudio();
 
-  //glutKeyboardFunc(Keyboard::keyboard);
-  //glutMotionFunc(Mouse::motion);
-  //glutPassiveMotionFunc(Mouse::motion);
-  //glutMouseFunc(Mouse::mouse);
-  //glutKeyboardUpFunc(Keyboard::keyboardUp);
-
-  //Vector4 col = Camera::getClearColor();
-  //glClearColor(col.x, col.y, col.z, col.w);
-  //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  //Camera::setClearColor(Vector4(0, 0, 0.2f, 1.0f));
-
-#ifdef USE_GLUTEN
-  gnEnable(GN_TEXTURE_2D);
-#else
-  glEnable(GL_TEXTURE_2D);
-#endif
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_BLEND);
   glEnable(GL_CULL_FACE);
+  glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-/*
-  std::shared_ptr<World> world = World::load(path);
-  if(world.get() == NULL)
-  {
-    std::cerr << "Err" << std::endl;
-    throw std::exception();
-  }
-  world->populate();
-*/
 
   Gui::initialize();
 }
@@ -162,7 +143,6 @@ void Environment::initializePost()
 
   instance->startTime = time(NULL);
 
-  //glutFullScreen();
   SDL_SetWindowFullscreen(instance->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
   instance->running = true;
@@ -206,12 +186,7 @@ void Environment::initializePost()
   }
 
   instance->closeAudio();
-
   instance.reset();
-
-#ifdef OPENGLD
-  glutdCleanup();
-#endif
 }
 
 void Environment::openAudio()

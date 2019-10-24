@@ -1,15 +1,10 @@
 #include "hydra.h"
 
-#include <GL/freeglut.h>
-
 namespace hydra
 {
 
 void Keyboard::keyboard(unsigned char key, int x, int y)
 {
-  //std::cout << key << std::endl;
-  //Check for modifier? (glutGetmodifiers() == GLUT_ACTIVE_SHIFT)
-
   for(size_t i = 0; i < Environment::instance->keys.size(); i++)
   {
     if(Environment::instance->keys.at(i) == key)
@@ -41,17 +36,10 @@ void Keyboard::keyboardSpecial(int key, int x, int y)
 void Keyboard::keyboardSpecialUp(int key, int x, int y)
 {
   // TODO
-/*
-  if      (key == GLUT_KEY_LEFT)  keyboardUp('a',x,y);
-  else if (key == GLUT_KEY_RIGHT) keyboardUp('d',x,y);
-  else if (key == GLUT_KEY_UP)    keyboardUp('w',x,y);
-  else if (key == GLUT_KEY_DOWN)  keyboardUp('s',x,y);
-*/
 }
 
 void Keyboard::keyboardUp(unsigned char key, int x, int y)
 {
-  //check for modified key in map and set to false
   for(size_t i = 0; i < Environment::instance->keys.size(); i++)
   {
     if(Environment::instance->keys.at(i) == key)

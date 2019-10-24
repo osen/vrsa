@@ -812,6 +812,8 @@ public:
     T* t = e->addComponent<T>(a, b);
     return t;
   }
+
+  ~Environment();
 };
 
 struct Gui
