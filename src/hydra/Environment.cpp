@@ -25,12 +25,7 @@ float direction = 0.5f;
 std::shared_ptr<Environment> Environment::instance;
 RegisterAssociation Environment::registrations[256];
 
-Environment::~Environment()
-{
-  SDL_GL_DeleteContext(glContext);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
-}
+Environment::~Environment() { }
 
 void Environment::clear()
 {
@@ -186,7 +181,14 @@ void Environment::initializePost()
   }
 
   instance->closeAudio();
+
+  // TODO: Make this more elegant
+  SDL_GLContext glContext = instance->glContext;
+  SDL_Window* window = instance->window;
   instance.reset();
+  SDL_GL_DeleteContext(glContext);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
 }
 
 void Environment::openAudio()
