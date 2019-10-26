@@ -18,15 +18,22 @@ void MenuScreen::onInitialize()
   getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
 
   nextButton = Environment::addEntity<VrButton>();
-  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(1, 0, -2));
+  nextButton->setTexture(Texture::load("buttons/next"));
+  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -2));
+  nextButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  nextButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
   increaseButton = Environment::addEntity<VrButton>();
   increaseButton->setTexture(Texture::load("buttons/increase"));
   increaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(1, 0, -2));
+  increaseButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  increaseButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
   decreaseButton = Environment::addEntity<VrButton>();
   decreaseButton->setTexture(Texture::load("buttons/decrease"));
   decreaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-1, 0, -2));
+  decreaseButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  decreaseButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
   fr = Environment::addEntity<FontRenderer>();
   fr->setMessage("Hello");
@@ -41,12 +48,28 @@ void MenuScreen::onTick()
 {
   if(increaseButton->isClicked())
   {
-    Environment::exit();
+    setInterval(interval + 1);
+  }
+
+  if(decreaseButton->isClicked())
+  {
+    setInterval(interval - 1);
+  }
+
+  if(nextButton->isClicked())
+  {
+    Environment::clear();
+    Environment::addEntity<MainScreen>();
   }
 }
 
 void MenuScreen::setInterval(int interval)
 {
+  if(interval > 8 || interval < 1)
+  {
+    return;
+  }
+
   this->interval = interval;
 
   std::stringstream ss;
