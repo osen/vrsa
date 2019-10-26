@@ -7,6 +7,7 @@ void ButtonBar::onInitialize(int mode)
 {
   this->mode = mode;
 
+/*
   Entity* e = Entity::create();
   ModelRenderer* mr = e->addComponent<ModelRenderer>();
   mr->setModel(Model::load("models/ExitButton/ExitButton"));
@@ -15,9 +16,14 @@ void ButtonBar::onInitialize(int mode)
   e->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
   e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   e->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+*/
+
+  Entity* e = NULL;
+  ModelRenderer* mr = NULL;
 
   if(mode == 0)
   {
+/*
     e = Entity::create();
     mr = e->addComponent<ModelRenderer>();
     mr->setModel(Model::load("models/ExamButton/ExamButton"));
@@ -35,6 +41,7 @@ void ButtonBar::onInitialize(int mode)
     e->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
     e->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
     e->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+*/
   }
 
   if(mode == 1)
@@ -87,10 +94,12 @@ void ButtonBar::onTick()
     Vector3 hitLocal;
     Vector3 hitWorld;
 
+/*
     if(exitCollider->colliding(r, hitLocal, hitWorld) == true)
     {
       Environment::exit();
     }
+*/
 
     if(pianoCollider && pianoCollider->colliding(r, hitLocal, hitWorld) == true)
     {
@@ -98,11 +107,13 @@ void ButtonBar::onTick()
       Environment::addEntity<MainScreen>();
     }
 
+/*
     if(examCollider && examCollider->colliding(r, hitLocal, hitWorld) == true)
     {
       Environment::clear();
       Environment::addEntity<QuestionScreen>();
     }
+*/
 
     if(backCollider && backCollider->colliding(r, hitLocal, hitWorld) == true)
     {
@@ -116,10 +127,12 @@ void ButtonBar::onTick()
       Environment::addEntity<QuestionScreen>();
     }
 
+/*
     if(helpCollider && helpCollider->colliding(r, hitLocal, hitWorld) == true)
     {
       Environment::clear();
       Environment::addEntity<HelpScreen>();
     }
+*/
   }
 }
