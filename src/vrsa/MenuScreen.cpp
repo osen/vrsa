@@ -4,6 +4,8 @@
 #include "Fade.h"
 #include "VrButton.h"
 
+#include <sstream>
+
 void MenuScreen::onInitialize()
 {
   Environment::addEntity<Fade>(Vector3(1, 1, 1), true);
@@ -25,5 +27,31 @@ void MenuScreen::onInitialize()
   decreaseButton = Environment::addEntity<VrButton>();
   decreaseButton->setTexture(Texture::load("buttons/decrease"));
   decreaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-1, 0, -2));
+
+  fr = Environment::addEntity<FontRenderer>();
+  fr->setMessage("Hello");
+  fr->setFont(Font::load("fonts/DroidWhiteLarge"));
+  fr->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -45));
+  fr->getEntity()->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
+
+  setInterval(2);
+}
+
+void MenuScreen::onTick()
+{
+  if(increaseButton->isClicked())
+  {
+    Environment::exit();
+  }
+}
+
+void MenuScreen::setInterval(int interval)
+{
+  this->interval = interval;
+
+  std::stringstream ss;
+  ss << "Interval: " << interval;
+
+  fr->setMessage(ss.str());
 }
 

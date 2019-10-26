@@ -19,6 +19,8 @@ void main()
 
 #ifdef FRAGMENT
 
+uniform float u_Interact;
+uniform float u_Time;
 uniform sampler2D u_Texture;
 uniform sampler2D u_Glyph;
 
@@ -38,6 +40,20 @@ void main()
   {
     //gl_FragColor = texture2D(u_Texture, v_TexCoord);
   }
+
+  float t = sin(u_Time * 5);
+  //t = 1 - t;
+  t /= 10;
+
+  if(u_Interact == 0.5)
+  {
+    gl_FragColor *= vec4(0.6, 0.6, 0.75 + t, 1);
+  }
+  else if(u_Interact == 1)
+  {
+    gl_FragColor *= vec4(0.6, 0.6, 1.0, 1);
+  }
+
 }
 
 #endif

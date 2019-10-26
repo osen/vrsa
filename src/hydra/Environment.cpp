@@ -4,8 +4,6 @@
 
 #ifdef _WIN32
   #include <windows.h>
-  #define popen _popen
-  #define pclose _pclose
 #else
   #include <unistd.h>
 #endif
@@ -13,7 +11,6 @@
 #include <iostream>
 
 #include <string.h>
-
 #include <time.h>
 
 namespace hydra
@@ -73,11 +70,9 @@ void Environment::setupPaths(char *argv0)
   pclose(process);
   std::string name = buffer;
   assetsDirectory = prefix + "/share/" + name;
-
-  //TODO TEMPORY WINDOWS WORK-AROUND
 #endif
 
-  std::cout << "Assets: " << assetsDirectory << std::endl;
+  std::cout << "Assets Path: " << assetsDirectory << std::endl;
 }
 
 std::sr1::shared_ptr<rend::Context> Environment::getContext()
