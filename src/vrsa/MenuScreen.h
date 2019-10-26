@@ -1,0 +1,16 @@
+#include <hydra/hydra.h>
+
+using namespace hydra;
+
+struct VrButton;
+
+struct MenuScreen : public Component
+{
+  void onInitialize();
+
+private:
+  std::sr1::observer_ptr<VrButton> nextButton;
+  std::sr1::observer_ptr<VrButton> increaseButton;
+  std::sr1::observer_ptr<VrButton> decreaseButton;
+
+};

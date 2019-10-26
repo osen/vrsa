@@ -69,5 +69,7 @@ add_executable(vrsa
   src/vrsa/QuestionScreen.cpp
   src/vrsa/HelpScreen.cpp
   src/vrsa/KeyHelper.cpp
+  src/vrsa/VrButton.cpp
+  src/vrsa/MenuScreen.cpp
 )
 target_link_libraries(vrsa hydra)
