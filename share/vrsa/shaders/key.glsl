@@ -27,7 +27,8 @@ varying vec2 v_TexCoord;
 
 void main()
 {
-  vec4 color = (u_Color + texture2D(u_Texture, v_TexCoord)) / 2;
+  vec4 tex = texture2D(u_Texture, v_TexCoord);
+  vec4 color = (u_Color + tex) / 2;
 
   if(u_Time != 0)
   {
@@ -36,6 +37,7 @@ void main()
   }
 
   gl_FragColor = color;
+  gl_FragColor.w = tex.w;
 }
 
 #endif
