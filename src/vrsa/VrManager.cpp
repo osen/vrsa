@@ -117,6 +117,8 @@ void VrManager::onTick()
 {
   ohmd_ctx_update(ctx);
 
+  mat4 vm = glm::inverse(getEntity()->getComponent<Transform>()->getModel());
+
   if(leftCamera->getRenderTarget())
   {
     float matrix[16] = {0};
@@ -125,14 +127,14 @@ void VrManager::onTick()
     rightCamera->setProjection(proj);
     ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_MODELVIEW_MATRIX, matrix);
     mat4 view = glm::make_mat4(matrix);
-    rightCamera->setView(view);
+    rightCamera->setView(vm * view);
 
     ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_PROJECTION_MATRIX, matrix);
     proj = glm::make_mat4(matrix);
     leftCamera->setProjection(proj);
     ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX, matrix);
     view = glm::make_mat4(matrix);
-    leftCamera->setView(view);
+    leftCamera->setView(vm * view);
   }
 
   if(Keyboard::getKeyDown('v'))
