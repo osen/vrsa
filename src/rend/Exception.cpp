@@ -31,8 +31,8 @@ void pollForError()
       return;
     }
 
-    //throw Exception((char*)gluErrorString(err));
-    std::cout << "Warning: " << (char*)gluErrorString(err) << std::endl;
+    throw Exception((char*)gluErrorString(err));
+    //std::cout << "Warning: " << (char*)gluErrorString(err) << std::endl;
   }
 }
 

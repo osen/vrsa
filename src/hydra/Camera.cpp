@@ -73,6 +73,11 @@ void Camera::applyProjection()
 
 mat4 Camera::getProjection()
 {
+  if(useCustomProjection)
+  {
+    return customProjection;
+  }
+
   mat4 rtn = rend::perspective(rend::radians(65.0f),
     (float)Environment::getScreenWidth() / (float)Environment::getScreenHeight(),
     0.1f, 1000.0f);
@@ -82,6 +87,11 @@ mat4 Camera::getProjection()
 
 mat4 Camera::getView()
 {
+  if(useCustomView)
+  {
+    return customView;
+  }
+
   mat4 rtn = getEntity()->getTransform()->getModel();
   rtn = rend::inverse(rtn);
 
@@ -125,6 +135,18 @@ Ray Camera::createRay(Vector2 screenPosition)
   rtn.direction = glm::normalize(worldSpaceFar - worldSpaceNear);
 
   return rtn;
+}
+
+void Camera::setProjection(const mat4& projection)
+{
+  customProjection = projection;
+  useCustomProjection = true;
+}
+
+void Camera::setView(const mat4& view)
+{
+  customView = view;
+  useCustomView = true;
 }
 
 }

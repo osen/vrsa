@@ -5,6 +5,9 @@ namespace hydra
 
 Texture* Gui::buttonTexture = NULL;
 
+// TODO: Place as member
+std::sr1::shared_ptr<rend::Buffer> buffer;
+
 void Gui::initialize()
 {
 /*
@@ -29,7 +32,8 @@ void Gui::initialize()
   Environment::instance->guiMesh->generateVbos();
 */
 
-  std::sr1::shared_ptr<rend::Buffer> buffer =
+  //std::sr1::shared_ptr<rend::Buffer> buffer =
+  buffer =
     Environment::getContext()->createBuffer();
 
   buffer->add(rend::vec2(0, 0));
@@ -68,9 +72,19 @@ void Gui::texture(Vector2 position, const std::sr1::observer_ptr<TextureAdapter>
 
 void Gui::texture(Vector4 position, const std::sr1::observer_ptr<TextureAdapter>& texture)
 {
+  Gui::texture(position, texture, std::sr1::shared_ptr<Material>());
+}
+
+void Gui::texture(Vector4 position, const std::sr1::observer_ptr<TextureAdapter>& texture, const std::sr1::shared_ptr<Material>& material)
+{
   Mesh* mesh = Environment::instance->guiMesh.get();
 
   std::sr1::shared_ptr<Material> guiMaterial = Environment::instance->guiMaterial;
+
+  if(material)
+  {
+    guiMaterial = material;
+  }
 
   guiMaterial->setVariable("u_Projection",
     rend::ortho(0.0f, (float)Environment::getScreenWidth(),
@@ -84,6 +98,7 @@ void Gui::texture(Vector4 position, const std::sr1::observer_ptr<TextureAdapter>
   guiMaterial->setVariable("u_Texture", texture);
   guiMaterial->apply();
 
+  guiMaterial->shader->internal->setAttribute("a_Position", buffer);
   //guiMaterial->shader->internal->setAttribute("a_Position", mesh->positions);
   //guiMaterial->shader->internal->setAttribute("a_TexCoord", mesh->texCoords);
   guiMaterial->shader->internal->render();

@@ -515,6 +515,12 @@ class Camera : public Component
   std::sr1::shared_ptr<RenderTarget> renderTarget;
   Vector4 clearColor;
 
+  mat4 customProjection;
+  std::sr1::zero_initialized<bool> useCustomProjection;
+
+  mat4 customView;
+  std::sr1::zero_initialized<bool> useCustomView;
+
 public:
   void applyProjection();
   void applyView();
@@ -526,6 +532,9 @@ public:
   mat4 getView();
   void setRenderTarget(const std::sr1::shared_ptr<RenderTarget>& renderTarget);
   std::sr1::shared_ptr<RenderTarget> getRenderTarget();
+
+  void setProjection(const mat4& projection);
+  void setView(const mat4& view);
 
   void setClearColor(Vector4 clearColor);
   Vector4 getClearColor();
@@ -825,6 +834,10 @@ struct Gui
   static void initialize();
 
   static void applyProjection();
+
+  static void texture(Vector4 position, const std::sr1::observer_ptr<TextureAdapter>& texture,
+    const std::sr1::shared_ptr<Material>& material);
+
   static void texture(Vector4 position, const std::sr1::observer_ptr<TextureAdapter>& texture);
   static void texture(Vector2 position, const std::sr1::observer_ptr<TextureAdapter>& texture);
   static bool button(Vector4 position, std::string label);
