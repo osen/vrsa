@@ -11,7 +11,8 @@ void Player::onInitialize()
   rightCamera = getEntity()->addComponent<Camera>();
   rightCamera->setClearColor(Vector4(0.5f, 0.5f, 1.0f, 1));
 
-  Environment::addEntity<VrManager>(leftCamera, rightCamera);
+  //Environment::addEntity<VrManager>(leftCamera, rightCamera);
+  getEntity()->addComponent<VrManager>(leftCamera, rightCamera);
 }
 
 void Player::onTick()

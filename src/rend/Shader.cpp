@@ -23,6 +23,8 @@ struct VariableInfo
 
   std::sr1::zero_initialized<float> floatVal;
   mat4 mat4Val;
+  vec2 vec2Val;
+  vec3 vec3Val;
   vec4 vec4Val;
   std::sr1::shared_ptr<Buffer> bufferVal;
   std::sr1::shared_ptr<TextureAdapter> textureVal;
@@ -91,6 +93,14 @@ void Shader::render()
       {
         glUniformMatrix4fv((*it)->loc, 1, false, glm::value_ptr((*it)->mat4Val)); pollForError();
       }
+      else if((*it)->type == GL_FLOAT_VEC2)
+      {
+        glUniform2fv((*it)->loc, 1, glm::value_ptr((*it)->vec2Val)); pollForError();
+      }
+      else if((*it)->type == GL_FLOAT_VEC3)
+      {
+        glUniform3fv((*it)->loc, 1, glm::value_ptr((*it)->vec3Val)); pollForError();
+      }
       else if((*it)->type == GL_FLOAT_VEC4)
       {
         glUniform4fv((*it)->loc, 1, glm::value_ptr((*it)->vec4Val)); pollForError();
@@ -155,6 +165,18 @@ void Shader::setUniform(const std::string& variable, mat4 value)
 {
   std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_MAT4, false);
   vi->mat4Val = value;
+}
+
+void Shader::setUniform(const std::string& variable, vec2 value)
+{
+  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC2, false);
+  vi->vec2Val = value;
+}
+
+void Shader::setUniform(const std::string& variable, vec3 value)
+{
+  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC3, false);
+  vi->vec3Val = value;
 }
 
 void Shader::setUniform(const std::string& variable, vec4 value)

@@ -98,6 +98,7 @@ struct RenderTarget : public TextureAdapter
   ~RenderTarget();
   int getWidth();
   int getHeight();
+  void setSize(int width, int height);
 
 private:
   friend class hydra::Environment;
@@ -160,6 +161,8 @@ struct Material
 
   void setVariable(const std::string& name, float value);
   void setVariable(const std::string& name, const mat4& value);
+  void setVariable(const std::string& name, const vec2& value);
+  void setVariable(const std::string& name, const vec3& value);
   void setVariable(const std::string& name, const vec4& value);
   void setVariable(const std::string& name, const std::sr1::observer_ptr<TextureAdapter>& value);
 

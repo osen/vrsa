@@ -72,4 +72,4 @@ add_executable(vrsa
   src/vrsa/VrButton.cpp
   src/vrsa/MenuScreen.cpp
 )
-target_link_libraries(vrsa hydra)
+target_link_libraries(vrsa hydra openhmd hidapi)

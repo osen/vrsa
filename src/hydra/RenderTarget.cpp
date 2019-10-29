@@ -35,6 +35,11 @@ std::sr1::shared_ptr<rend::TextureAdapter> RenderTarget::getInternal()
   return internal;
 }
 
+void RenderTarget::setSize(int width, int height)
+{
+  internal->setSize(width, height);
+}
+
 int RenderTarget::getWidth()
 {
   return internal->getWidth();

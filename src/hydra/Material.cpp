@@ -9,15 +9,19 @@ struct MaterialVariable
   std::sr1::zero_initialized<int> type;
 
   std::sr1::zero_initialized<float> floatVal;
+  rend::vec2 vec2Val;
+  rend::vec3 vec3Val;
   rend::vec4 vec4Val;
   rend::mat4 mat4Val;
   std::sr1::observer_ptr<TextureAdapter> textureVal;
 };
 
 #define VAR_MAT4 1
-#define VAR_VEC4 2
-#define VAR_TEXTURE 3
-#define VAR_FLOAT 4
+#define VAR_VEC2 2
+#define VAR_VEC3 3
+#define VAR_VEC4 4
+#define VAR_TEXTURE 5
+#define VAR_FLOAT 6
 
 void Material::apply()
 {
@@ -27,6 +31,14 @@ void Material::apply()
     if((*it)->type == VAR_MAT4)
     {
       shader->internal->setUniform((*it)->name, (*it)->mat4Val);
+    }
+    else if((*it)->type == VAR_VEC2)
+    {
+      shader->internal->setUniform((*it)->name, (*it)->vec2Val);
+    }
+    else if((*it)->type == VAR_VEC3)
+    {
+      shader->internal->setUniform((*it)->name, (*it)->vec3Val);
     }
     else if((*it)->type == VAR_VEC4)
     {
@@ -62,6 +74,18 @@ void Material::setVariable(const std::string& name, const mat4& value)
 {
   std::sr1::shared_ptr<MaterialVariable> var = getVariable(name, VAR_MAT4);
   var->mat4Val = value;
+}
+
+void Material::setVariable(const std::string& name, const vec2& value)
+{
+  std::sr1::shared_ptr<MaterialVariable> var = getVariable(name, VAR_VEC2);
+  var->vec2Val = value;
+}
+
+void Material::setVariable(const std::string& name, const vec3& value)
+{
+  std::sr1::shared_ptr<MaterialVariable> var = getVariable(name, VAR_VEC3);
+  var->vec3Val = value;
 }
 
 void Material::setVariable(const std::string& name, const vec4& value)
