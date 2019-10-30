@@ -24,6 +24,7 @@ private:
 
   std::sr1::zero_initialized<int> index;
   std::sr1::zero_initialized<float> time;
+  //std::sr1::zero_initialized<float> to;
 
   void refresh();
 

@@ -21,6 +21,21 @@ void Key::onTick()
     time = 0;
   }
 
+/*
+  float of = to;
+  to-= Environment::getDeltaTime();
+
+  if(of > 0 && to <= 0)
+  {
+    Transform* t = Environment::getCamera()->getEntity()->getComponent<Transform>();
+    Vector3 v = getEntity()->getComponent<Transform>()->getPosition();
+    Vector4 res = Environment::getCamera()->getView() * vec4(v, 1.0f);
+    v = res;
+    //  sound->play();
+    sound->play(v);
+  }
+*/
+
   material->setVariable("u_Time", time);
 }
 
@@ -31,7 +46,16 @@ void Key::setSound(std::sr1::observer_ptr<Sound> sound)
 
 void Key::play()
 {
-  sound->play();
+  Transform* t = Environment::getCamera()->getEntity()->getComponent<Transform>();
+  Vector3 v = getEntity()->getComponent<Transform>()->getPosition();
+  Vector4 res = Environment::getCamera()->getView() * vec4(v, 1.0f);
+  v = res;
+  //sound->play(Vector3(1, 0, 0));
+  //sound->play();
+  sound->play(v);
+  //sound->play(getEntity()->getComponent<Transform>()->getPosition() * 10);
+
+  //to = 3;
 }
 
 void Key::setSelected(int selected)

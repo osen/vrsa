@@ -109,6 +109,11 @@ bool Entity::hasTag(std::string tag)
 void Entity::kill()
 {
   alive = false;
+
+  for(size_t i = 0; i < components.size(); i++)
+  {
+    components.at(i)->onDoKill();
+  }
 }
 
 Entity* Entity::findByTag(std::string tag)

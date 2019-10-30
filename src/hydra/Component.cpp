@@ -11,6 +11,7 @@ void Component::onRender() {}
 void Component::onPostRender() {}
 void Component::onGui() {}
 void Component::onKill() {}
+void Component::onDoKill() {}
 
 void Component::setEnabled(bool enabled)
 {

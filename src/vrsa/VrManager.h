@@ -13,6 +13,7 @@ struct VrManager : public Component
 
   void onTick();
   void onGui();
+  void onDoKill();
 
   ~VrManager();
 

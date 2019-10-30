@@ -117,25 +117,28 @@ void VrManager::onTick()
 {
   ohmd_ctx_update(ctx);
 
-  mat4 vm = glm::inverse(getEntity()->getComponent<Transform>()->getModel());
-
+/*
   if(leftCamera->getRenderTarget())
   {
+    mat4 vm = glm::inverse(getEntity()->getComponent<Transform>()->getModel());
+    //mat4 vm = getEntity()->getComponent<Transform>()->getModel();
+
     float matrix[16] = {0};
     ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_PROJECTION_MATRIX, matrix);
     mat4 proj = glm::make_mat4(matrix);
     rightCamera->setProjection(proj);
     ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_MODELVIEW_MATRIX, matrix);
     mat4 view = glm::make_mat4(matrix);
-    rightCamera->setView(vm * view);
+    rightCamera->setView(view * vm);
 
     ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_PROJECTION_MATRIX, matrix);
     proj = glm::make_mat4(matrix);
     leftCamera->setProjection(proj);
     ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX, matrix);
     view = glm::make_mat4(matrix);
-    leftCamera->setView(vm * view);
+    leftCamera->setView(view * vm);
   }
+*/
 
   if(Keyboard::getKeyDown('v'))
   {
@@ -155,6 +158,11 @@ void VrManager::onTick()
   {
     disableWarp = true;
   }
+
+  if(Keyboard::getKeyDown('q'))
+  {
+    Environment::exit();
+  }
 }
 
 void VrManager::onGui()
@@ -164,35 +172,70 @@ void VrManager::onGui()
     Vector2 size(Environment::getScreenWidth(),
       Environment::getScreenHeight());
 
-    size.x -= 30;
-    size.x /= 2;
-
-    size.y -= 20;
-
     if(disableWarp)
     {
+      size.x -= 30;
+      size.y -= 20;
+      size.x /= 2;
       Gui::texture(Vector4(10, 10, size.x, size.y), leftCamera->getRenderTarget());
       Gui::texture(Vector4(10 + size.x + 10, 10, size.x, size.y),
         rightCamera->getRenderTarget());
     }
     else
     {
+      size.x /= 2;
       warpMaterial->setVariable("u_LensCenter", leftLensCenter);
-      Gui::texture(Vector4(10, 10, size.x, size.y), leftCamera->getRenderTarget(), warpMaterial);
+      Gui::texture(Vector4(0, 0, size.x, size.y), leftCamera->getRenderTarget(), warpMaterial);
 
       warpMaterial->setVariable("u_LensCenter", rightLensCenter);
-      Gui::texture(Vector4(10 + size.x + 10, 10, size.x, size.y),
+      Gui::texture(Vector4(size.x, 0, size.x, size.y),
         rightCamera->getRenderTarget(), warpMaterial);
     }
   }
 
   Gui::text(Vector2(10, 10), "Renderer: OpenGL [4.5 core]", font.get());
   Gui::text(Vector2(10, 40), "VR Driver: OpenVR [disconnected]", font.get());
-  Gui::text(Vector2(10, 70), "Audio: OpenAL [soft, mono]", font.get());
+  Gui::text(Vector2(10, 70), "Audio: OpenAL [soft]", font.get());
+  //Gui::text(Vector2(10, 70), "Audio: OpenAL [soft, mono]", font.get());
+
+  if(leftCamera->getRenderTarget())
+  {
+    mat4 vm = glm::inverse(getEntity()->getComponent<Transform>()->getModel());
+    //mat4 vm = getEntity()->getComponent<Transform>()->getModel();
+
+    float matrix[16] = {0};
+    ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_PROJECTION_MATRIX, matrix);
+    mat4 proj = glm::make_mat4(matrix);
+    rightCamera->setProjection(proj);
+    ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_MODELVIEW_MATRIX, matrix);
+    mat4 view = glm::make_mat4(matrix);
+    rightCamera->setView(view * vm);
+
+    ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_PROJECTION_MATRIX, matrix);
+    proj = glm::make_mat4(matrix);
+    leftCamera->setProjection(proj);
+    ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX, matrix);
+    view = glm::make_mat4(matrix);
+    leftCamera->setView(view * vm);
+  }
+}
+
+void VrManager::onDoKill()
+{
+  std::cout << "Killing" << std::endl;
+  if(ctx)
+  {
+    ohmd_ctx_destroy(ctx);
+    ctx = NULL;
+  }
 }
 
 VrManager::~VrManager()
 {
-  //std::cout << "Destroying" << std::endl;
-  ohmd_ctx_destroy(ctx);
+  std::cout << "Destroying" << std::endl;
+  if(ctx)
+  {
+    ohmd_ctx_destroy(ctx);
+    ctx = NULL;
+  }
 }

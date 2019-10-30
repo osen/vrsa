@@ -89,6 +89,9 @@ void Environment::initializePre(int argc, char *argv[])
   instance->screenWidth = 640;
   instance->screenHeight = 480;
 
+  //instance->screenWidth = 2880;
+  //instance->screenHeight = 1600;
+
   if(SDL_Init(SDL_INIT_VIDEO) < 0)
   {
     throw Exception("Failed to initialize window system");
@@ -96,6 +99,7 @@ void Environment::initializePre(int argc, char *argv[])
 
   instance->window = SDL_CreateWindow("VRSA",
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+    //0, 0,
     instance->screenWidth, instance->screenHeight,
     SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
@@ -133,7 +137,7 @@ void Environment::initializePost()
 
   instance->startTime = time(NULL);
 
-  SDL_SetWindowFullscreen(instance->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+  //SDL_SetWindowFullscreen(instance->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
   instance->running = true;
   SDL_Event e = {0};

@@ -57,6 +57,18 @@ void Sound::play()
   hydra::Environment::instance->audioSources.push_back(sid);
 }
 
+void Sound::play(Vector3 pos)
+{
+  ALuint sid = 0;
+  alGenSources(1, &sid);
+  alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+  alSource3f(sid, AL_POSITION, pos.x, pos.y, pos.z);
+  alSourcei(sid, AL_BUFFER, id);
+  alSourcePlay(sid);
+
+  hydra::Environment::instance->audioSources.push_back(sid);
+}
+
 std::string Sound::getPath()
 {
   return path;
@@ -105,6 +117,9 @@ void Sound::loadOgg(const std::string& fileName, std::vector<char>& buffer,
   {
     format = AL_FORMAT_STEREO16;
   }
+
+  // Force format to be mono
+  format = AL_FORMAT_MONO16;
 
   // Record the sample rate required by OpenAL
   freq = sampleRate;

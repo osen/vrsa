@@ -195,6 +195,7 @@ public:
   ~Sound();
 
   void play();
+  void play(Vector3 pos);
   void play(float vol, float varMin, float varMax);
   std::string getPath();
 
@@ -254,6 +255,7 @@ class Component : public std::sr1::enable_observer
   virtual void onPostRender();
   virtual void onGui();
   virtual void onKill();
+  virtual void onDoKill();
 
 public:
   virtual ~Component();
