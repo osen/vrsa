@@ -48,6 +48,7 @@ void Key::play()
 {
   Transform* t = Environment::getCamera()->getEntity()->getComponent<Transform>();
   Vector3 v = getEntity()->getComponent<Transform>()->getPosition();
+  v /= 10.0f;
   Vector4 res = Environment::getCamera()->getView() * vec4(v, 1.0f);
   v = res;
   //sound->play(Vector3(1, 0, 0));

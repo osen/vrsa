@@ -11,6 +11,7 @@ namespace rend
 {
 
 struct Context;
+struct Shader;
 
 struct Buffer : public std::sr1::noncopyable
 {

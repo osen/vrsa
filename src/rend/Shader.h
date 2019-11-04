@@ -15,7 +15,6 @@ namespace rend
 struct Context;
 struct VariableInfo;
 struct Buffer;
-struct Texture;
 struct RenderTexture;
 struct TextureAdapter;
 

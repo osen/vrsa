@@ -18,11 +18,6 @@ struct Context
   std::sr1::shared_ptr<RenderTexture> createRenderTexture();
 
 private:
-  friend struct Texture;
-  friend struct Shader;
-  friend struct Buffer;
-  friend struct RenderTexture;
-
   std::sr1::weak_ptr<Context> self;
 
 };
