@@ -54,6 +54,8 @@ else()
   target_link_libraries(hydra rend openal)
 endif()
 
+#add_definitions(-DENABLE_VR)
+
 add_executable(vrsa
   src/vrsa/main.cpp
   src/vrsa/IntroScreen.cpp
@@ -72,5 +74,6 @@ add_executable(vrsa
   src/vrsa/VrButton.cpp
   src/vrsa/MenuScreen.cpp
 )
-target_link_libraries(vrsa hydra openhmd hidapi-libusb pthread)
+#target_link_libraries(vrsa hydra openhmd hidapi-libusb pthread)
 #target_link_libraries(vrsa hydra openhmd hidapi)
+target_link_libraries(vrsa hydra pthread)

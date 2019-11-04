@@ -9,6 +9,7 @@ void VrManager::onInitialize(
   this->leftCamera = leftCamera;
   this->rightCamera = rightCamera;
 
+#ifdef ENABLE_VR
   ctx = ohmd_ctx_create();
   int num_devices = ohmd_ctx_probe(ctx);
 
@@ -18,7 +19,7 @@ void VrManager::onInitialize(
     throw Exception("Failed to probe devices");
   }
 
-  std::cout << "HMD Devices: " << num_devices << std::endl;
+  //std::cout << "HMD Devices: " << num_devices << std::endl;
 
   ohmd_device_settings* settings = ohmd_device_settings_create(ctx);
   int auto_update = 1;
@@ -39,8 +40,8 @@ void VrManager::onInitialize(
   float ipd = 0;
   ohmd_device_getf(hmd, OHMD_EYE_IPD, &ipd);
 
-  std::cout << "HMD Width: " << hmd_w << std::endl;
-  std::cout << "HMD Height: " << hmd_h << std::endl;
+  //std::cout << "HMD Width: " << hmd_w << std::endl;
+  //std::cout << "HMD Height: " << hmd_h << std::endl;
 
   float viewport_scale[2] = {0};
   float distortion_coeffs[4] = {0};
@@ -111,53 +112,17 @@ void VrManager::onInitialize(
   rightRt = RenderTarget::create();
   leftRt->setSize(eye_w, eye_h);
   rightRt->setSize(eye_w, eye_h);
+
+  leftCamera->setRenderTarget(leftRt);
+  rightCamera->setRenderTarget(rightRt);
+#endif
 }
 
 void VrManager::onTick()
 {
+#ifdef ENABLE_VR
   ohmd_ctx_update(ctx);
-
-/*
-  if(leftCamera->getRenderTarget())
-  {
-    mat4 vm = glm::inverse(getEntity()->getComponent<Transform>()->getModel());
-    //mat4 vm = getEntity()->getComponent<Transform>()->getModel();
-
-    float matrix[16] = {0};
-    ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_PROJECTION_MATRIX, matrix);
-    mat4 proj = glm::make_mat4(matrix);
-    rightCamera->setProjection(proj);
-    ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_MODELVIEW_MATRIX, matrix);
-    mat4 view = glm::make_mat4(matrix);
-    rightCamera->setView(view * vm);
-
-    ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_PROJECTION_MATRIX, matrix);
-    proj = glm::make_mat4(matrix);
-    leftCamera->setProjection(proj);
-    ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX, matrix);
-    view = glm::make_mat4(matrix);
-    leftCamera->setView(view * vm);
-  }
-*/
-
-  if(Keyboard::getKeyDown('v'))
-  {
-    if(leftCamera->getRenderTarget())
-    {
-      leftCamera->setRenderTarget(std::sr1::shared_ptr<RenderTarget>());
-      rightCamera->setRenderTarget(std::sr1::shared_ptr<RenderTarget>());
-    }
-    else
-    {
-      leftCamera->setRenderTarget(leftRt);
-      rightCamera->setRenderTarget(rightRt);
-    }
-  }
-
-  if(Keyboard::getKeyDown('b'))
-  {
-    disableWarp = true;
-  }
+#endif
 
   if(Keyboard::getKeyDown('q'))
   {
@@ -167,75 +132,71 @@ void VrManager::onTick()
 
 void VrManager::onGui()
 {
-  if(leftCamera->getRenderTarget())
-  {
-    Vector2 size(Environment::getScreenWidth(),
-      Environment::getScreenHeight());
+#ifdef ENABLE_VR
+  Vector2 size(Environment::getScreenWidth(),
+    Environment::getScreenHeight());
 
-    if(disableWarp)
-    {
-      size.x -= 30;
-      size.y -= 20;
-      size.x /= 2;
-      Gui::texture(Vector4(10, 10, size.x, size.y), leftCamera->getRenderTarget());
-      Gui::texture(Vector4(10 + size.x + 10, 10, size.x, size.y),
-        rightCamera->getRenderTarget());
-    }
-    else
-    {
-      size.x /= 2;
-      warpMaterial->setVariable("u_LensCenter", leftLensCenter);
-      Gui::texture(Vector4(0, 0, size.x, size.y), leftCamera->getRenderTarget(), warpMaterial);
+/*
+  size.x -= 30;
+  size.y -= 20;
+  size.x /= 2;
+  Gui::texture(Vector4(10, 10, size.x, size.y), leftCamera->getRenderTarget());
+  Gui::texture(Vector4(10 + size.x + 10, 10, size.x, size.y),
+    rightCamera->getRenderTarget());
+*/
 
-      warpMaterial->setVariable("u_LensCenter", rightLensCenter);
-      Gui::texture(Vector4(size.x, 0, size.x, size.y),
-        rightCamera->getRenderTarget(), warpMaterial);
-    }
-  }
+  size.x /= 2;
+  warpMaterial->setVariable("u_LensCenter", leftLensCenter);
+  Gui::texture(Vector4(0, 0, size.x, size.y), leftCamera->getRenderTarget(), warpMaterial);
+
+  warpMaterial->setVariable("u_LensCenter", rightLensCenter);
+  Gui::texture(Vector4(size.x, 0, size.x, size.y),
+    rightCamera->getRenderTarget(), warpMaterial);
 
   Gui::text(Vector2(10, 10), "Renderer: OpenGL [4.5 core]", font.get());
   Gui::text(Vector2(10, 40), "VR Driver: OpenVR [disconnected]", font.get());
   Gui::text(Vector2(10, 70), "Audio: OpenAL [soft]", font.get());
-  //Gui::text(Vector2(10, 70), "Audio: OpenAL [soft, mono]", font.get());
 
-  if(leftCamera->getRenderTarget())
-  {
-    mat4 vm = glm::inverse(getEntity()->getComponent<Transform>()->getModel());
-    //mat4 vm = getEntity()->getComponent<Transform>()->getModel();
+  mat4 vm = glm::inverse(getEntity()->getComponent<Transform>()->getModel());
 
-    float matrix[16] = {0};
-    ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_PROJECTION_MATRIX, matrix);
-    mat4 proj = glm::make_mat4(matrix);
-    rightCamera->setProjection(proj);
-    ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_MODELVIEW_MATRIX, matrix);
-    mat4 view = glm::make_mat4(matrix);
-    rightCamera->setView(view * vm);
+  float matrix[16] = {0};
+  ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_PROJECTION_MATRIX, matrix);
+  mat4 proj = glm::make_mat4(matrix);
+  rightCamera->setProjection(proj);
+  ohmd_device_getf(hmd, OHMD_RIGHT_EYE_GL_MODELVIEW_MATRIX, matrix);
+  mat4 view = glm::make_mat4(matrix);
+  rightCamera->setView(view * vm);
 
-    ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_PROJECTION_MATRIX, matrix);
-    proj = glm::make_mat4(matrix);
-    leftCamera->setProjection(proj);
-    ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX, matrix);
-    view = glm::make_mat4(matrix);
-    leftCamera->setView(view * vm);
-  }
+  ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_PROJECTION_MATRIX, matrix);
+  proj = glm::make_mat4(matrix);
+  leftCamera->setProjection(proj);
+  ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX, matrix);
+  view = glm::make_mat4(matrix);
+  leftCamera->setView(view * vm);
+#endif
 }
 
 void VrManager::onDoKill()
 {
-  std::cout << "Killing" << std::endl;
+#ifdef ENABLE_VR
   if(ctx)
   {
+    std::cout << ohmd_ctx_destroy << std::endl;
     ohmd_ctx_destroy(ctx);
     ctx = NULL;
   }
+#endif
 }
 
 VrManager::~VrManager()
 {
-  std::cout << "Destroying" << std::endl;
+#ifdef ENABLE_VR
   if(ctx)
   {
+    std::cout << ohmd_ctx_destroy << std::endl;
     ohmd_ctx_destroy(ctx);
     ctx = NULL;
   }
+#endif
 }
+

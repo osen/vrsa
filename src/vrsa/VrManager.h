@@ -1,7 +1,9 @@
 #include <hydra/hydra.h>
 
-#define OHMD_STATIC
-#include <openhmd.h>
+#ifdef ENABLE_VR
+  #define OHMD_STATIC
+  #include <openhmd.h>
+#endif
 
 using namespace hydra;
 
@@ -30,6 +32,8 @@ private:
   std::sr1::shared_ptr<Material> warpMaterial;
   std::sr1::zero_initialized<bool> disableWarp;
 
+#ifdef ENABLE_VR
   std::sr1::zero_initialized<ohmd_context*> ctx;
   std::sr1::zero_initialized<ohmd_device*> hmd;
+#endif
 };
