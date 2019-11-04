@@ -73,6 +73,7 @@ add_executable(vrsa
   src/vrsa/KeyHelper.cpp
   src/vrsa/VrButton.cpp
   src/vrsa/MenuScreen.cpp
+  src/vrsa/Pointer.cpp
 )
 #target_link_libraries(vrsa hydra openhmd hidapi-libusb pthread)
 #target_link_libraries(vrsa hydra openhmd hidapi)

@@ -412,6 +412,7 @@ void Environment::idle()
 
   instance->downKeys.clear();
   Mouse::clearButtons();
+  Mouse::lastPosition = ivec2(Mouse::x, Mouse::y);
 }
 
 void Environment::registerType(std::string type, void (*attachFunc)(Entity*))

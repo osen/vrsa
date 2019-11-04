@@ -32,9 +32,12 @@ typedef glm::vec3 Vector3;
 typedef glm::vec4 Vector4;
 
 using rend::mat4;
+using rend::ivec2;
 using rend::vec2;
 using rend::vec3;
 using rend::vec4;
+
+//using namespace rend;
 
 struct Part;
 struct ColliderColumn;
@@ -368,12 +371,16 @@ class ModelRenderer : public Component
   std::sr1::observer_ptr<Model> model;
   std::vector<Animation*> animations;
   std::sr1::zero_initialized<double> frame;
+  std::sr1::zero_initialized<bool> depthTest;
   Vector2 screenCoordinate;
   Vector3 offset;
   std::sr1::shared_ptr<Material> material;
 
   virtual void onRender();
+  virtual void onPostRender();
   virtual void onTick();
+
+  void doRender();
 
 public:
   void onInitialize();
@@ -387,6 +394,7 @@ public:
   std::sr1::shared_ptr<Material> getMaterial();
 
   Vector2 getScreenCoordinate();
+  void setDepthTest(bool depthTest);
 
 };
 
@@ -685,11 +693,13 @@ public:
   static int getY();
   static bool getButton(int button = 0);
   static bool getButtonDown(int button = 0);
+  static ivec2 getMotion();
 
   static void clearButtons();
 
   static int x;
   static int y;
+  static ivec2 lastPosition;
 
   static std::array<bool, 10> buttons;
   static std::array<bool, 10> buttonsDown;

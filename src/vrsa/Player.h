@@ -2,6 +2,8 @@
 
 using namespace hydra;
 
+struct Pointer;
+
 struct Player : public Component
 {
   void onInitialize();
@@ -11,5 +13,7 @@ private:
   std::sr1::observer_ptr<Camera> leftCamera;
   std::sr1::observer_ptr<Camera> rightCamera;
   Vector2 lastMouse;
+
+  std::sr1::observer_ptr<Pointer> pointer;
 
 };

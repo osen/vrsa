@@ -21,6 +21,7 @@ private:
   std::sr1::zero_initialized<int> selected;
   std::sr1::observer_ptr<Sound> sound;
   std::sr1::shared_ptr<Material> material;
+  //std::sr1::observer_ptr<ModelRenderer> mr;
 
   std::sr1::zero_initialized<int> index;
   std::sr1::zero_initialized<float> time;

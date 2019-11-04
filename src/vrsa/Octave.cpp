@@ -1,6 +1,7 @@
 #include "Octave.h"
 #include "Key.h"
 #include "KeyHelper.h"
+#include "Pointer.h"
 
 #include <glm/ext.hpp>
 
@@ -43,7 +44,11 @@ void Octave::onTick()
   if(Mouse::getButtonDown(0) == true)
   {
     Vector2 mpos = Vector2(Mouse::getX(), Mouse::getY());
-    Ray r = Environment::getCamera()->createRay(mpos);
+    //Ray r = Environment::getCamera()->createRay(mpos);
+
+    Entity* pe = Entity::findByTag("pointer");
+    Pointer* pointer = pe->getComponent<Pointer>();
+    Ray r = pointer->getRay();
 
     std::sr1::observer_ptr<Key> k = getKey(r);
 

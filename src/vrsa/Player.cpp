@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "VrManager.h"
+#include "Pointer.h"
 
 #include <iostream>
 
@@ -13,6 +14,8 @@ void Player::onInitialize()
 
   //Environment::addEntity<VrManager>(leftCamera, rightCamera);
   getEntity()->addComponent<VrManager>(leftCamera, rightCamera);
+
+  pointer = Environment::addEntity<Pointer>(getEntity());
 }
 
 void Player::onTick()

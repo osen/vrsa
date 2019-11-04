@@ -4,6 +4,7 @@ void Key::onInitialize(int index)
 {
   this->index = index;
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
+  //mr->setDepthTest(false);
   material = mr->getMaterial();
   material->setShader(Shader::load("shaders/key"));
   setType(0);
@@ -67,6 +68,17 @@ void Key::setSelected(int selected)
 
 void Key::setType(int type)
 {
+/*
+  if(type == 0)
+  {
+    mr->setDepthTest(true);
+  }
+  else
+  {
+    mr->setDepthTest(false);
+  }
+*/
+
   this->type = type;
   refresh();
 }

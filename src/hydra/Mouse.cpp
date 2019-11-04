@@ -7,6 +7,7 @@ namespace hydra
 
 int Mouse::x;
 int Mouse::y;
+ivec2 Mouse::lastPosition;
 
 std::array<bool, 10> Mouse::buttons;
 std::array<bool, 10> Mouse::buttonsDown;
@@ -42,6 +43,11 @@ int Mouse::getX()
 int Mouse::getY()
 {
   return y;
+}
+
+ivec2 Mouse::getMotion()
+{
+  return ivec2(x, y) - lastPosition;
 }
 
 bool Mouse::getButton(int button)
@@ -80,6 +86,7 @@ void Mouse::mouse(int button, int state, int x, int y)
     buttonsDown.at(button) = false;
   }
 
+  //lastPosition = ivec2(Mouse::x, Mouse::y);
   Mouse::x = x;
   Mouse::y = y;
 }

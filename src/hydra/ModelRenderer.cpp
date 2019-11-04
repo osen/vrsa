@@ -19,11 +19,17 @@ void ModelRenderer::onInitialize()
 {
   material = std::sr1::make_shared<Material>();
   material->setShader(Shader::load("shaders/default"));
+  depthTest = true;
 }
 
 std::sr1::shared_ptr<Material> ModelRenderer::getMaterial()
 {
   return material;
+}
+
+void ModelRenderer::setDepthTest(bool depthTest)
+{
+  this->depthTest = depthTest;
 }
 
 void ModelRenderer::onTick()
@@ -74,6 +80,24 @@ int mrand_between(int min, int max)
 }
 
 void ModelRenderer::onRender()
+{
+  if(depthTest)
+  {
+    doRender();
+  }
+}
+
+void ModelRenderer::onPostRender()
+{
+  if(!depthTest)
+  {
+    //glDisable(GL_DEPTH_TEST);
+    doRender();
+    //glEnable(GL_DEPTH_TEST);
+  }
+}
+
+void ModelRenderer::doRender()
 {
   if(!Environment::getCamera())
   {
