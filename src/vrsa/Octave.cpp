@@ -54,6 +54,7 @@ void Octave::onTick()
 
     if(k)
     {
+      //pointer->restAgainst(k->getEntity()->getTransform()->getPosition());
       selectKey(k);
     }
   }

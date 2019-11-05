@@ -59,6 +59,7 @@ void Piano::onTick()
     if(k)
     {
       selectKey(k);
+      //pointer->restAgainst(k->getEntity()->getTransform()->getPosition());
       //selectKeyOctave(k);
     }
 

@@ -20,7 +20,7 @@ void MenuScreen::onInitialize()
 
   nextButton = Environment::addEntity<VrButton>();
   nextButton->setTexture(Texture::load("buttons/next"));
-  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -3));
+  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -4));
   nextButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   nextButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
@@ -38,13 +38,13 @@ void MenuScreen::onInitialize()
 
   increaseButton = Environment::addEntity<VrButton>();
   increaseButton->setTexture(Texture::load("buttons/increase"));
-  increaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(1, 0, -2));
+  increaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2, 0, -4));
   increaseButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   increaseButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
   decreaseButton = Environment::addEntity<VrButton>();
   decreaseButton->setTexture(Texture::load("buttons/decrease"));
-  decreaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-1, 0, -2));
+  decreaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2, 0, -4));
   decreaseButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   decreaseButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 

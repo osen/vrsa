@@ -34,6 +34,8 @@ void VrButton::onTick()
 
   if(mc->colliding(r, hitLocal, hitWorld) == true)
   {
+    pointer->restAgainst(getEntity()->getTransform()->getPosition());
+
     if(Mouse::getButtonDown(0) == true)
     {
       time = 1;
