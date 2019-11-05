@@ -7,6 +7,7 @@ void Pointer::onInitialize(std::sr1::observer_ptr<Entity> parent)
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   mr->setDepthTest(false);
   mr->setModel(Model::load("models/Pointer/Pointer"));
+  getEntity()->getTransform()->setScale(vec3(2.5f, 2.5f, 1));
 }
 
 void Pointer::onTick()
@@ -36,7 +37,7 @@ void Pointer::onTick()
   m = translate(m, t->getPosition());
   m = rotate(m, rend::radians(-position.x), vec3(0, 1, 0));
   m = rotate(m, rend::radians(-position.y), vec3(1, 0, 0));
-  m = translate(m, vec3(0, 0, -10));
+  m = translate(m, vec3(0, 0, -9));
   vec4 res = m * vec4(0, 0, 0, 1);
   getEntity()->getTransform()->setPosition(vec3(res.x, res.y, res.z));
   getEntity()->getTransform()->lookAt(t->getPosition());
