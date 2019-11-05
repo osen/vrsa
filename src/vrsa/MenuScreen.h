@@ -12,7 +12,9 @@ struct MenuScreen : public Component
   void setInterval(int interval);
 
 private:
+  std::sr1::observer_ptr<VrButton> quitButton;
   std::sr1::observer_ptr<VrButton> nextButton;
+  std::sr1::observer_ptr<VrButton> questionButton;
   std::sr1::observer_ptr<VrButton> increaseButton;
   std::sr1::observer_ptr<VrButton> decreaseButton;
 

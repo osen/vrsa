@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Fade.h"
 #include "VrButton.h"
+#include "QuestionScreen.h"
 
 #include <sstream>
 
@@ -19,9 +20,21 @@ void MenuScreen::onInitialize()
 
   nextButton = Environment::addEntity<VrButton>();
   nextButton->setTexture(Texture::load("buttons/next"));
-  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -2));
+  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -3));
   nextButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   nextButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+
+  quitButton = Environment::addEntity<VrButton>();
+  quitButton->setTexture(Texture::load("buttons/exit"));
+  quitButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2.5f, -1, -4));
+  quitButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  quitButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+
+  questionButton = Environment::addEntity<VrButton>();
+  questionButton->setTexture(Texture::load("buttons/exam"));
+  questionButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2.5f, -1, -4));
+  questionButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  questionButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
   increaseButton = Environment::addEntity<VrButton>();
   increaseButton->setTexture(Texture::load("buttons/increase"));
@@ -56,10 +69,21 @@ void MenuScreen::onTick()
     setInterval(interval - 1);
   }
 
+  if(quitButton->isClicked())
+  {
+    Environment::exit();
+  }
+
   if(nextButton->isClicked())
   {
     Environment::clear();
     Environment::addEntity<MainScreen>();
+  }
+
+  if(questionButton->isClicked())
+  {
+    Environment::clear();
+    Environment::addEntity<QuestionScreen>();
   }
 }
 
