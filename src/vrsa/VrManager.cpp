@@ -9,6 +9,9 @@ void VrManager::onInitialize(
   this->leftCamera = leftCamera;
   this->rightCamera = rightCamera;
 
+  leftRt = RenderTarget::create();
+  rightRt = RenderTarget::create();
+
 #ifdef ENABLE_VR
   ctx = ohmd_ctx_create();
   int num_devices = ohmd_ctx_probe(ctx);
@@ -108,14 +111,16 @@ void VrManager::onInitialize(
   int eye_w = hmd_w / 2 * oversampleScale;
   int eye_h = hmd_h * oversampleScale;
 
-  leftRt = RenderTarget::create();
-  rightRt = RenderTarget::create();
   leftRt->setSize(eye_w, eye_h);
   rightRt->setSize(eye_w, eye_h);
 
+#else
+  leftRt->setSize(512, 512);
+  rightRt->setSize(512, 512);
+#endif
+
   leftCamera->setRenderTarget(leftRt);
   rightCamera->setRenderTarget(rightRt);
-#endif
 }
 
 void VrManager::onTick()
@@ -130,21 +135,12 @@ void VrManager::onTick()
   }
 }
 
-void VrManager::onGui()
+void VrManager::onPreGui()
 {
-#ifdef ENABLE_VR
   Vector2 size(Environment::getScreenWidth(),
     Environment::getScreenHeight());
 
-/*
-  size.x -= 30;
-  size.y -= 20;
-  size.x /= 2;
-  Gui::texture(Vector4(10, 10, size.x, size.y), leftCamera->getRenderTarget());
-  Gui::texture(Vector4(10 + size.x + 10, 10, size.x, size.y),
-    rightCamera->getRenderTarget());
-*/
-
+#ifdef ENABLE_VR
   size.x /= 2;
   warpMaterial->setVariable("u_LensCenter", leftLensCenter);
   Gui::texture(Vector4(0, 0, size.x, size.y), leftCamera->getRenderTarget(), warpMaterial);
@@ -173,7 +169,15 @@ void VrManager::onGui()
   ohmd_device_getf(hmd, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX, matrix);
   view = glm::make_mat4(matrix);
   leftCamera->setView(view * vm);
+#else
+  size.x -= 30;
+  size.y -= 20;
+  size.x /= 2;
+  Gui::texture(Vector4(10, 10, size.x, size.y), leftCamera->getRenderTarget());
+  Gui::texture(Vector4(10 + size.x + 10, 10, size.x, size.y),
+    rightCamera->getRenderTarget());
 #endif
+
 }
 
 void VrManager::onDoKill()

@@ -256,6 +256,7 @@ class Component : public std::sr1::enable_observer
   virtual void onTick();
   virtual void onRender();
   virtual void onPostRender();
+  virtual void onPreGui();
   virtual void onGui();
   virtual void onKill();
   virtual void onDoKill();
@@ -614,6 +615,7 @@ class Entity : public std::sr1::enable_observer
   void render();
   void postRender();
   void gui();
+  void preGui();
   void _kill();
 
 public:

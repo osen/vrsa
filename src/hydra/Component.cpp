@@ -9,6 +9,7 @@ void Component::onBegin() {}
 void Component::onTick() {}
 void Component::onRender() {}
 void Component::onPostRender() {}
+void Component::onPreGui() {}
 void Component::onGui() {}
 void Component::onKill() {}
 void Component::onDoKill() {}

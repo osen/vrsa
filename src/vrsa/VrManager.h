@@ -14,7 +14,7 @@ struct VrManager : public Component
     std::sr1::observer_ptr<Camera> rightCamera);
 
   void onTick();
-  void onGui();
+  void onPreGui();
   void onDoKill();
 
   ~VrManager();

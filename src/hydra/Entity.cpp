@@ -36,6 +36,19 @@ void Entity::tick()
   }
 }
 
+void Entity::preGui()
+{
+  if(!alive) return;
+
+  for(size_t i = 0; i < components.size(); i++)
+  {
+    if(!components.at(i)->disabled)
+    {
+      components.at(i)->onPreGui();
+    }
+  }
+}
+
 void Entity::gui()
 {
   if(!alive) return;

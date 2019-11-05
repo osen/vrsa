@@ -347,13 +347,24 @@ void Environment::display()
   glDisable(GL_CULL_FACE);
   glDisableClientState(GL_NORMAL_ARRAY);
 
-  for(size_t i = 0; i < instance->entities.size(); i++)
+  for(auto it = instance->cameras.begin();
+    it != instance->cameras.end(); it++)
   {
-    instance->entities.at(i)->postRender();
+    instance->camera = *it;
+
+    for(size_t i = 0; i < instance->entities.size(); i++)
+    {
+      instance->entities.at(i)->postRender();
+    }
   }
 
   //glDisableClientState(GL_NORMAL_ARRAY);
   Gui::applyProjection();
+
+  for(size_t i = 0; i < instance->entities.size(); i++)
+  {
+    instance->entities.at(i)->preGui();
+  }
 
   for(size_t i = 0; i < instance->entities.size(); i++)
   {
