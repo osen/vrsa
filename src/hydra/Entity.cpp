@@ -62,8 +62,18 @@ void Entity::gui()
   }
 }
 
+void Entity::setImmutable(bool immutable)
+{
+  this->immutable = immutable;
+}
+
 void Entity::_kill()
 {
+  if(immutable)
+  {
+    return;
+  }
+
   for(size_t i = 0; i < components.size(); i++)
   {
     components.at(i)->onKill();
@@ -121,6 +131,11 @@ bool Entity::hasTag(std::string tag)
 
 void Entity::kill()
 {
+  if(immutable)
+  {
+    return;
+  }
+
   alive = false;
 
   for(size_t i = 0; i < components.size(); i++)

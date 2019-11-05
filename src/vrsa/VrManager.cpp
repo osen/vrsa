@@ -1,18 +1,32 @@
 #include "VrManager.h"
 
-void VrManager::onInitialize(
+void VrManager::setCameras(
   std::sr1::observer_ptr<Camera> leftCamera,
   std::sr1::observer_ptr<Camera> rightCamera)
 {
-  font = Font::load("fonts/DroidWhite");
-
   this->leftCamera = leftCamera;
   this->rightCamera = rightCamera;
+
+  leftCamera->setRenderTarget(leftRt);
+  rightCamera->setRenderTarget(rightRt);
+}
+
+void VrManager::onInitialize()
+{
+  getEntity()->addTag("vrmanager");
+  getEntity()->setImmutable(true);
+
+  font = Font::load("fonts/DroidWhite");
 
   leftRt = RenderTarget::create();
   rightRt = RenderTarget::create();
 
 #ifdef ENABLE_VR
+
+  std::cout << "*************************" << std::endl;
+  std::cout << "Initializing VR Subsystem" << std::endl;
+  std::cout << "*************************" << std::endl;
+
   ctx = ohmd_ctx_create();
   int num_devices = ohmd_ctx_probe(ctx);
 
@@ -113,14 +127,14 @@ void VrManager::onInitialize(
 
   leftRt->setSize(eye_w, eye_h);
   rightRt->setSize(eye_w, eye_h);
+  std::cout << "*************************" << std::endl;
 
 #else
+
   leftRt->setSize(512, 512);
   rightRt->setSize(512, 512);
-#endif
 
-  leftCamera->setRenderTarget(leftRt);
-  rightCamera->setRenderTarget(rightRt);
+#endif
 }
 
 void VrManager::onTick()

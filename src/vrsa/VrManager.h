@@ -9,13 +9,14 @@ using namespace hydra;
 
 struct VrManager : public Component
 {
-  void onInitialize(
-    std::sr1::observer_ptr<Camera> leftCamera,
-    std::sr1::observer_ptr<Camera> rightCamera);
-
+  void onInitialize();
   void onTick();
   void onPreGui();
   void onDoKill();
+
+  void setCameras(
+    std::sr1::observer_ptr<Camera> leftCamera,
+    std::sr1::observer_ptr<Camera> rightCamera);
 
   ~VrManager();
 

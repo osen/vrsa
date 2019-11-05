@@ -608,6 +608,7 @@ class Entity : public std::sr1::enable_observer
   std::vector<std::string> tags;
   std::vector<std::shared_ptr<Component> > components;
   std::sr1::zero_initialized<bool> alive;
+  std::sr1::zero_initialized<bool> immutable;
   std::sr1::observer_ptr<Transform> transform;
   std::sr1::observer_ptr<Entity> self;
 
@@ -627,6 +628,7 @@ public:
   void addTag(std::string tag);
   Transform* getTransform();
   bool hasTag(std::string tag);
+  void setImmutable(bool immutable);
 
   template <typename T>
   T* addComponent()

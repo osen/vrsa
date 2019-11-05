@@ -12,8 +12,15 @@ void Player::onInitialize()
   rightCamera = getEntity()->addComponent<Camera>();
   rightCamera->setClearColor(Vector4(0.5f, 0.5f, 1.0f, 1));
 
-  //Environment::addEntity<VrManager>(leftCamera, rightCamera);
-  getEntity()->addComponent<VrManager>(leftCamera, rightCamera);
+  std::sr1::observer_ptr<Entity> vrme = Entity::findByTag("vrmanager");
+
+  if(!vrme)
+  {
+    vrme = Environment::addEntity<VrManager>()->getEntity();
+  }
+
+  std::sr1::observer_ptr<VrManager> vrm = vrme->getComponent<VrManager>();
+  vrm->setCameras(leftCamera, rightCamera);
 
   pointer = Environment::addEntity<Pointer>(getEntity());
 }

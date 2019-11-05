@@ -256,8 +256,11 @@ struct observer_ptr
   template <typename R>
   void reset(R* r)
   {
-    //ptr = static_pointer_cast<R>(r->_self);
-    ptr = dynamic_pointer_cast<R>(r->_self);
+    if(r)
+    {
+      //ptr = static_pointer_cast<R>(r->_self);
+      ptr = dynamic_pointer_cast<R>(r->_self);
+    }
   }
 
   void reset()
