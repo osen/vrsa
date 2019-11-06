@@ -41,6 +41,24 @@ void Octave::onInitialize(const OctaveConstruction& oc)
 
 void Octave::onTick()
 {
+  float curr = timeout;
+  timeout -= Environment::getDeltaTime();
+
+  // Through threshold
+  if(curr > 0 && timeout <= 0)
+  {
+    if(playlist.size() > 0)
+    {
+      playKey(playlist.at(0));
+      playlist.erase(playlist.begin());
+      timeout = 3;
+    }
+    else
+    {
+      selectKey(std::sr1::observer_ptr<Key>());
+    }
+  }
+
   if(readOnly)
   {
     return;
@@ -62,6 +80,42 @@ void Octave::onTick()
       //pointer->restAgainst(k->getEntity()->getTransform()->getPosition());
       selectKey(k);
     }
+  }
+}
+
+void Octave::setPlaylist(const std::sr1::vector<int>& playlist)
+{
+  if(this->playlist.size() == 0 && timeout <= 0)
+  {
+    timeout = 0.0001f;
+    this->playlist = playlist;
+  }
+}
+
+void Octave::setBackground(bool background)
+{
+  if(this->background == background)
+  {
+    return;
+  }
+
+  this->background = background;
+
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    keys.begin(); it != keys.end(); it++)
+  {
+    vec3 pos = (*it)->getEntity()->getTransform()->getPosition();
+
+    if(background)
+    {
+      pos.z -= 10;
+    }
+    else
+    {
+      pos.z += 10;
+    }
+
+    (*it)->getEntity()->getTransform()->setPosition(pos);
   }
 }
 
@@ -93,6 +147,13 @@ std::sr1::observer_ptr<Key> Octave::getKey(Ray ray)
   return rtn;
 }
 
+void Octave::playKey(int index)
+{
+  //keys.at(index)->setSelected(1);
+  //keys.at(index)->play();
+  selectKey(keys.at(index));
+}
+
 void Octave::selectKey(std::sr1::observer_ptr<Key> key)
 {
   for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
@@ -101,8 +162,11 @@ void Octave::selectKey(std::sr1::observer_ptr<Key> key)
     (*it)->setSelected(0);
   }
 
-  key->setSelected(1);
-  key->play();
+  if(key)
+  {
+    key->setSelected(1);
+    key->play();
+  }
 }
 
 void Octave::setReadOnly(bool readOnly)

@@ -31,7 +31,7 @@ void Player::onTick()
 
   if(Mouse::getButton(2) == true)
   {
-    Vector2 mdelta = mpos - lastMouse;
+    Vector2 mdelta = Mouse::getMotion();
     Vector3 rot = getEntity()->getComponent<Transform>()->getRotation();
     rot.y -= mdelta.x * 0.5f;
     rot.x -= mdelta.y * 0.5f;

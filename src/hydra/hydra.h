@@ -699,6 +699,7 @@ public:
   static bool getButtonDown(int button = 0);
   static ivec2 getMotion();
 
+  static void setLocked(bool locked);
   static void clearButtons();
 
   static int x;

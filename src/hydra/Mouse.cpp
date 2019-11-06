@@ -12,6 +12,20 @@ ivec2 Mouse::lastPosition;
 std::array<bool, 10> Mouse::buttons;
 std::array<bool, 10> Mouse::buttonsDown;
 
+void Mouse::setLocked(bool locked)
+{
+  if(locked)
+  {
+    //SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_ShowCursor(SDL_DISABLE);
+  }
+  else
+  {
+    //SDL_SetRelativeMouseMode(SDL_FALSE);
+    SDL_ShowCursor(SDL_ENABLE);
+  }
+}
+
 void Mouse::clearButtons()
 {
 /*
@@ -47,7 +61,9 @@ int Mouse::getY()
 
 ivec2 Mouse::getMotion()
 {
-  return ivec2(x, y) - lastPosition;
+  //return ivec2(x, y) - lastPosition;
+  //return ivec2(x, y) - ivec2(100, 100);
+  return lastPosition;
 }
 
 bool Mouse::getButton(int button)

@@ -16,22 +16,80 @@ void OctaveScreen::onInitialize(const OctaveConstruction& oc)
   getEntity()->getComponent<Transform>()->setScale(Vector3(7, 7, 7));
   getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
 
-  Environment::addEntity<Octave>(oc);
+  octave = Environment::addEntity<Octave>(oc);
+  octave->setReadOnly(true);
 
   backButton = Environment::addEntity<VrButton>();
   backButton->setTexture(Texture::load("buttons/back"));
   backButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
-  backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2.5, -2.5, -4));
+  backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-6.0f, -2.5, -2));
   backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+
+  repeatButton = Environment::addEntity<VrButton>();
+  repeatButton->setTexture(Texture::load("buttons/repeat"));
+  repeatButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
+  repeatButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-1.0f, -2.5, -5.0));
+  repeatButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  repeatButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+
+  intervalsButton = Environment::addEntity<VrButton>();
+  intervalsButton->setTexture(Texture::load("buttons/intervals"));
+  intervalsButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
+  intervalsButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(1.0f, -2.5, -5));
+  intervalsButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  intervalsButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 }
 
 void OctaveScreen::onTick()
 {
+/*
+  float curr = timeout;
+  timeout -= Environment::getDeltaTime();
+
+  // Through threshold
+  if(curr > 0 && timeout <= 0)
+  {
+    if(playList.size() > 0)
+    {
+      octave->playKey(playList.at(0));
+      playList.erase(playList.begin());
+      timeout = 3;
+    }
+    else
+    {
+      octave->selectKey(std::sr1::observer_ptr<Key>());
+    }
+  }
+*/
+
   if(backButton->isClicked())
   {
     Environment::clear();
     Environment::addEntity<MainScreen>();
+  }
+
+/*
+  if(playList.size() == 0 && timeout <= 0 && repeatButton->isClicked())
+  {
+    timeout = 0.0001f;
+    playList.push_back(5);
+    playList.push_back(8);
+  }
+*/
+
+  if(repeatButton->isClicked())
+  {
+    octave->setBackground(false);
+    std::sr1::vector<int> playlist;
+    playlist.push_back(5);
+    playlist.push_back(8);
+    octave->setPlaylist(playlist);
+  }
+
+  if(intervalsButton->isClicked())
+  {
+    octave->setBackground(true);
   }
 }
 

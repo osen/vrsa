@@ -23,8 +23,9 @@ void Pointer::onTick()
   getEntity()->getTransform()->setPosition(vec3(res.x, res.y, res.z));
 */
 
-  vec2 p(Mouse::getMotion().x, Mouse::getMotion().y);
-  position += p / 2.0f;
+  vec2 p = Mouse::getMotion();
+  p *= 0.1f;
+  position += p;
 
   if(position.y < -30)
   {
