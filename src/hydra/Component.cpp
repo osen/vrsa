@@ -3,6 +3,11 @@
 namespace hydra
 {
 
+Component::Component()
+{
+  alive = true;
+}
+
 Component::~Component() {}
 void Component::onInitialize() {}
 void Component::onBegin() {}
@@ -27,6 +32,11 @@ bool Component::getEnabled()
 Entity* Component::getEntity()
 {
   return entity.get();
+}
+
+void Component::kill()
+{
+  alive = false;
 }
 
 }

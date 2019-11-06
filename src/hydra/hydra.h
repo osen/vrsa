@@ -56,6 +56,7 @@ class FontRenderer;
 class Transform;
 class Sound;
 struct Material;
+struct SoundSource;
 
 struct Extent
 {
@@ -186,6 +187,7 @@ private:
 class Sound : public std::sr1::enable_observer
 {
   friend class hydra::Environment;
+  friend struct hydra::SoundSource;
 
   static void loadOgg(const std::string& fileName,
     std::vector<char>& buffer, ALenum &format, ALsizei &freq);
@@ -249,6 +251,7 @@ class Component : public std::sr1::enable_observer
 
   std::sr1::observer_ptr<Entity> entity;
   std::sr1::zero_initialized<bool> began;
+  std::sr1::zero_initialized<bool> alive;
   std::sr1::zero_initialized<bool> disabled;
 
   virtual void onInitialize();
@@ -262,11 +265,28 @@ class Component : public std::sr1::enable_observer
   virtual void onDoKill();
 
 public:
+  Component();
   virtual ~Component();
 
   Entity* getEntity();
   void setEnabled(bool enabled);
   bool getEnabled();
+  void kill();
+
+};
+
+struct SoundSource : public Component, public std::sr1::noncopyable
+{
+  void onInitialize(const std::sr1::observer_ptr<Sound>& sound);
+  void onTick();
+
+  ~SoundSource();
+
+private:
+  std::sr1::observer_ptr<Sound> sound;
+  std::sr1::zero_initialized<ALuint> id;
+
+  void updatePosition();
 
 };
 

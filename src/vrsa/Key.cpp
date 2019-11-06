@@ -47,6 +47,7 @@ void Key::setSound(std::sr1::observer_ptr<Sound> sound)
 
 void Key::play()
 {
+/*
   Transform* t = Environment::getCamera()->getEntity()->getComponent<Transform>();
   Vector3 v = getEntity()->getComponent<Transform>()->getPosition();
   v /= 10.0f;
@@ -56,6 +57,9 @@ void Key::play()
   //sound->play();
   sound->play(v);
   //sound->play(getEntity()->getComponent<Transform>()->getPosition() * 10);
+*/
+
+  getEntity()->addComponent<SoundSource>(sound);
 
   //to = 3;
 }

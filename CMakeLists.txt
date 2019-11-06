@@ -45,6 +45,7 @@ add_library(hydra
   src/hydra/World.cpp
   src/hydra/WorldCollider.cpp
   src/hydra/WorldRenderer.cpp
+  src/hydra/SoundSource.cpp
   src/hydra/lodepng.cpp
   src/hydra/tribox.cpp
 )

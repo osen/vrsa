@@ -34,6 +34,19 @@ void Entity::tick()
       components.at(i)->onTick();
     }
   }
+
+  for(std::vector<std::shared_ptr<Component> >::iterator it = components.begin();
+    it != components.end();)
+  {
+    if(!(*it)->alive)
+    {
+      it = components.erase(it);
+    }
+    else
+    {
+      it++;
+    }
+  }
 }
 
 void Entity::preGui()
