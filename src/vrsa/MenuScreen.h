@@ -18,7 +18,8 @@ private:
   std::sr1::observer_ptr<VrButton> increaseButton;
   std::sr1::observer_ptr<VrButton> decreaseButton;
 
-  std::sr1::observer_ptr<FontRenderer> fr;
+  std::sr1::observer_ptr<FontRenderer> frInterval;
+  std::sr1::observer_ptr<FontRenderer> frName;
 
   std::sr1::zero_initialized<int> interval;
 

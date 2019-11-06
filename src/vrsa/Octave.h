@@ -19,10 +19,12 @@ struct Octave : public Component
 
   std::sr1::observer_ptr<Key> getKey(Ray ray);
   void selectKey(std::sr1::observer_ptr<Key> key);
+  void setReadOnly(bool readOnly);
 
 private:
   std::sr1::vector<std::sr1::observer_ptr<Key> > keys;
   std::sr1::vector<std::sr1::observer_ptr<Sound> > sounds;
   std::sr1::zero_initialized<int> startIndex;
+  std::sr1::zero_initialized<bool> readOnly;
 
 };

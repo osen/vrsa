@@ -41,6 +41,11 @@ void Octave::onInitialize(const OctaveConstruction& oc)
 
 void Octave::onTick()
 {
+  if(readOnly)
+  {
+    return;
+  }
+
   if(Mouse::getButtonDown(0) == true)
   {
     Vector2 mpos = Vector2(Mouse::getX(), Mouse::getY());
@@ -98,5 +103,10 @@ void Octave::selectKey(std::sr1::observer_ptr<Key> key)
 
   key->setSelected(1);
   key->play();
+}
+
+void Octave::setReadOnly(bool readOnly)
+{
+  this->readOnly = readOnly;
 }
 

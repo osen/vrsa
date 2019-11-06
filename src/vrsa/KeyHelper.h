@@ -17,4 +17,6 @@ struct KeyHelper
   static KeyInfo octaveLayout(int startIndex, int index);
 
   static std::string idxToNote(int index);
+
+  static std::string intervalToName(int interval);
 };

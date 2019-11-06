@@ -4,6 +4,7 @@
 #include "Fade.h"
 #include "VrButton.h"
 #include "QuestionScreen.h"
+#include "KeyHelper.h"
 
 #include <sstream>
 
@@ -48,13 +49,19 @@ void MenuScreen::onInitialize()
   decreaseButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   decreaseButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
-  fr = Environment::addEntity<FontRenderer>();
-  fr->setMessage("Hello");
-  fr->setFont(Font::load("fonts/DroidWhiteLarge"));
-  fr->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -45));
-  fr->getEntity()->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
+  frName = Environment::addEntity<FontRenderer>();
+  frName->setMessage("Name");
+  frName->setFont(Font::load("fonts/DroidWhiteLarge"));
+  frName->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 5, -45));
+  frName->getEntity()->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
 
-  setInterval(2);
+  frInterval = Environment::addEntity<FontRenderer>();
+  frInterval->setMessage("Interval");
+  frInterval->setFont(Font::load("fonts/DroidWhiteLarge"));
+  frInterval->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -2.5, -45));
+  frInterval->getEntity()->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
+
+  setInterval(6);
 }
 
 void MenuScreen::onTick()
@@ -89,7 +96,7 @@ void MenuScreen::onTick()
 
 void MenuScreen::setInterval(int interval)
 {
-  if(interval > 8 || interval < 1)
+  if(interval > 12 || interval < 0)
   {
     return;
   }
@@ -99,6 +106,7 @@ void MenuScreen::setInterval(int interval)
   std::stringstream ss;
   ss << "Interval: " << interval;
 
-  fr->setMessage(ss.str());
+  frInterval->setMessage(ss.str());
+  frName->setMessage(KeyHelper::intervalToName(interval));
 }
 

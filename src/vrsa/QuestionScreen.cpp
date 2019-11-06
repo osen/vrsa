@@ -1,14 +1,14 @@
 #include "QuestionScreen.h"
 #include "Player.h"
-#include "ButtonBar.h"
 #include "Fade.h"
 #include "Octave.h"
+#include "VrButton.h"
+#include "MenuScreen.h"
 
 void QuestionScreen::onInitialize()
 {
   Environment::addEntity<Fade>(Vector3(0, 0, 0), true);
   Environment::addEntity<Player>();
-  Environment::addEntity<ButtonBar>(2);
 
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
   Model* world = Model::load("models/MusicRoom/MusicRoom");
@@ -26,5 +26,22 @@ void QuestionScreen::onInitialize()
 
   OctaveConstruction oc;
   oc.index = 4;
-  Environment::addEntity<Octave>(oc);
+  Octave* octave = Environment::addEntity<Octave>(oc);
+  octave->setReadOnly(true);
+
+  backButton = Environment::addEntity<VrButton>();
+  backButton->setTexture(Texture::load("buttons/back"));
+  backButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
+  backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2.5, -2.5, -5));
+  backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+}
+
+void QuestionScreen::onTick()
+{
+  if(backButton->isClicked())
+  {
+    Environment::clear();
+    Environment::addEntity<MenuScreen>();
+  }
 }
