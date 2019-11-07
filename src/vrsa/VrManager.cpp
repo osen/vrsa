@@ -27,6 +27,7 @@ void VrManager::onInitialize()
   std::cout << "Initializing VR Subsystem" << std::endl;
   std::cout << "*************************" << std::endl;
 
+  Mouse::setLocked(true);
   ctx = ohmd_ctx_create();
   int num_devices = ohmd_ctx_probe(ctx);
 

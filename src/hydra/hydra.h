@@ -725,6 +725,7 @@ public:
   static int x;
   static int y;
   static ivec2 lastPosition;
+  static bool locked;
 
   static std::array<bool, 10> buttons;
   static std::array<bool, 10> buttonsDown;

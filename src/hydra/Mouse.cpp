@@ -8,6 +8,7 @@ namespace hydra
 int Mouse::x;
 int Mouse::y;
 ivec2 Mouse::lastPosition;
+bool Mouse::locked;
 
 std::array<bool, 10> Mouse::buttons;
 std::array<bool, 10> Mouse::buttonsDown;
@@ -24,6 +25,8 @@ void Mouse::setLocked(bool locked)
     //SDL_SetRelativeMouseMode(SDL_FALSE);
     SDL_ShowCursor(SDL_ENABLE);
   }
+
+  Mouse::locked = locked;
 }
 
 void Mouse::clearButtons()
@@ -61,8 +64,11 @@ int Mouse::getY()
 
 ivec2 Mouse::getMotion()
 {
-  //return ivec2(x, y) - lastPosition;
-  //return ivec2(x, y) - ivec2(100, 100);
+  if(!locked)
+  {
+    return ivec2(x, y) - lastPosition;
+  }
+
   return lastPosition;
 }
 
@@ -91,6 +97,7 @@ bool Mouse::getButtonDown(int button)
 void Mouse::mouse(int button, int state, int x, int y)
 {
   button -= 1;
+
   if(state == SDL_PRESSED)
   {
     buttons.at(button) = true;
@@ -102,7 +109,7 @@ void Mouse::mouse(int button, int state, int x, int y)
     buttonsDown.at(button) = false;
   }
 
-  //lastPosition = ivec2(Mouse::x, Mouse::y);
+  lastPosition = ivec2(Mouse::x, Mouse::y);
   Mouse::x = x;
   Mouse::y = y;
 }

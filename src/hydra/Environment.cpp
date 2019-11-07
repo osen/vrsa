@@ -144,8 +144,9 @@ void Environment::initializePost()
 
   while(instance->running)
   {
-    //int mot = 0;
     ivec2 mot;
+    Mouse::lastPosition = ivec2(Mouse::x, Mouse::y);
+
     while(SDL_PollEvent(&e) != 0)
     {
       if(e.type == SDL_QUIT)
@@ -165,10 +166,8 @@ void Environment::initializePost()
         int mx = 0;
         int my = 0;
         SDL_GetMouseState(&mx, &my);
-        //if(mot) continue;
         Mouse::motion(mx, my);
         mot += ivec2(mx, my) - ivec2(100, 100);
-        //mot++;
       }
       else if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP)
       {
@@ -179,14 +178,20 @@ void Environment::initializePost()
       }
     }
 
-    SDL_WarpMouseInWindow(instance->window, 100, 100);
-    Mouse::lastPosition = mot;
+    if(Mouse::locked)
+    {
+      SDL_WarpMouseInWindow(instance->window, 100, 100);
+      Mouse::lastPosition = mot;
+    }
 
     idle();
     display();
     SDL_GL_SwapWindow(instance->window);
 
-    //Mouse::lastPosition = ivec2(100, 100);
+    if(!Mouse::locked)
+    {
+      //Mouse::lastPosition = ivec2(Mouse::x, Mouse::y);
+    }
   }
 
   instance->closeAudio();

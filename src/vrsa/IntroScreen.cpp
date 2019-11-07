@@ -4,8 +4,6 @@
 
 void IntroScreen::onInitialize()
 {
-  Mouse::setLocked(true);
-
   logo = Texture::load("images/BULogo");
   //Environment::getCamera()->setClearColor(Vector4(1, 1, 1, 1));
   timeout = 1;
