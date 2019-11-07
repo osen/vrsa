@@ -65,7 +65,6 @@ add_executable(vrsa
   src/vrsa/Piano.cpp
   src/vrsa/Key.cpp
   src/vrsa/VrManager.cpp
-  src/vrsa/ButtonBar.cpp
   src/vrsa/OctaveScreen.cpp
   src/vrsa/Octave.cpp
   src/vrsa/Fade.cpp

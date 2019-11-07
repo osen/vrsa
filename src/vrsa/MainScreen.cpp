@@ -1,7 +1,6 @@
 #include "MainScreen.h"
 #include "Player.h"
 #include "Piano.h"
-#include "ButtonBar.h"
 #include "Fade.h"
 #include "VrButton.h"
 #include "HelpScreen.h"
@@ -12,7 +11,6 @@ void MainScreen::onInitialize()
 {
   Environment::addEntity<Fade>(Vector3(1, 1, 1), true);
   Environment::addEntity<Player>();
-  Environment::addEntity<ButtonBar>(0);
 
   std::sr1::shared_ptr<Shader> s = Shader::load("shaders/default");
 
