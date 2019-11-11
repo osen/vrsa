@@ -80,6 +80,11 @@ bool VrButton::isClicked()
   return clicked;
 }
 
+void VrButton::setBaseTexture(std::sr1::observer_ptr<Texture> texture)
+{
+  getEntity()->getComponent<ModelRenderer>()->setTexture(texture);
+}
+
 void VrButton::setTexture(std::sr1::observer_ptr<Texture> texture)
 {
   material->setVariable("u_Glyph", texture);

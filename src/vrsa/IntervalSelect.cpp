@@ -5,17 +5,17 @@ void IntervalSelect::onInitialize()
 {
   selected = -1;
 
-  add(0, 1, 0);
+  add(0, 1, 0, Texture::load("slices/darkgreen"));
 
-  add(-0.7f, 0.6f, 45);
-  add(-1, 0, 90);
-  add(-0.7f, -0.6f, 135);
+  add(0.7f, 0.6f, -45, Texture::load("slices/purple"));
+  add(1, 0, -90, Texture::load("slices/orange"));
+  add(0.7f, -0.6f, -135, Texture::load("slices/turq"));
 
-  add(0, -1, 180);
+  add(0, -1, 180, Texture::load("slices/yellow"));
 
-  add(0.7f, 0.6f, -45);
-  add(1, 0, -90);
-  add(0.7f, -0.6f, -135);
+  add(-0.7f, 0.6f, 45, Texture::load("slices/red"));
+  add(-1, 0, 90, Texture::load("slices/blue"));
+  add(-0.7f, -0.6f, 135, Texture::load("slices/green"));
 }
 
 void IntervalSelect::onKill()
@@ -27,12 +27,13 @@ void IntervalSelect::onKill()
   }
 }
 
-void IntervalSelect::add(float x, float y, float r)
+void IntervalSelect::add(float x, float y, float r, std::sr1::observer_ptr<Texture> base)
 {
   std::sr1::observer_ptr<VrButton> b = Environment::addEntity<VrButton>();
   b->setModel(Model::load("models/IntervalSlice/IntervalSlice"));
-  b->getEntity()->getTransform()->setPosition(vec3(x, y, -5));
-  b->getEntity()->getTransform()->setScale(vec3(2, 2, 1));
+  b->setBaseTexture(base);
+  b->getEntity()->getTransform()->setPosition(vec3(x, y, -4));
+  b->getEntity()->getTransform()->setScale(vec3(2, 2.5f, 1));
   b->getEntity()->getTransform()->setRotation(vec3(0, 0, r));
 
   buttons.push_back(b);

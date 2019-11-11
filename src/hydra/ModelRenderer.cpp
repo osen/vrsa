@@ -87,6 +87,11 @@ void ModelRenderer::onRender()
   }
 }
 
+void ModelRenderer::setTexture(const std::sr1::observer_ptr<Texture>& texture)
+{
+  this->texture = texture;
+}
+
 void ModelRenderer::onPostRender()
 {
   if(!depthTest)
@@ -137,8 +142,15 @@ void ModelRenderer::doRender()
       std::shared_ptr<MaterialGroup> mg = model->parts.at(pi)->materialGroups.at(mgi);
       if(!mg->texture) continue;
 
-      getMaterial()->setVariable("u_Texture",
-        model->parts.at(pi)->materialGroups.at(mgi)->texture);
+      if(texture)
+      {
+        getMaterial()->setVariable("u_Texture", texture);
+      }
+      else
+      {
+        getMaterial()->setVariable("u_Texture",
+          model->parts.at(pi)->materialGroups.at(mgi)->texture);
+      }
 
       material->apply();
 

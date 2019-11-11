@@ -20,4 +20,7 @@ private:
   std::sr1::observer_ptr<IntervalSelect> intervalSelect;
   std::sr1::vector<int> playlist;
 
+  void selectInterval(int interval);
+  void repeat();
+
 };

@@ -390,6 +390,7 @@ public:
 class ModelRenderer : public Component
 {
   std::sr1::observer_ptr<Model> model;
+  std::sr1::observer_ptr<Texture> texture;
   std::vector<Animation*> animations;
   std::sr1::zero_initialized<double> frame;
   std::sr1::zero_initialized<bool> depthTest;
@@ -416,6 +417,7 @@ public:
 
   Vector2 getScreenCoordinate();
   void setDepthTest(bool depthTest);
+  void setTexture(const std::sr1::observer_ptr<Texture>& texture);
 
 };
 
