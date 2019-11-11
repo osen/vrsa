@@ -91,6 +91,29 @@ void QuestionScreen::endQuestions()
 {
   Environment::clear();
   Environment::addEntity<MenuScreen>();
+
+  std::stringstream ss;
+  ss << "PRAGMA foreign_keys=ON;" << std::endl;
+  ss << "BEGIN TRANSACTION;" << std::endl;
+
+  for(std::sr1::vector<Question>::iterator it = questions.begin();
+    it != questions.end(); it++)
+  {
+    ss << "INSERT INTO answer VALUES(NULL, " <<
+      1 << ", " <<
+      "datetime(), " <<
+      it->interval << ", " <<
+      it->first << ", " <<
+      it->second << ", " <<
+      it->offset << ", " <<
+      it->answer << ", " <<
+      it->repeats << ");" <<
+      std::endl;
+
+  }
+
+  ss << "COMMIT;";
+  std::cout << ss.str() << std::endl;
 }
 
 void QuestionScreen::onTick()
@@ -121,6 +144,7 @@ void QuestionScreen::onTick()
       return;
     }
 
+    questions.at(currentQuestion).answer = selected + 1;
     intervalSelect->getEntity()->kill();
     octave->setBackground(false);
 
