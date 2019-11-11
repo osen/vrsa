@@ -29,15 +29,6 @@ void OctaveScreen::onInitialize(const OctaveConstruction& oc)
   backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
-/*
-  repeatButton = Environment::addEntity<VrButton>();
-  repeatButton->setTexture(Texture::load("buttons/repeat"));
-  repeatButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
-  repeatButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-1.0f, -2.5, -5.0));
-  repeatButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
-  repeatButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
-*/
-
   intervalsButton = Environment::addEntity<VrButton>();
   intervalsButton->setTexture(Texture::load("buttons/intervals"));
   intervalsButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
@@ -97,11 +88,28 @@ void OctaveScreen::repeat()
     return;
   }
 
+  if(intervalSelect)
+  {
+    intervalSelect->getEntity()->kill();
+  }
+
   octave->setPlaylist(playlist);
 }
 
 void OctaveScreen::onTick()
 {
+  if(backButton->isClicked())
+  {
+    Environment::clear();
+    Environment::addEntity<MainScreen>();
+  }
+
+  if(repeatButton && repeatButton->isClicked())
+  {
+    octave->setBackground(false);
+    repeat();
+  }
+
   if(intervalSelect)
   {
     int selected = intervalSelect->getSelected();
@@ -116,18 +124,6 @@ void OctaveScreen::onTick()
     }
 
     return;
-  }
-
-  if(backButton->isClicked())
-  {
-    Environment::clear();
-    Environment::addEntity<MainScreen>();
-  }
-
-  if(repeatButton && repeatButton->isClicked())
-  {
-    octave->setBackground(false);
-    repeat();
   }
 
   if(intervalsButton->isClicked())

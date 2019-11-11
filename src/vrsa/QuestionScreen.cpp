@@ -4,6 +4,7 @@
 #include "Octave.h"
 #include "VrButton.h"
 #include "MenuScreen.h"
+#include "IntervalSelect.h"
 
 void QuestionScreen::onInitialize()
 {
@@ -30,11 +31,24 @@ void QuestionScreen::onInitialize()
   octave->setReadOnly(true);
 
   backButton = Environment::addEntity<VrButton>();
-  backButton->setTexture(Texture::load("buttons/back"));
+  backButton->setTexture(Texture::load("buttons/exit"));
   backButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
   backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2.5, -2.5, -5));
   backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+
+  repeatButton = Environment::addEntity<VrButton>();
+  repeatButton->setTexture(Texture::load("buttons/repeat"));
+  repeatButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
+  repeatButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2.5f, -2.5, -5.0));
+  repeatButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
+  repeatButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  repeatButton->getEntity()->setEnabled(false);
+
+  timeout = 2;
+
+  playlist.push_back(2);
+  playlist.push_back(12);
 }
 
 void QuestionScreen::onTick()
@@ -45,33 +59,41 @@ void QuestionScreen::onTick()
     Environment::addEntity<MenuScreen>();
   }
 
-  if(Keyboard::getKeyDown('j'))
+  if(repeatButton->isClicked())
   {
-    playSound(vec3(0, 0, 1));
+    intervalSelect->getEntity()->kill();
+    octave->setBackground(false);
+    //octave->setPlaylist(playlist);
+    timeout = 1;
+    repeatButton->getEntity()->setEnabled(false);
   }
 
-  if(Keyboard::getKeyDown('k'))
+  // If waiting for user to select answer, early out.
+  if(intervalSelect)
   {
-    playSound(vec3(0, 0, -1));
+    return;
   }
 
-  if(Keyboard::getKeyDown('h'))
+  // If threshold then start playing.
+  float pre = timeout;
+  timeout -= Environment::getDeltaTime();
+  if(pre > 0 && timeout <= 0)
   {
-    playSound(vec3(-1, 0, 0));
+    octave->setPlaylist(playlist);
   }
 
-  if(Keyboard::getKeyDown('l'))
+  // If waiting for play timout, early exit.
+  if(timeout > 0)
   {
-    playSound(vec3(1, 0, 0));
+    return;
   }
-}
 
-void QuestionScreen::playSound(vec3 pos)
-{
-  Transform* t = Environment::getCamera()->getEntity()->getComponent<Transform>();
-  Vector4 res = Environment::getCamera()->getView() * vec4(pos, 1.0f);
-  pos = res;
-  std::sr1::observer_ptr<Sound> sound = Sound::load("audio/octave4/C4");
-  sound->play(pos);
+  // If playing finished, add interval screen.
+  if(!octave->isPlaying())
+  {
+    octave->setBackground(true);
+    intervalSelect = Environment::addEntity<IntervalSelect>();
+    repeatButton->getEntity()->setEnabled(true);
+  }
 }
 

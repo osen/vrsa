@@ -59,9 +59,19 @@ void Key::play()
   //sound->play(getEntity()->getComponent<Transform>()->getPosition() * 10);
 */
 
-  getEntity()->addComponent<SoundSource>(sound);
+  soundSource = getEntity()->addComponent<SoundSource>(sound);
 
   //to = 3;
+}
+
+bool Key::isPlaying()
+{
+  if(soundSource)
+  {
+    return true;
+  }
+
+  return false;
 }
 
 void Key::setSelected(int selected)

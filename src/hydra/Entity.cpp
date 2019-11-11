@@ -11,15 +11,22 @@ Entity* Entity::create()
   rtn->self = rtn.get();
   rtn->transform = rtn->addComponent<Transform>();
   rtn->alive = true;
+  rtn->enabled = true;
 
   Environment::instance->entities.push_back(rtn);
 
   return rtn.get();
 }
 
+void Entity::setEnabled(bool enabled)
+{
+  this->enabled = enabled;
+}
+
 void Entity::tick()
 {
   if(!alive) return;
+  if(!enabled) return;
 
   for(size_t i = 0; i < components.size(); i++)
   {
@@ -52,6 +59,7 @@ void Entity::tick()
 void Entity::preGui()
 {
   if(!alive) return;
+  if(!enabled) return;
 
   for(size_t i = 0; i < components.size(); i++)
   {
@@ -65,6 +73,7 @@ void Entity::preGui()
 void Entity::gui()
 {
   if(!alive) return;
+  if(!enabled) return;
 
   for(size_t i = 0; i < components.size(); i++)
   {
@@ -96,6 +105,7 @@ void Entity::_kill()
 void Entity::render()
 {
   if(!alive) return;
+  if(!enabled) return;
 
   for(size_t i = 0; i < components.size(); i++)
   {
@@ -109,6 +119,7 @@ void Entity::render()
 void Entity::postRender()
 {
   if(!alive) return;
+  if(!enabled) return;
 
   for(size_t i = 0; i < components.size(); i++)
   {

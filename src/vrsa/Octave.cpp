@@ -83,6 +83,30 @@ void Octave::onTick()
   }
 }
 
+bool Octave::isPlaying()
+{
+  if(playlist.size() > 0)
+  {
+    return true;
+  }
+
+  if(timeout > 0)
+  {
+    return true;
+  }
+
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    keys.begin(); it != keys.end(); it++)
+  {
+    if((*it)->isPlaying())
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void Octave::setPlaylist(const std::sr1::vector<int>& playlist)
 {
   if(this->playlist.size() == 0 && timeout <= 0)

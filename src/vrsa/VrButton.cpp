@@ -77,7 +77,11 @@ void VrButton::onTick()
 
 bool VrButton::isClicked()
 {
-  return clicked;
+  bool rtn = clicked;
+
+  clicked = false;
+
+  return rtn;
 }
 
 void VrButton::setBaseTexture(std::sr1::observer_ptr<Texture> texture)

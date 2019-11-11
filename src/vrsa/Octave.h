@@ -23,6 +23,7 @@ struct Octave : public Component
   void playKey(int index);
   void setPlaylist(const std::sr1::vector<int>& playlist);
   void setBackground(bool background);
+  bool isPlaying();
 
 private:
   std::sr1::vector<std::sr1::observer_ptr<Key> > keys;
