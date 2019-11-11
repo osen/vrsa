@@ -82,6 +82,7 @@ std::sr1::shared_ptr<rend::Context> Environment::getContext()
 
 void Environment::initializePre(int argc, char *argv[])
 {
+  srand(time(NULL));
   instance = std::make_shared<Environment>();
 
   instance->setupPaths(argv[0]);

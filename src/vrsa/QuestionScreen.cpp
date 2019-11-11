@@ -6,6 +6,10 @@
 #include "MenuScreen.h"
 #include "IntervalSelect.h"
 
+#include <sstream>
+
+#define REPEATS 2
+
 void QuestionScreen::onInitialize()
 {
   Environment::addEntity<Fade>(Vector3(0, 0, 0), true);
@@ -18,9 +22,9 @@ void QuestionScreen::onInitialize()
   //getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
 
   Entity* fe = Entity::create();
-  FontRenderer* fr = fe->addComponent<FontRenderer>();
+  fr = fe->addComponent<FontRenderer>();
   fr->setFont(Font::load("fonts/DroidWhiteLarge"));
-  fr->setMessage("Question: 1 / 24");
+  //fr->setMessage("Question: 1 / 24");
   fe->getComponent<Transform>()->setPosition(Vector3(0, 10, -25));
   //fe->getComponent<Transform>()->setRotation(Vector3(0, 180, 0));
   fe->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
@@ -45,10 +49,48 @@ void QuestionScreen::onInitialize()
   repeatButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
   repeatButton->getEntity()->setEnabled(false);
 
-  timeout = 2;
+  //timeout = 2;
 
-  playlist.push_back(2);
-  playlist.push_back(12);
+  populateQuestions();
+
+  currentQuestion = -1;
+  nextQuestion();
+}
+
+int genrand(int min, int max);
+
+void QuestionScreen::nextQuestion()
+{
+  repeats = 0;
+  timeout = 1;
+
+  currentQuestion++;
+  Question q = questions.at(currentQuestion);
+
+  int minIdx = 0;
+  int maxIdx = 12 - q.interval - q.offset;
+
+  int first = genrand(minIdx, maxIdx);
+  int second = first + q.interval + q.offset;
+  playlist.clear();
+  playlist.push_back(first);
+  playlist.push_back(second);
+
+  q.first = first;
+  q.second = second;
+  questions.at(currentQuestion) = q;
+
+  //std::cout << first << " " << second << " (" << q.interval << ", " << q.offset << ")" << std::endl;
+
+  std::stringstream ss;
+  ss << "Question: " << currentQuestion + 1 << " / " << questions.size();
+  fr->setMessage(ss.str());
+}
+
+void QuestionScreen::endQuestions()
+{
+  Environment::clear();
+  Environment::addEntity<MenuScreen>();
 }
 
 void QuestionScreen::onTick()
@@ -64,6 +106,7 @@ void QuestionScreen::onTick()
     intervalSelect->getEntity()->kill();
     octave->setBackground(false);
     //octave->setPlaylist(playlist);
+    questions.at(currentQuestion).repeats++;
     timeout = 1;
     repeatButton->getEntity()->setEnabled(false);
   }
@@ -71,6 +114,25 @@ void QuestionScreen::onTick()
   // If waiting for user to select answer, early out.
   if(intervalSelect)
   {
+    int selected = intervalSelect->getSelected();
+
+    if(selected == -1)
+    {
+      return;
+    }
+
+    intervalSelect->getEntity()->kill();
+    octave->setBackground(false);
+
+    if(currentQuestion == questions.size() - 1)
+    {
+      endQuestions();
+    }
+    else
+    {
+      nextQuestion();
+    }
+
     return;
   }
 
@@ -93,7 +155,47 @@ void QuestionScreen::onTick()
   {
     octave->setBackground(true);
     intervalSelect = Environment::addEntity<IntervalSelect>();
-    repeatButton->getEntity()->setEnabled(true);
+
+    if(questions.at(currentQuestion).repeats < REPEATS)
+    {
+      repeatButton->getEntity()->setEnabled(true);
+    }
   }
 }
 
+void QuestionScreen::populateQuestions()
+{
+  // Interval, start, offset
+
+  questions.push_back(Question(3, 0));
+  questions.push_back(Question(3, 1));
+/*
+  questions.push_back(Question(3, 2));
+  questions.push_back(Question(3, -1));
+  questions.push_back(Question(3, -2));
+
+  questions.push_back(Question(3, 0));
+  questions.push_back(Question(3, 1));
+  questions.push_back(Question(3, 2));
+  questions.push_back(Question(3, -1));
+  questions.push_back(Question(3, -2));
+
+  questions.push_back(Question(6, 0));
+  questions.push_back(Question(6, 1));
+  questions.push_back(Question(6, 2));
+  questions.push_back(Question(6, -1));
+  questions.push_back(Question(6, -2));
+
+  questions.push_back(Question(6, 0));
+  questions.push_back(Question(6, 1));
+  questions.push_back(Question(6, 2));
+  questions.push_back(Question(6, -1));
+  questions.push_back(Question(6, -2));
+*/
+}
+
+Question::Question(int interval, int offset)
+{
+  this->interval = interval;
+  this->offset = offset;
+}
