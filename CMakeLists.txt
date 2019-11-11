@@ -74,6 +74,7 @@ add_executable(vrsa
   src/vrsa/VrButton.cpp
   src/vrsa/MenuScreen.cpp
   src/vrsa/Pointer.cpp
+  src/vrsa/IntervalSelect.cpp
 )
 #target_link_libraries(vrsa hydra openhmd hidapi-libusb pthread)
 #target_link_libraries(vrsa hydra openhmd hidapi)

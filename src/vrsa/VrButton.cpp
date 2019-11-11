@@ -4,15 +4,22 @@
 void VrButton::onInitialize()
 {
   ModelRenderer* mr = getEntity()->addComponent<ModelRenderer>();
-  Model* model = Model::load("models/VrButton/VrButton");
-  mr->setModel(model);
-  material = mr->getMaterial();
+
+  setModel(Model::load("models/VrButton/VrButton"));
+  //Model* model = Model::load("models/VrButton/VrButton");
+  //mr->setModel(model);
 
   mc = getEntity()->addComponent<ModelCollider>();
-
+  material = mr->getMaterial();
   material->setShader(Shader::load("shaders/vrbutton"));
 
   setTexture(Texture::load("buttons/increase"));
+}
+
+void VrButton::setModel(std::sr1::observer_ptr<Model> model)
+{
+  ModelRenderer* mr = getEntity()->getComponent<ModelRenderer>();
+  mr->setModel(model.get());
 }
 
 void VrButton::onTick()

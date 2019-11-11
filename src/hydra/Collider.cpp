@@ -23,6 +23,7 @@ bool ModelCollider::colliding(Ray& ray, Vector3 &hitLocal, Vector3 &hitWorld)
 
   model = glm::rotate(model, glm::radians(rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
   model = glm::rotate(model, glm::radians(rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+  model = glm::rotate(model, glm::radians(rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
   model = glm::scale(model, glm::vec3(sca.x, sca.y, sca.z));
 

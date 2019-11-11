@@ -4,6 +4,7 @@
 #include "Fade.h"
 #include "VrButton.h"
 #include "MainScreen.h"
+#include "IntervalSelect.h"
 
 void OctaveScreen::onInitialize(const OctaveConstruction& oc)
 {
@@ -43,25 +44,22 @@ void OctaveScreen::onInitialize(const OctaveConstruction& oc)
 
 void OctaveScreen::onTick()
 {
-/*
-  float curr = timeout;
-  timeout -= Environment::getDeltaTime();
-
-  // Through threshold
-  if(curr > 0 && timeout <= 0)
+  if(intervalSelect)
   {
-    if(playList.size() > 0)
+    int selected = intervalSelect->getSelected();
+
+    if(selected != -1)
     {
-      octave->playKey(playList.at(0));
-      playList.erase(playList.begin());
-      timeout = 3;
+      intervalSelect->getEntity()->kill();
+      octave->setBackground(false);
+      playlist.clear();
+      playlist.push_back(2);
+      playlist.push_back(8);
+      octave->setPlaylist(playlist);
     }
-    else
-    {
-      octave->selectKey(std::sr1::observer_ptr<Key>());
-    }
+
+    return;
   }
-*/
 
   if(backButton->isClicked())
   {
@@ -69,19 +67,10 @@ void OctaveScreen::onTick()
     Environment::addEntity<MainScreen>();
   }
 
-/*
-  if(playList.size() == 0 && timeout <= 0 && repeatButton->isClicked())
-  {
-    timeout = 0.0001f;
-    playList.push_back(5);
-    playList.push_back(8);
-  }
-*/
-
   if(repeatButton->isClicked())
   {
     octave->setBackground(false);
-    std::sr1::vector<int> playlist;
+    playlist.clear();
     playlist.push_back(5);
     playlist.push_back(8);
     octave->setPlaylist(playlist);
@@ -90,6 +79,7 @@ void OctaveScreen::onTick()
   if(intervalsButton->isClicked())
   {
     octave->setBackground(true);
+    intervalSelect = Environment::addEntity<IntervalSelect>();
   }
 }
 

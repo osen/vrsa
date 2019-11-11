@@ -5,6 +5,7 @@ using namespace hydra;
 struct OctaveConstruction;
 struct VrButton;
 struct Octave;
+struct IntervalSelect;
 
 struct OctaveScreen : public Component
 {
@@ -16,10 +17,7 @@ private:
   std::sr1::observer_ptr<VrButton> repeatButton;
   std::sr1::observer_ptr<VrButton> intervalsButton;
   std::sr1::observer_ptr<Octave> octave;
-
-/*
-  std::vector<int> playList;
-  std::sr1::zero_initialized<float> timeout;
-*/
+  std::sr1::observer_ptr<IntervalSelect> intervalSelect;
+  std::sr1::vector<int> playlist;
 
 };

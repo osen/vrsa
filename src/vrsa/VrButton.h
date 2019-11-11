@@ -4,6 +4,7 @@ using namespace hydra;
 
 struct VrButton : public Component
 {
+  void setModel(std::sr1::observer_ptr<Model> model);
   void setTexture(std::sr1::observer_ptr<Texture> texture);
   bool isClicked();
 

@@ -180,6 +180,7 @@ mat4 Transform::getModel()
   rtn = rend::translate(rtn, getPosition());
   rtn = rend::rotate(rtn, rend::radians(getRotation().y), vec3(0, 1, 0));
   rtn = rend::rotate(rtn, rend::radians(getRotation().x), vec3(1, 0, 0));
+  rtn = rend::rotate(rtn, rend::radians(getRotation().z), vec3(0, 0, 1));
   rtn = rend::scale(rtn, scale);
 
   return rtn;
