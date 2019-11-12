@@ -19,23 +19,32 @@ void MenuScreen::onInitialize()
   getEntity()->getComponent<Transform>()->setScale(Vector3(7, 7, 7));
   getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
 
+  Entity* bg = Entity::create();
+  bg->getTransform()->setScale(vec3(95, 35, 40));
+  bg->getTransform()->setPosition(Vector3(0, 0, -90));
+  mr = bg->addComponent<ModelRenderer>();
+  mr->setModel(Model::load("models/Background/Background"));
+
   nextButton = Environment::addEntity<VrButton>();
   nextButton->setTexture(Texture::load("buttons/next"));
-  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -4));
+  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -5));
   nextButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   nextButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  nextButton->getEntity()->getTransform()->setScale(Vector3(2, 2, 2));
 
   quitButton = Environment::addEntity<VrButton>();
   quitButton->setTexture(Texture::load("buttons/exit"));
   quitButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2.5f, -1, -4));
   quitButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   quitButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  quitButton->getEntity()->getTransform()->setScale(Vector3(2, 2, 2));
 
   questionButton = Environment::addEntity<VrButton>();
   questionButton->setTexture(Texture::load("buttons/exam"));
   questionButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2.5f, -1, -4));
   questionButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   questionButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  questionButton->getEntity()->getTransform()->setScale(Vector3(2, 2, 2));
 
 /*
   increaseButton = Environment::addEntity<VrButton>();
