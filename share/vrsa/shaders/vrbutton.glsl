@@ -33,12 +33,17 @@ void main()
 
   if(glyphColor.w == 1)
   {
-    glyphColor.w = 1;
+    //glyphColor.w = 1;
     gl_FragColor *= glyphColor;
   }
   else
   {
-    //gl_FragColor = texture2D(u_Texture, v_TexCoord);
+    float a = gl_FragColor.w;
+    //gl_FragColor /= 2;
+    gl_FragColor.w = a;
+    glyphColor *= glyphColor.w;
+    gl_FragColor.xyz += glyphColor.xyz;
+    gl_FragColor = clamp(gl_FragColor, vec4(0, 0, 0, 0), vec4(1, 1, 1, 1));
   }
 
   float t = sin(u_Time * 5);

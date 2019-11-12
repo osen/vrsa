@@ -428,6 +428,7 @@ class FontRenderer : public Component
   Vector3 offset;
   std::sr1::zero_initialized<float> scale;
   std::sr1::shared_ptr<Material> material;
+  Vector4 color;
 
   virtual void onRender();
 
@@ -438,6 +439,7 @@ public:
   void setMessage(std::string message);
   void setOffset(Vector3 offset);
   void setScale(float scale);
+  void setColor(vec3 color);
 
 };
 

@@ -12,12 +12,18 @@ void FontRenderer::onInitialize()
   material = std::sr1::make_shared<Material>();
   material->setShader(Shader::load("shaders/font"));
 
+  color = vec4(1, 1, 1, 1);
   scale = 1;
 }
 
 void FontRenderer::setScale(float scale)
 {
   this->scale = scale;
+}
+
+void FontRenderer::setColor(vec3 color)
+{
+  this->color = vec4(color, 1.0f);
 }
 
 void FontRenderer::onRender()
@@ -61,7 +67,8 @@ void FontRenderer::onRender()
       size *= sizeMod;
 
       material->setVariable("u_Texture", g.texture);
-      material->setVariable("u_Color", Vector4(1, 1, 1, 1));
+      //material->setVariable("u_Color", Vector4(1, 1, 1, 1));
+      material->setVariable("u_Color", color);
 
       rend::mat4 glyphMat = rend::scale(modelMat, rend::vec3(size.x, size.y, 1));
       material->setVariable("u_Model", glyphMat);
