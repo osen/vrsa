@@ -1,5 +1,6 @@
 #include "IntervalSelect.h"
 #include "VrButton.h"
+#include "KeyHelper.h"
 
 void IntervalSelect::onInitialize()
 {
@@ -16,6 +17,13 @@ void IntervalSelect::onInitialize()
   add(-0.7f, -0.6f, 135, Texture::load("slices/green"), "6");
   add(-1, 0, 90, Texture::load("slices/blue"), "7");
   add(-0.7f, 0.6f, 45, Texture::load("slices/red"), "8");
+
+  label = Environment::addEntity<FontRenderer>();
+  label->setFont(Font::load("fonts/DroidWhite"));
+  label->setMessage("Select an interval");
+  label->setColor(vec3(1, 1, 1));
+  label->getEntity()->getTransform()->setPosition(vec3(0, 1.0f, -3.0));
+  label->getEntity()->getTransform()->setScale(vec3(0.01f, 0.01f, 1.0f));
 }
 
 void IntervalSelect::onKill()
@@ -31,6 +39,8 @@ void IntervalSelect::onKill()
   {
     (*it)->getEntity()->kill();
   }
+
+  label->getEntity()->kill();
 }
 
 void IntervalSelect::add(float x, float y, float r, std::sr1::observer_ptr<Texture> base, const std::string& label)
@@ -67,6 +77,11 @@ void IntervalSelect::onTick()
     if(buttons.at(i)->isClicked())
     {
       selected = i;
+    }
+
+    if(buttons.at(i)->isHover())
+    {
+      label->setMessage(KeyHelper::intervalToName(i + 1));
     }
   }
 }

@@ -41,6 +41,7 @@ void VrButton::onTick()
 
   if(mc->colliding(r, hitLocal, hitWorld) == true)
   {
+    hover = true;
     pointer->restAgainst(getEntity()->getTransform()->getPosition());
 
     if(Mouse::getButtonDown(0) == true)
@@ -67,12 +68,18 @@ void VrButton::onTick()
   }
   else
   {
+    hover = false;
     time = 0;
     startDown = false;
     material->setVariable("u_Interact", 0);
   }
 
   material->setVariable("u_Time", time);
+}
+
+bool VrButton::isHover()
+{
+  return hover;
 }
 
 bool VrButton::isClicked()
