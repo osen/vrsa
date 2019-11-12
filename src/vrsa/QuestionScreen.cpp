@@ -72,12 +72,21 @@ void QuestionScreen::nextQuestion()
   int maxIdx = 12 - q.interval - q.offset;
 
   int first = genrand(minIdx, maxIdx);
-  int second = first + q.interval + q.offset;
+  int second = first + q.interval;
   playlist.clear();
-  playlist.push_back(first);
-  playlist.push_back(second);
-  playlist.push_back(first);
-  playlist.push_back(second);
+  PlayItem pi;
+  pi.key = first;
+  pi.offset = 0;
+  playlist.push_back(pi);
+  pi.key = second;
+  pi.offset = q.offset;
+  playlist.push_back(pi);
+  pi.key = first;
+  pi.offset = 0;
+  playlist.push_back(pi);
+  pi.key = second;
+  pi.offset = q.offset;
+  playlist.push_back(pi);
 
   q.first = first;
   q.second = second;

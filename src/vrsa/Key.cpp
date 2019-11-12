@@ -40,6 +40,11 @@ void Key::setSound(std::sr1::observer_ptr<Sound> sound)
   this->sound = sound;
 }
 
+void Key::play(const std::sr1::observer_ptr<Key>& target)
+{
+  soundSource = target->getEntity()->addComponent<SoundSource>(sound);
+}
+
 void Key::play()
 {
   soundSource = getEntity()->addComponent<SoundSource>(sound);

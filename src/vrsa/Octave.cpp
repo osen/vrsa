@@ -45,7 +45,7 @@ void Octave::onTick()
   {
     if(playlist.size() > 0)
     {
-      playKey(playlist.at(0));
+      playKey(playlist.at(0).key, playlist.at(0).offset);
       playlist.erase(playlist.begin());
     }
     else
@@ -111,12 +111,35 @@ bool Octave::keysPlaying()
   return false;
 }
 
+void Octave::setPlaylist(const std::sr1::vector<PlayItem>& playlist)
+{
+  if(isPlaying())
+  {
+    return;
+  }
+
+  this->playlist = playlist;
+}
+
 void Octave::setPlaylist(const std::sr1::vector<int>& playlist)
 {
-  if(!isPlaying())
+  if(isPlaying())
   {
-    this->playlist = playlist;
+    return;
   }
+
+  std::sr1::vector<PlayItem> list;
+  std::sr1::vector<int> pl = playlist;
+
+  for(std::sr1::vector<int>::iterator it = pl.begin();
+    it != pl.end(); it++)
+  {
+    PlayItem pi;
+    pi.key = *it;
+    list.push_back(pi);
+  }
+
+  this->playlist = list;
 }
 
 void Octave::setBackground(bool background)
@@ -176,9 +199,19 @@ std::sr1::observer_ptr<Key> Octave::getKey(Ray ray)
 
 void Octave::playKey(int index)
 {
-  //keys.at(index)->setSelected(1);
-  //keys.at(index)->play();
   selectKey(keys.at(index));
+  keys.at(index)->play();
+}
+
+void Octave::playKey(int index, int offset)
+{
+  if(offset)
+  {
+    std::cout << "Playing at offset: " << offset << std::endl;
+  }
+
+  selectKey(keys.at(index));
+  keys.at(index)->play(keys.at(index + offset));
 }
 
 void Octave::selectKey(std::sr1::observer_ptr<Key> key)
@@ -192,7 +225,7 @@ void Octave::selectKey(std::sr1::observer_ptr<Key> key)
   if(key)
   {
     key->setSelected(1);
-    key->play();
+    //key->play();
   }
 }
 

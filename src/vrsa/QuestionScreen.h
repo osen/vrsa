@@ -1,9 +1,11 @@
+#include "Octave.h"
+
 #include <hydra/hydra.h>
 
 using namespace hydra;
 
 struct VrButton;
-struct Octave;
+//struct Octave;
 struct IntervalSelect;
 
 struct Question
@@ -31,7 +33,7 @@ private:
   std::sr1::observer_ptr<Octave> octave;
   std::sr1::observer_ptr<IntervalSelect> intervalSelect;
   std::sr1::zero_initialized<float> timeout;
-  std::sr1::vector<int> playlist;
+  std::sr1::vector<PlayItem> playlist;
 
   std::sr1::zero_initialized<int> currentQuestion;
   std::sr1::zero_initialized<int> repeats;

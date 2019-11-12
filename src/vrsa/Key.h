@@ -11,6 +11,7 @@ struct Key : public Component
   void setType(int type);
   void setSelected(int selected);
   void play();
+  void play(const std::sr1::observer_ptr<Key>& target);
   bool isPlaying();
   void setFrozen(bool frozen);
 
