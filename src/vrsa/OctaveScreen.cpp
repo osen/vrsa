@@ -66,6 +66,8 @@ void OctaveScreen::selectInterval(int interval)
   int second = first + interval;
   playlist.push_back(first);
   playlist.push_back(second);
+  playlist.push_back(first);
+  playlist.push_back(second);
   octave->setPlaylist(playlist);
 
   //std::cout << first << " " << second << std::endl;

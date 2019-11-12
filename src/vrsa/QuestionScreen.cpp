@@ -76,6 +76,8 @@ void QuestionScreen::nextQuestion()
   playlist.clear();
   playlist.push_back(first);
   playlist.push_back(second);
+  playlist.push_back(first);
+  playlist.push_back(second);
 
   q.first = first;
   q.second = second;
