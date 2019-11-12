@@ -57,6 +57,10 @@ endif()
 
 #add_definitions(-DENABLE_VR)
 
+add_library(sqlite3
+  src/sqlite3/sqlite3.c
+)
+
 add_executable(vrsa
   src/vrsa/main.cpp
   src/vrsa/IntroScreen.cpp
@@ -75,7 +79,8 @@ add_executable(vrsa
   src/vrsa/MenuScreen.cpp
   src/vrsa/Pointer.cpp
   src/vrsa/IntervalSelect.cpp
+  src/vrsa/Database.cpp
 )
-#target_link_libraries(vrsa hydra openhmd hidapi-libusb pthread)
-#target_link_libraries(vrsa hydra openhmd hidapi)
-target_link_libraries(vrsa hydra pthread)
+#target_link_libraries(vrsa hydra openhmd hidapi-libusb pthread sqlite3 dl)
+#target_link_libraries(vrsa hydra openhmd hidapi sqlite3)
+target_link_libraries(vrsa hydra pthread sqlite3)

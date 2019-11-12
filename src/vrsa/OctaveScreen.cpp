@@ -25,7 +25,7 @@ void OctaveScreen::onInitialize(const OctaveConstruction& oc)
   backButton = Environment::addEntity<VrButton>();
   backButton->setTexture(Texture::load("buttons/back"));
   backButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
-  backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-6.0f, -2.5, -2));
+  backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-5.0f, -2.5, -2));
   backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 

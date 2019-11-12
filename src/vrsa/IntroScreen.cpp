@@ -1,5 +1,5 @@
 #include "IntroScreen.h"
-//#include "MainScreen.h"
+#include "Database.h"
 #include "MenuScreen.h"
 
 void IntroScreen::onInitialize()
@@ -15,7 +15,7 @@ void IntroScreen::onTick()
 
   if(timeout <= 0)
   {
-    //Environment::addEntity<MainScreen>();
+    Environment::addEntity<Database>();
     Environment::addEntity<MenuScreen>();
     getEntity()->kill();
   }
