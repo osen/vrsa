@@ -24,6 +24,7 @@ struct Octave : public Component
   void setPlaylist(const std::sr1::vector<int>& playlist);
   void setBackground(bool background);
   bool isPlaying();
+  void setTestMode(bool testMode);
 
 private:
   std::sr1::vector<std::sr1::observer_ptr<Key> > keys;
@@ -31,8 +32,9 @@ private:
   std::sr1::zero_initialized<int> startIndex;
   std::sr1::zero_initialized<bool> readOnly;
 
-  std::sr1::zero_initialized<float> timeout;
   std::sr1::vector<int> playlist;
   std::sr1::zero_initialized<float> background;
+
+  bool keysPlaying();
 
 };

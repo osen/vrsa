@@ -11,6 +11,11 @@ void Key::onInitialize(int index)
   ModelCollider* mc = getEntity()->addComponent<ModelCollider>();
 }
 
+void Key::setFrozen(bool frozen)
+{
+  this->frozen = frozen;
+}
+
 void Key::onTick()
 {
   if(selected == 1)
@@ -22,20 +27,10 @@ void Key::onTick()
     time = 0;
   }
 
-/*
-  float of = to;
-  to-= Environment::getDeltaTime();
-
-  if(of > 0 && to <= 0)
+  if(frozen)
   {
-    Transform* t = Environment::getCamera()->getEntity()->getComponent<Transform>();
-    Vector3 v = getEntity()->getComponent<Transform>()->getPosition();
-    Vector4 res = Environment::getCamera()->getView() * vec4(v, 1.0f);
-    v = res;
-    //  sound->play();
-    sound->play(v);
+    time = 0;
   }
-*/
 
   material->setVariable("u_Time", time);
 }
@@ -47,21 +42,7 @@ void Key::setSound(std::sr1::observer_ptr<Sound> sound)
 
 void Key::play()
 {
-/*
-  Transform* t = Environment::getCamera()->getEntity()->getComponent<Transform>();
-  Vector3 v = getEntity()->getComponent<Transform>()->getPosition();
-  v /= 10.0f;
-  Vector4 res = Environment::getCamera()->getView() * vec4(v, 1.0f);
-  v = res;
-  //sound->play(Vector3(1, 0, 0));
-  //sound->play();
-  sound->play(v);
-  //sound->play(getEntity()->getComponent<Transform>()->getPosition() * 10);
-*/
-
   soundSource = getEntity()->addComponent<SoundSource>(sound);
-
-  //to = 3;
 }
 
 bool Key::isPlaying()
@@ -104,6 +85,13 @@ int Key::getType()
 
 void Key::refresh()
 {
+  int selected = this->selected;
+
+  if(frozen)
+  {
+    selected = 0;
+  }
+
   if(type == 0 && selected == 0)
   {
     material->setVariable("u_Color", Vector4(1, 1, 1, 1));

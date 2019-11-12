@@ -41,17 +41,12 @@ void Octave::onInitialize(const OctaveConstruction& oc)
 
 void Octave::onTick()
 {
-  float curr = timeout;
-  timeout -= Environment::getDeltaTime();
-
-  // Through threshold
-  if(curr > 0 && timeout <= 0)
+  if(!keysPlaying())
   {
     if(playlist.size() > 0)
     {
       playKey(playlist.at(0));
       playlist.erase(playlist.begin());
-      timeout = 3;
     }
     else
     {
@@ -90,11 +85,20 @@ bool Octave::isPlaying()
     return true;
   }
 
-  if(timeout > 0)
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    keys.begin(); it != keys.end(); it++)
   {
-    return true;
+    if((*it)->isPlaying())
+    {
+      return true;
+    }
   }
 
+  return false;
+}
+
+bool Octave::keysPlaying()
+{
   for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
     keys.begin(); it != keys.end(); it++)
   {
@@ -109,9 +113,8 @@ bool Octave::isPlaying()
 
 void Octave::setPlaylist(const std::sr1::vector<int>& playlist)
 {
-  if(this->playlist.size() == 0 && timeout <= 0)
+  if(!isPlaying())
   {
-    timeout = 0.0001f;
     this->playlist = playlist;
   }
 }
@@ -198,3 +201,11 @@ void Octave::setReadOnly(bool readOnly)
   this->readOnly = readOnly;
 }
 
+void Octave::setTestMode(bool testMode)
+{
+  for(std::sr1::vector<std::sr1::observer_ptr<Key> >::iterator it =
+    keys.begin(); it != keys.end(); it++)
+  {
+    (*it)->setFrozen(testMode);
+  }
+}

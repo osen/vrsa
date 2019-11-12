@@ -37,6 +37,7 @@ void MenuScreen::onInitialize()
   questionButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   questionButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
 
+/*
   increaseButton = Environment::addEntity<VrButton>();
   increaseButton->setTexture(Texture::load("buttons/increase"));
   increaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2, 0, -4));
@@ -62,10 +63,12 @@ void MenuScreen::onInitialize()
   frInterval->getEntity()->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
 
   setInterval(6);
+*/
 }
 
 void MenuScreen::onTick()
 {
+/*
   if(increaseButton->isClicked())
   {
     setInterval(interval + 1);
@@ -75,6 +78,7 @@ void MenuScreen::onTick()
   {
     setInterval(interval - 1);
   }
+*/
 
   if(quitButton->isClicked())
   {
@@ -94,6 +98,7 @@ void MenuScreen::onTick()
   }
 }
 
+/*
 void MenuScreen::setInterval(int interval)
 {
   if(interval > 12 || interval < 0)
@@ -109,4 +114,5 @@ void MenuScreen::setInterval(int interval)
   frInterval->setMessage(ss.str());
   frName->setMessage(KeyHelper::intervalToName(interval));
 }
+*/
 

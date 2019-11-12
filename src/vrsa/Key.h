@@ -12,6 +12,7 @@ struct Key : public Component
   void setSelected(int selected);
   void play();
   bool isPlaying();
+  void setFrozen(bool frozen);
 
   std::sr1::observer_ptr<Sound> getSound();
   int getIndex();
@@ -27,7 +28,7 @@ private:
 
   std::sr1::zero_initialized<int> index;
   std::sr1::zero_initialized<float> time;
-  //std::sr1::zero_initialized<float> to;
+  std::sr1::zero_initialized<bool> frozen;
 
   void refresh();
 

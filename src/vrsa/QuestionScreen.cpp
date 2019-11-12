@@ -33,6 +33,7 @@ void QuestionScreen::onInitialize()
   oc.index = 48;
   octave = Environment::addEntity<Octave>(oc);
   octave->setReadOnly(true);
+  octave->setTestMode(true);
 
   backButton = Environment::addEntity<VrButton>();
   backButton->setTexture(Texture::load("buttons/exit"));
@@ -193,11 +194,11 @@ void QuestionScreen::populateQuestions()
 
   questions.push_back(Question(3, 0));
   questions.push_back(Question(3, 1));
-/*
   questions.push_back(Question(3, 2));
   questions.push_back(Question(3, -1));
   questions.push_back(Question(3, -2));
 
+/*
   questions.push_back(Question(3, 0));
   questions.push_back(Question(3, 1));
   questions.push_back(Question(3, 2));
