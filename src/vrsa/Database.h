@@ -9,6 +9,8 @@ struct Database : public Component
   ~Database();
 
   void execute(const std::string& sql);
+  int queryInt(const std::string& sql);
+  std::string getHostname();
 
 private:
   std::sr1::zero_initialized<sqlite3*> db;

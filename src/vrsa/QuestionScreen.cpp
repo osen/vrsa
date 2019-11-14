@@ -5,6 +5,7 @@
 #include "VrButton.h"
 #include "MenuScreen.h"
 #include "IntervalSelect.h"
+#include "Database.h"
 
 #include <sstream>
 
@@ -102,16 +103,23 @@ void QuestionScreen::endQuestions()
   Environment::clear();
   Environment::addEntity<MenuScreen>();
 
+  Entity* dbe = Entity::findByTag("database");
+  Database* db = dbe->getComponent<Database>();
+
   std::stringstream ss;
   ss << "PRAGMA foreign_keys=ON;" << std::endl;
   ss << "BEGIN TRANSACTION;" << std::endl;
 
+  ss << "CREATE TEMPORARY TABLE _(last_id INTEGER);" << std::endl;
+  ss << "INSERT INTO session VALUES(NULL, '"<<db->getHostname()<<"', datetime());" << std::endl;
+  ss << "INSERT INTO _ VALUES(last_insert_rowid());" << std::endl;
+
   for(std::sr1::vector<Question>::iterator it = questions.begin();
     it != questions.end(); it++)
   {
-    ss << "INSERT INTO answer VALUES(NULL, " <<
-      1 << ", " <<
-      "datetime(), " <<
+    ss << "INSERT INTO question VALUES(NULL, " <<
+      "(SELECT last_id FROM _), " <<
+      "'" << db->getHostname() << "', " <<
       it->interval << ", " <<
       it->first << ", " <<
       it->second << ", " <<
@@ -119,11 +127,14 @@ void QuestionScreen::endQuestions()
       it->answer << ", " <<
       it->repeats << ");" <<
       std::endl;
-
   }
 
+  ss << "DROP TABLE _;" << std::endl;
   ss << "COMMIT;";
-  std::cout << ss.str() << std::endl;
+  db->execute(ss.str());
+
+  std::cout << db->queryInt(
+    "SELECT session_id FROM question WHERE id = last_insert_rowid()") << std::endl;
 }
 
 void QuestionScreen::onTick()
@@ -207,11 +218,11 @@ void QuestionScreen::populateQuestions()
 
   questions.push_back(Question(3, 0));
   questions.push_back(Question(3, 1));
+/*
   questions.push_back(Question(3, 2));
   questions.push_back(Question(3, -1));
   questions.push_back(Question(3, -2));
 
-/*
   questions.push_back(Question(3, 0));
   questions.push_back(Question(3, 1));
   questions.push_back(Question(3, 2));
