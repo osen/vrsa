@@ -201,7 +201,8 @@ void VrManager::onDoKill()
   if(ctx)
   {
     std::cout << ohmd_ctx_destroy << std::endl;
-    ohmd_ctx_destroy(ctx);
+    // TODO
+    //ohmd_ctx_destroy(ctx);
     ctx = NULL;
   }
 #endif
@@ -213,7 +214,8 @@ VrManager::~VrManager()
   if(ctx)
   {
     std::cout << ohmd_ctx_destroy << std::endl;
-    ohmd_ctx_destroy(ctx);
+    // TODO
+    //ohmd_ctx_destroy(ctx);
     ctx = NULL;
   }
 #endif

@@ -19,14 +19,11 @@ void QuestionScreen::onInitialize()
   Model* world = Model::load("models/MusicRoom/MusicRoom");
   mr->setModel(world);
   getEntity()->getComponent<Transform>()->setScale(Vector3(7, 7, 7));
-  //getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 0, -25));
 
   Entity* fe = Entity::create();
   fr = fe->addComponent<FontRenderer>();
   fr->setFont(Font::load("fonts/DroidWhiteLarge"));
-  //fr->setMessage("Question: 1 / 24");
   fe->getComponent<Transform>()->setPosition(Vector3(0, 10, -25));
-  //fe->getComponent<Transform>()->setRotation(Vector3(0, 180, 0));
   fe->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
 
   OctaveConstruction oc;
@@ -70,7 +67,7 @@ void QuestionScreen::nextQuestion()
   Question q = questions.at(currentQuestion);
 
   int minIdx = 0;
-  int maxIdx = 12 - q.interval - q.offset;
+  int maxIdx = 12 - abs(q.interval) - abs(q.offset);
 
   int first = genrand(minIdx, maxIdx);
   int second = first + q.interval;
@@ -169,6 +166,8 @@ void QuestionScreen::onTick()
     else
     {
       nextQuestion();
+      repeatButton->getEntity()->setEnabled(false);
+      repeatButton->setLabel("");
     }
 
     return;
