@@ -6,6 +6,7 @@
 #include "MenuScreen.h"
 #include "IntervalSelect.h"
 #include "Database.h"
+#include "CompleteScreen.h"
 
 #include <sstream>
 
@@ -133,8 +134,14 @@ void QuestionScreen::endQuestions()
   ss << "COMMIT;";
   db->execute(ss.str());
 
-  std::cout << db->queryInt(
-    "SELECT session_id FROM question WHERE id = last_insert_rowid()") << std::endl;
+  int sessionId = db->queryInt(
+    "SELECT session_id FROM question WHERE id = last_insert_rowid()");
+
+  ss.str("");
+  ss << sessionId << " - " << db->getHostname();
+
+  Environment::clear();
+  Environment::addEntity<CompleteScreen>(ss.str());
 }
 
 void QuestionScreen::onTick()
@@ -217,8 +224,8 @@ void QuestionScreen::populateQuestions()
   // Interval, start, offset
 
   questions.push_back(Question(3, 0));
-  questions.push_back(Question(3, 1));
 /*
+  questions.push_back(Question(3, 1));
   questions.push_back(Question(3, 2));
   questions.push_back(Question(3, -1));
   questions.push_back(Question(3, -2));

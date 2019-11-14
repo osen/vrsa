@@ -80,6 +80,7 @@ add_executable(vrsa
   src/vrsa/Pointer.cpp
   src/vrsa/IntervalSelect.cpp
   src/vrsa/Database.cpp
+  src/vrsa/CompleteScreen.cpp
 )
 #target_link_libraries(vrsa hydra openhmd hidapi-libusb pthread sqlite3 dl)
 #target_link_libraries(vrsa hydra openhmd hidapi sqlite3)
