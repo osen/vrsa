@@ -41,6 +41,7 @@ void QuestionScreen::onInitialize()
   backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2.5, -2.5, -5));
   backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  backButton->setLabel("Quit");
 
   repeatButton = Environment::addEntity<VrButton>();
   repeatButton->setTexture(Texture::load("buttons/repeat"));
@@ -144,6 +145,7 @@ void QuestionScreen::onTick()
     questions.at(currentQuestion).repeats++;
     timeout = 1;
     repeatButton->getEntity()->setEnabled(false);
+    repeatButton->setLabel("");
   }
 
   // If waiting for user to select answer, early out.
@@ -195,6 +197,7 @@ void QuestionScreen::onTick()
     if(questions.at(currentQuestion).repeats < REPEATS)
     {
       repeatButton->getEntity()->setEnabled(true);
+      repeatButton->setLabel("Repeat");
     }
   }
 }

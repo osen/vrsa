@@ -100,3 +100,28 @@ void VrButton::setTexture(std::sr1::observer_ptr<Texture> texture)
 {
   material->setVariable("u_Glyph", texture);
 }
+
+void VrButton::onKill()
+{
+  if(fe)
+  {
+    fe->kill();
+  }
+}
+
+void VrButton::setLabel(const std::string& label)
+{
+  if(!fr)
+  {
+    fe = Entity::create();
+    fr = fe->addComponent<FontRenderer>();
+    fr->setFont(Font::load("fonts/DroidWhiteLarge"));
+    fe->getTransform()->setPosition(getEntity()->getTransform()->getPosition() + vec3(0, -0.5f, 0));
+    fe->getTransform()->setRotation(getEntity()->getTransform()->getRotation());
+    fe->getTransform()->moveForward(-1);
+    fe->getTransform()->setRotation(getEntity()->getTransform()->getRotation() + vec3(-90, 0, 0));
+    fe->getComponent<Transform>()->setScale(Vector3(0.01f, 0.01f, 1));
+  }
+
+  fr->setMessage(label);
+}

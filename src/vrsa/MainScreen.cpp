@@ -27,6 +27,7 @@ void MainScreen::onInitialize()
   quitButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2.5, -2.5, -7));
   quitButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   quitButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  quitButton->setLabel("Exit");
 
   backButton = Environment::addEntity<VrButton>();
   backButton->setTexture(Texture::load("buttons/back"));
@@ -35,13 +36,16 @@ void MainScreen::onInitialize()
   backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -2.5, -8));
   backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  backButton->setLabel("Menu");
 
+/*
   helpButton = Environment::addEntity<VrButton>();
   helpButton->setTexture(Texture::load("buttons/help"));
   helpButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
   helpButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2.5, -2.5, -7));
   helpButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   helpButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+*/
 
 /*
   examButton = Environment::addEntity<VrButton>();
@@ -68,11 +72,13 @@ void MainScreen::onTick()
     Environment::addEntity<MenuScreen>();
   }
 
+/*
   if(helpButton->isClicked())
   {
     Environment::clear();
     Environment::addEntity<HelpScreen>();
   }
+*/
 
 /*
   if(examButton->isClicked())

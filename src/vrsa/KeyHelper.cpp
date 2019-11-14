@@ -111,3 +111,22 @@ std::string KeyHelper::intervalToName(int interval)
 
   throw Exception("Invalid interval specified");
 }
+
+std::string KeyHelper::intervalToSName(int interval)
+{
+  if(interval == 0) return "Perfect unison";
+  else if(interval == 1) return "Minor 2nd";
+  else if(interval == 2) return "Major 2nd";
+  else if(interval == 3) return "Minor 3rd";
+  else if(interval == 4) return "Major 3rd";
+  else if(interval == 5) return "Perfect 4th";
+  else if(interval == 6) return "Tritone";
+  else if(interval == 7) return "Perfect 5th";
+  else if(interval == 8) return "Minor 6th";
+  else if(interval == 9) return "Major 6th";
+  else if(interval == 10) return "Minor 7th";
+  else if(interval == 11) return "Major 7th";
+  else if(interval == 12) return "Perfect octave";
+
+  throw Exception("Invalid interval specified");
+}

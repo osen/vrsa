@@ -28,6 +28,7 @@ void OctaveScreen::onInitialize(const OctaveConstruction& oc)
   backButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-5.0f, -2.5, -2));
   backButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   backButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  backButton->setLabel("Back");
 
   intervalsButton = Environment::addEntity<VrButton>();
   intervalsButton->setTexture(Texture::load("buttons/intervals"));
@@ -35,6 +36,15 @@ void OctaveScreen::onInitialize(const OctaveConstruction& oc)
   intervalsButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(1.0f, -2.5, -5));
   intervalsButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   intervalsButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+  intervalsButton->setLabel("Change Interval");
+
+  //Entity* fe = Entity::create();
+  //FontRenderer* fr = fe->addComponent<FontRenderer>();
+  //fr->setFont(Font::load("fonts/DroidWhiteLarge"));
+  //fr->setMessage("Change Interval");
+  //fe->getComponent<Transform>()->setPosition(Vector3(1.0f, -3.0f, -4));
+  //fe->getComponent<Transform>()->setRotation(intervalsButton->getEntity()->getTransform()->getRotation() + vec3(-90, 0, 0));
+  //fe->getComponent<Transform>()->setScale(Vector3(0.01f, 0.01f, 1));
 }
 
 int genrand(int min, int max)
@@ -77,9 +87,10 @@ void OctaveScreen::selectInterval(int interval)
     repeatButton = Environment::addEntity<VrButton>();
     repeatButton->setTexture(Texture::load("buttons/repeat"));
     repeatButton->getEntity()->getComponent<Transform>()->setScale(Vector3(2, 2, 2));
-    repeatButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-1.0f, -2.5, -5.0));
+    repeatButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-3.0f, -2.5, -4.5));
     repeatButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
     repeatButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
+    repeatButton->setLabel("Repeat");
   }
 }
 

@@ -9,9 +9,11 @@ struct VrButton : public Component
   void setBaseTexture(std::sr1::observer_ptr<Texture> texture);
   bool isClicked();
   bool isHover();
+  void setLabel(const std::string& label);
 
   void onInitialize();
   void onTick();
+  void onKill();
 
 private:
   std::sr1::shared_ptr<Material> material;
@@ -21,5 +23,8 @@ private:
   std::sr1::zero_initialized<bool> startDown;
   std::sr1::zero_initialized<float> time;
   std::sr1::observer_ptr<ModelCollider> mc;
+
+  std::sr1::observer_ptr<Entity> fe;
+  std::sr1::observer_ptr<FontRenderer> fr;
 
 };

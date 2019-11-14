@@ -26,69 +26,32 @@ void MenuScreen::onInitialize()
   mr->setModel(Model::load("models/Background/Background"));
 
   nextButton = Environment::addEntity<VrButton>();
-  nextButton->setTexture(Texture::load("buttons/next"));
-  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -1, -5));
+  nextButton->setTexture(Texture::load("buttons/training"));
+  nextButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -2, -5));
   nextButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   nextButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
   nextButton->getEntity()->getTransform()->setScale(Vector3(2, 2, 2));
+  nextButton->setLabel("Training");
 
   quitButton = Environment::addEntity<VrButton>();
   quitButton->setTexture(Texture::load("buttons/exit"));
-  quitButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2.5f, -1, -4));
+  quitButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-3.5f, -2, -4));
   quitButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   quitButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
   quitButton->getEntity()->getTransform()->setScale(Vector3(2, 2, 2));
+  quitButton->setLabel("Exit");
 
   questionButton = Environment::addEntity<VrButton>();
   questionButton->setTexture(Texture::load("buttons/exam"));
-  questionButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2.5f, -1, -4));
+  questionButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(3.5f, -2, -4));
   questionButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
   questionButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
   questionButton->getEntity()->getTransform()->setScale(Vector3(2, 2, 2));
-
-/*
-  increaseButton = Environment::addEntity<VrButton>();
-  increaseButton->setTexture(Texture::load("buttons/increase"));
-  increaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(2, 0, -4));
-  increaseButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
-  increaseButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
-
-  decreaseButton = Environment::addEntity<VrButton>();
-  decreaseButton->setTexture(Texture::load("buttons/decrease"));
-  decreaseButton->getEntity()->getComponent<Transform>()->setPosition(Vector3(-2, 0, -4));
-  decreaseButton->getEntity()->getComponent<Transform>()->lookAt(Vector3(0, 0, 0));
-  decreaseButton->getEntity()->getComponent<Transform>()->rotate(Vector3(0, 180, 0));
-
-  frName = Environment::addEntity<FontRenderer>();
-  frName->setMessage("Name");
-  frName->setFont(Font::load("fonts/DroidWhiteLarge"));
-  frName->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, 5, -45));
-  frName->getEntity()->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
-
-  frInterval = Environment::addEntity<FontRenderer>();
-  frInterval->setMessage("Interval");
-  frInterval->setFont(Font::load("fonts/DroidWhiteLarge"));
-  frInterval->getEntity()->getComponent<Transform>()->setPosition(Vector3(0, -2.5, -45));
-  frInterval->getEntity()->getComponent<Transform>()->setScale(Vector3(0.1f, 0.1f, 0.1f));
-
-  setInterval(6);
-*/
+  questionButton->setLabel("Questions");
 }
 
 void MenuScreen::onTick()
 {
-/*
-  if(increaseButton->isClicked())
-  {
-    setInterval(interval + 1);
-  }
-
-  if(decreaseButton->isClicked())
-  {
-    setInterval(interval - 1);
-  }
-*/
-
   if(quitButton->isClicked())
   {
     Environment::exit();
@@ -106,22 +69,4 @@ void MenuScreen::onTick()
     Environment::addEntity<QuestionScreen>();
   }
 }
-
-/*
-void MenuScreen::setInterval(int interval)
-{
-  if(interval > 12 || interval < 0)
-  {
-    return;
-  }
-
-  this->interval = interval;
-
-  std::stringstream ss;
-  ss << "Interval: " << interval;
-
-  frInterval->setMessage(ss.str());
-  frName->setMessage(KeyHelper::intervalToName(interval));
-}
-*/
 

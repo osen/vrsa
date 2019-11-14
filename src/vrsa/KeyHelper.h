@@ -19,4 +19,5 @@ struct KeyHelper
   static std::string idxToNote(int index);
 
   static std::string intervalToName(int interval);
+  static std::string intervalToSName(int interval);
 };

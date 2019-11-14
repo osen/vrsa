@@ -9,8 +9,6 @@ struct MenuScreen : public Component
   void onInitialize();
   void onTick();
 
-  void setInterval(int interval);
-
 private:
   std::sr1::observer_ptr<VrButton> quitButton;
   std::sr1::observer_ptr<VrButton> nextButton;
