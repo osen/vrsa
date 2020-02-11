@@ -1,5 +1,7 @@
 #include "VrManager.h"
 
+#include <unistd.h>
+
 void VrManager::setCameras(
   std::sr1::observer_ptr<Camera> leftCamera,
   std::sr1::observer_ptr<Camera> rightCamera)
@@ -144,9 +146,40 @@ void VrManager::onTick()
   ohmd_ctx_update(ctx);
 #endif
 
+  if(delay > 0)
+  {
+    usleep(1000 * delay);
+  }
+
   if(Keyboard::getKeyDown('q'))
   {
     Environment::exit();
+  }
+  else if(Keyboard::getKeyDown('['))
+  {
+    int ex = leftRt->getWidth();
+    ex /= 2;
+    leftRt->setSize(ex, ex);
+    rightRt->setSize(ex, ex);
+    std::cout << "Render Texture: " << ex << std::endl;
+  }
+  else if(Keyboard::getKeyDown(']'))
+  {
+    int ex = leftRt->getWidth();
+    ex *= 2;
+    leftRt->setSize(ex, ex);
+    rightRt->setSize(ex, ex);
+    std::cout << "Render Texture: " << ex << std::endl;
+  }
+  else if(Keyboard::getKeyDown('-'))
+  {
+    delay -= 100;
+    std::cout << "Delay: " << delay << std::endl;
+  }
+  else if(Keyboard::getKeyDown('='))
+  {
+    delay += 100;
+    std::cout << "Delay: " << delay << std::endl;
   }
 }
 

@@ -33,6 +33,8 @@ private:
   std::sr1::shared_ptr<Material> warpMaterial;
   std::sr1::zero_initialized<bool> disableWarp;
 
+  std::sr1::zero_initialized<float> delay;
+
 #ifdef ENABLE_VR
   std::sr1::zero_initialized<ohmd_context*> ctx;
   std::sr1::zero_initialized<ohmd_device*> hmd;
